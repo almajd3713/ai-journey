@@ -59,6 +59,7 @@ export function Key() {
             <li><span className="route route-advanced" aria-hidden="true" /><span><strong>The advanced route</strong> ({STATIONS.length - BASIC_COUNT} stations) follows the long, flat floor, where progress is slow and careful.</span></li>
             <li><Icon name="sounding" size={22} /><span><strong>Soundings</strong> are measured numbers, each from a notebook's saved output.</span></li>
             <li><Icon name="ping" size={22} /><span><strong>Pings</strong> are the sessions' own pause questions. Guess, then read the measured answer.</span></li>
+            <li><Icon name="trench" size={22} /><span><strong>The sea life is decoration.</strong> It lives where a real ocean would put it: kelp and fish on the shallow shelf, mantas over the slope, anglerfish, lanternfish and jellyfish in the dark. None of it is data.</span></li>
           </ul>
           <p className="fog small">Use the arrow keys ← → to move between stations, or the 2D button in the header for a flat chart.</p>
         </div>
@@ -218,7 +219,7 @@ export function Method({ T, theme }: { T: Terrain | null; theme: Theme }) {
               <p className="small">
                 The plane is 2 of the network's 17 dimensions. The line is drawn on the surface at the projected point, while the depth gauge shows
                 the network's true loss at that step: at step 0 the surface reads {T ? T.meta.trailSurfaceLoss[0].toFixed(3) : "0.693"} and the true loss
-                is {T ? T.meta.trueLoss[0].toFixed(3) : "0.760"}. Stations mark sessions, not training steps: no session trains this network.
+                is {T ? T.meta.trueLoss[0].toFixed(3) : "0.760"}. Stations mark sessions, not training steps: no session trains this network. The plants and animals are decoration, placed by depth as in a real sea.
               </p>
               <p className="small fog">
                 Source: <a href={`${REPO_URL}/blob/${SITE.branch}/website/tools/make_landscape.py`} target="_blank" rel="noopener">make_landscape.py</a>

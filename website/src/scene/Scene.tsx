@@ -10,20 +10,11 @@ import { rgba, token, type Theme } from "../lib/theme";
 import { STATION_BY_ID } from "../lib/content";
 import markers from "../../content/markers.json";
 import { planktonFrag, planktonVert, terrainFrag, terrainVert } from "./shaders";
+import { K, S, rgb, v3, world, type V3 } from "./world";
+import { Life } from "./Life";
 
-const S = 24;
-const K = 1.0;
 const UP = new THREE.Vector3(0, 1, 0);
-
-type V3 = THREE.Vector3;
-const v3 = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 const smooth = (t: number) => t * t * (3 - 2 * t);
-const rgb = (hex: string) => v3(...(rgba(hex).slice(0, 3) as [number, number, number]));
-
-/** grid coordinates to world, at full relief */
-function world(T: Terrain, gx: number, gy: number, lift = 0, out: V3 = v3()): V3 {
-  return out.set((gx / (T.n - 1) - 0.5) * S, (T.h(gx, gy) - T.max) * K + lift, (gy / (T.n - 1) - 0.5) * S);
-}
 
 function palette() {
   return {
@@ -37,6 +28,8 @@ function palette() {
     advanced: token("--route-advanced"),
     thread: token("--route-thread"),
     plankton: token("--plankton"),
+    // water: lit teal on the shelf, black in the abyss (the fog and background colour)
+    shallow: rgb(token("--d3")).multiplyScalar(0.8),
     chart: document.documentElement.dataset.theme === "chart",
   };
 }
@@ -257,8 +250,9 @@ function Plankton({ P, count }: { P: Palette; count: number }) {
 }
 
 /** Scroll drives everything: lift, the diver's distance along the route, and the camera. */
-function Rig({ T, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
+function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
   T: Terrain;
+  P: Palette;
   onSlow: () => void;
   uniforms: Record<string, THREE.IUniform>;
   relief: RefObject<THREE.Group | null>;
@@ -270,6 +264,7 @@ function Rig({ T, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
   const look = useRef(v3(0, 0, 0));
   const tmp = useMemo(() => ({ a: v3(), b: v3(), dir: v3(), side: v3(), pos: v3(), at: v3(), p: v3(), tag: v3() }), []);
   const wide = size.width >= 1000;
+  const water = useMemo(() => ({ abyss: rgb(P.bg), shallow: P.shallow, chart: P.chart }), [P]);
   // frame-time guard for weak GPUs: first drop to 1x resolution, then give up on 3D
   const perf = useRef({ t0: 0, frames: 0, stage: 0 });
 
@@ -342,6 +337,15 @@ function Rig({ T, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
     const dist = camera.position.distanceTo(look.current);
     uniforms.uFogNear.value = dist * 0.85;
     uniforms.uFogFar.value = dist * 2.6;
+    uniforms.uLift.value = lift;
+    uniforms.uPx.value = Math.min(2, state.viewport.dpr) * (size.height / 800);
+    // the water darkens as you go down; the chart view keeps the page's background
+    const depth = smooth(Math.min(1, d / T.total));
+    const lit = water.chart ? 0 : lift * (1 - 0.9 * depth) * (1 - 0.6 * end);
+    uniforms.uBg.value.copy(water.abyss).lerp(water.shallow, lit);
+    uniforms.uShaft.value = lift * Math.max(0, 1 - depth * 1.6);
+    const bg = uniforms.uBg.value as V3;
+    (state.scene.background as THREE.Color | null)?.setRGB(bg.x, bg.y, bg.z, THREE.SRGBColorSpace);
 
     // the current station's tag, placed over its buoy
     const el = tagRef.current;
@@ -387,6 +391,9 @@ export default function Scene({ T, theme, tagRef, onSlow }: {
     uPingColor: { value: v3() },
     uPing: { value: 0 },
     uCaustic: { value: 1 },
+    uLift: { value: 0 },      // 0 flat chart .. 1 full relief
+    uShaft: { value: 0 },     // sunlight strength, fading with depth
+    uPx: { value: 1 },        // point-size scale for the screen
   }), [T]);
   const mobile = typeof window !== "undefined" && window.innerWidth < 700;
 
@@ -412,9 +419,10 @@ export default function Scene({ T, theme, tagRef, onSlow }: {
         <Floor T={T} P={P} uniforms={uniforms} />
         <Route T={T} P={P} dRef={dRef} />
       </group>
+      {!P.chart && <Life T={T} uniforms={uniforms} mobile={mobile} />}
       <Diver P={P} posRef={diverRef} />
       <Plankton P={P} count={mobile ? 420 : 900} />
-      <Rig T={T} uniforms={uniforms} relief={relief} dRef={dRef} diverRef={diverRef} tagRef={tagRef} onSlow={onSlow} />
+      <Rig T={T} P={P} uniforms={uniforms} relief={relief} dRef={dRef} diverRef={diverRef} tagRef={tagRef} onSlow={onSlow} />
     </Canvas>
   );
 }

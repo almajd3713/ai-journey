@@ -41,10 +41,17 @@ uniform vec3 uDiver;
 uniform vec3 uPingColor;
 uniform float uPing;
 uniform float uCaustic;
+uniform float uLift;
 varying float vH;
 varying vec2 vG;
 varying vec3 vW;
 varying float vDist;
+
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float vnoise(vec2 p) {
+  vec2 i = floor(p), f = fract(p), u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
 
 float isoline(float v, float width) {
   float w = fwidth(v);
@@ -69,11 +76,19 @@ void main() {
   vec3 L = normalize(vec3(-0.55, 0.63, -0.55));
   c *= uShadeBase + uShadeAmp * (dot(n, L) - 0.6);
 
+  // the seabed in relief: sand grain everywhere, ripples where the floor is flat
+  if (uCaustic > 0.0) {
+    float grain = vnoise(vW.xz * 3.0) * 0.6 + vnoise(vW.xz * 13.0) * 0.4;
+    float flat1 = 1.0 - smoothstep(0.05, 0.5, length(vG));
+    float ripple = sin(dot(vW.xz, vec2(0.8, 0.6)) * 16.0 + vnoise(vW.xz * 1.5) * 7.0);
+    c *= 1.0 + uLift * ((grain - 0.5) * 0.22 + ripple * 0.05 * flat1);
+  }
+
   // caustics: faint moving light in shallow water (dark theme only)
   if (uCaustic > 0.0) {
     vec2 q = vW.xz * 1.7;
     float k = sin(q.x + uTime * 0.6) * sin(q.y * 1.3 - uTime * 0.45) + sin((q.x + q.y) * 0.8 + uTime * 0.3);
-    c += uCaustic * smoothstep(0.9, 1.9, k) * (1.0 - t) * 0.05;
+    c += uCaustic * smoothstep(0.9, 1.9, k) * (1.0 - t) * 0.09 * uLift;
   }
 
   // Tanaka isobaths
@@ -82,6 +97,7 @@ void main() {
   float line = isoline(vH / 0.25, 0.35);
   vec4 tanaka = mix(uIsoShade, uIsoLit, face * 0.5 + 0.5);
   float strength = smoothstep(0.0, 0.15, slope);
+  line *= 1.0 - 0.5 * uLift * uCaustic;   // in relief the minor isobaths step back; the index ones stay
   c = mix(c, tanaka.rgb, tanaka.a * line * strength * 1.4);
   c = mix(c, uIso.rgb, uIso.a * line);
   float idx = isoline(vH, 0.25);
