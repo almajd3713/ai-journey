@@ -93,7 +93,7 @@ def parse(nb_path):
             items = re.findall(r"^(?:-|\d+\.) (.+(?:\n(?!- |\d+\. )\S.*)*)", text, re.M)
             takeaways = [inline(x).rstrip(";") for x in items]
             continue
-        for q in re.findall(r"^>\s*\*\*Pause:?\*\*:?\s*(.+(?:\n>.+)*)", text, re.M):
+        for q in re.findall(r"^>\s*\*\*Pause:?\*\*:?\s*(.+(?:\n>[ \t]*\S.*)*)", text, re.M):
             pauses.append({"section": re.sub(r"^\d+\.\s*", "", h), "q": inline(re.sub(r"\n>\s*", " ", q))})
     return {
         "n": n,

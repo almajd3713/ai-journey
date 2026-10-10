@@ -1,9 +1,8 @@
 import { useEffect, useRef } from "react";
-import { BASIC_COUNT, COURSES, KIT_BYTES, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, REPO_URL, SITE, STATIONS, assetUrl, size } from "../lib/content";
-import { goTo } from "../lib/dive";
+import { COURSES, KIT_BYTES, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, REPO_URL, SITE, STATIONS, assetUrl, size } from "../lib/content";
+import { enterDive, stepTo } from "../lib/dive";
 import { BathyChart } from "../lib/chart2d";
 import type { Terrain } from "../lib/terrain";
-import type { Theme } from "../lib/theme";
 import { Icon } from "./Icon";
 
 const fileCount = STATIONS.length * 2 + COURSES.length * 2;
@@ -23,99 +22,42 @@ export function Hero({ T }: { T: Terrain | null }) {
             <span className="outline hero-sub">{SITE.tagline}.</span>
           </h1>
           <p className="lead">
-            Two courses, 27 sessions, one dive. The seafloor below is real: it is the loss surface of the small network you train in basic
-            Session 6, and the line across it is the path that network took to the bottom, one training step at a time.
+            Two courses, 27 sessions. The island beside this text is real: it is the loss surface of the network you train in basic Session 6,
+            and the line across it is the path that network took to the bottom.
           </p>
           <div className="hero-cta">
-            <a className="btn btn-glow chamfer" href="#basic-00" onClick={(e) => { e.preventDefault(); goTo(0); }}>
+            <button type="button" className="btn btn-glow chamfer" onClick={() => enterDive(0)}>
               Begin the descent <span className="arr" aria-hidden="true">→</span>
-            </a>
-            <a className="btn btn-line" href="#kit">Field kit</a>
+            </button>
+            <a className="btn btn-line" href="#kit">Sessions and downloads</a>
           </div>
           <div className="stats">
             <div className="stat"><div className="dot" /><div className="num">27</div><div className="label">sessions</div></div>
             <div className="stat"><div className="dot" /><div className="num">2</div><div className="label">routes</div></div>
-            <div className="stat"><div className="dot" /><div className="num">500</div><div className="label">real training steps</div></div>
             <div className="stat"><div className="dot" /><div className="num">{fileCount}</div><div className="label">files to download{KIT_BYTES ? ` · ${size(KIT_BYTES)}` : ""}</div></div>
           </div>
         </div>
         <p className="hero-depth label">
-          <Icon name="surface" size={16} /> 0 m · Surface{start ? ` · loss ${start.toFixed(3)}` : ""} · scroll to dive
+          <Icon name="surface" size={16} /> 0 m · Surface{start ? ` · loss ${start.toFixed(3)}` : ""} · the dive is optional, everything is listed below
         </p>
       </div>
     </section>
   );
 }
 
-export function Key() {
-  return (
-    <section className="key" aria-labelledby="key-t">
-      <div className="wrap">
-        <div className="key-card card">
-          <h2 className="h-3" id="key-t">How to read the dive</h2>
-          <ul className="legend">
-            <li><span className="ramp" aria-hidden="true" /><span><strong>Loss is depth.</strong> Light water is a high loss, the abyss a low one. Isobaths are lines of equal loss; the green ones are labelled with the loss itself.</span></li>
-            <li><span className="route route-basic" aria-hidden="true" /><span><strong>The basic route</strong> ({BASIC_COUNT} stations) crosses the steep shelf, where most of the loss falls.</span></li>
-            <li><span className="route route-advanced" aria-hidden="true" /><span><strong>The advanced route</strong> ({STATIONS.length - BASIC_COUNT} stations) follows the long, flat floor, where progress is slow and careful.</span></li>
-            <li><Icon name="sounding" size={22} /><span><strong>Soundings</strong> are measured numbers, each from a notebook's saved output.</span></li>
-            <li><Icon name="ping" size={22} /><span><strong>Pings</strong> are the sessions' own pause questions. Guess, then read the measured answer.</span></li>
-            <li><Icon name="trench" size={22} /><span><strong>The sea life is decoration.</strong> It lives where a real ocean would put it: kelp and fish on the shallow shelf, mantas over the slope, anglerfish, lanternfish and jellyfish in the dark. None of it is data.</span></li>
-          </ul>
-          <p className="fog small">Use the arrow keys ← → to move between stations, or the 2D button in the header for a flat chart.</p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function RouteHead({ course }: { course: "basic" | "advanced" }) {
-  const c = COURSES.find((x) => x.id === course)!;
-  return (
-    <div className="route-head wrap" id={`route-${course}`}>
-      <span className={`route route-${course}`}>{course === "basic" ? "Route B · the shelf" : "Route A · the floor"}</span>
-      <h2 className="az h-1">{c.title}</h2>
-      <p className="lead">{c.subtitle}. {c.stations.length} sessions{course === "advanced" ? ", for those who finished the basic course" : ", for engineers new to machine learning"}.</p>
-    </div>
-  );
-}
-
-export function Shelf({ T }: { T: Terrain | null }) {
-  const k = T ? T.stations[BASIC_COUNT - 1].k : null;
-  return (
-    <section className="shelf" aria-labelledby="shelf-t">
-      <div className="wrap">
-        <div className="panel panel-grad cut shelf-card">
-          <span className="label">Shelf break · checkpoint saved</span>
-          <h2 className="az h-2" id="shelf-t">basic.pt</h2>
-          <p>
-            The basic course ends here, at the edge of the shelf{k !== null && T ? `: step ${Math.round(k)}, loss ${T.lossAt(k).toFixed(4)}` : ""}. The
-            advanced course resumes training from this checkpoint. It opens up the language models that the basic course used as tools.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function Converged({ T }: { T: Terrain | null }) {
+/** The last step of the dive, past station A13. */
+export function DiveEnd({ T, onKit }: { T: Terrain | null; onKit: () => void }) {
   const last = T ? T.meta.trueLoss[T.meta.trueLoss.length - 1] : null;
   return (
-    <section className="converged" id="converged" aria-labelledby="conv-t">
-      <div className="wrap">
-        <div className="conv-col card">
-          <span className="label"><Icon name="trench" size={16} /> Past station A13 · after 500 steps{last ? ` · loss ${last.toFixed(5)}` : ""}</span>
-          <h2 className="az h-hero outline" id="conv-t">Converged?</h2>
-          <p className="lead">
-            Not quite. The chart keeps going down past the last station: with more steps the loss would keep falling. A minimum is a checkpoint, not
-            an ending. The notebooks are yours to run, change and argue with.
-          </p>
-          <div className="hero-cta">
-            <a className="btn btn-glow chamfer" href="#kit">Get the field kit <span className="arr" aria-hidden="true">→</span></a>
-            <a className="btn btn-line" href="#surface">Back to the surface</a>
-          </div>
-        </div>
+    <article className="dcard dend card" aria-labelledby="dend-t">
+      <span className="label"><Icon name="trench" size={16} /> Past A13 · after 500 steps{last ? ` · loss ${last.toFixed(5)}` : ""}</span>
+      <h2 className="az h-2 outline" id="dend-t">Converged?</h2>
+      <p>Not quite: with more steps the loss would keep falling. A minimum is a checkpoint, not an ending.</p>
+      <div className="hero-cta">
+        <button type="button" className="btn btn-glow btn-s chamfer" onClick={onKit}>Get the field kit <span className="arr" aria-hidden="true">→</span></button>
+        <button type="button" className="btn btn-line btn-s" onClick={() => stepTo(0)}>Back to B00</button>
       </div>
-    </section>
+    </article>
   );
 }
 
@@ -162,7 +104,7 @@ export function Guides() {
   );
 }
 
-export function Method({ T, theme }: { T: Terrain | null; theme: Theme }) {
+export function Method({ T }: { T: Terrain | null }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const chart = useRef<BathyChart | null>(null);
   useEffect(() => {
@@ -172,7 +114,6 @@ export function Method({ T, theme }: { T: Terrain | null; theme: Theme }) {
     chart.current = c;
     return () => c.destroy();
   }, [T]);
-  useEffect(() => { chart.current?.redraw(); }, [theme]);
   const m = T?.meta;
   const pct = m ? (m.explained[0] + m.explained[1]) * 100 : null;
   return (
@@ -187,8 +128,8 @@ export function Method({ T, theme }: { T: Terrain | null; theme: Theme }) {
             <canvas
               ref={canvas}
               role="img"
-              aria-label="Bathymetric chart of the loss surface with the 27 stations along the training path"
-              onClick={(e) => { const i = chart.current?.hit(e.clientX, e.clientY) ?? -1; if (i >= 0) goTo(i); }}
+              aria-label="Bathymetric chart of the loss surface with the 27 stations along the training path; click a station to dive there"
+              onClick={(e) => { const i = chart.current?.hit(e.clientX, e.clientY) ?? -1; if (i >= 0) enterDive(i); }}
             />
             <figcaption>
               <span>Session 6 · XOR network · {m ? m.params : 17} parameters</span>
@@ -219,7 +160,7 @@ export function Method({ T, theme }: { T: Terrain | null; theme: Theme }) {
               <p className="small">
                 The plane is 2 of the network's 17 dimensions. The line is drawn on the surface at the projected point, while the depth gauge shows
                 the network's true loss at that step: at step 0 the surface reads {T ? T.meta.trailSurfaceLoss[0].toFixed(3) : "0.693"} and the true loss
-                is {T ? T.meta.trueLoss[0].toFixed(3) : "0.760"}. Stations mark sessions, not training steps: no session trains this network. The plants and animals are decoration, placed by depth as in a real sea.
+                is {T ? T.meta.trueLoss[0].toFixed(3) : "0.760"}. Stations mark sessions, not training steps: no session trains this network. The island's outline is a crop around the route, not data: the measured square goes on under the water. The plants and animals are decoration, placed by depth as in a real sea.
               </p>
               <p className="small fog">
                 Source: <a href={`${REPO_URL}/blob/${SITE.branch}/website/tools/make_landscape.py`} target="_blank" rel="noopener">make_landscape.py</a>

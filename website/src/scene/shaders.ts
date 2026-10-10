@@ -2,7 +2,10 @@
 // depth tint (the --d0..--d6 ramp), hillshade lit from the north-west, isobaths every 0.25
 // in log-loss with Tanaka lighting (lit on slopes facing the light, shaded on the others),
 // an index isobath every e-fold in signal green, the diver's sonar sweep, faint caustics in
-// shallow water, and haze into the abyss with distance.
+// shallow water, and haze into the abyss with distance. Only the island is drawn: outside
+// its coast (lib/island.ts) the floor is cut away, and the coast is drawn like a chart's.
+import { FOG_GLSL, ISLAND_GLSL } from "./world";
+
 export const terrainVert = /* glsl */ `
 attribute float aH;
 attribute vec2 aG;
@@ -22,6 +25,7 @@ void main() {
 `;
 
 export const terrainFrag = /* glsl */ `
+${ISLAND_GLSL}
 uniform vec3 uRamp[7];
 uniform float uMin;
 uniform float uMax;
@@ -35,13 +39,11 @@ uniform vec4 uIsoShade;
 uniform vec3 uBg;
 uniform float uFogNear;
 uniform float uFogFar;
-uniform float uHalf;
 uniform float uTime;
 uniform vec3 uDiver;
 uniform vec3 uPingColor;
 uniform float uPing;
 uniform float uCaustic;
-uniform float uLift;
 varying float vH;
 varying vec2 vG;
 varying vec3 vW;
@@ -60,6 +62,9 @@ float isoline(float v, float width) {
 }
 
 void main() {
+  float isl = islandAt(vW.xz);
+  if (isl < -0.02) discard;
+
   // depth tint: high loss is shallow water, low loss the abyss
   float t = clamp((uMax - vH) / (uMax - uMin), 0.0, 1.0);
   float f = t * 6.0;
@@ -109,10 +114,13 @@ void main() {
   c += uPingColor * band * (1.0 - uPing) * 0.55;
   c += uPingColor * (1.0 - smoothstep(0.0, 0.5, r)) * 0.06;
 
-  // haze with distance, and fade the square edges into the background
+  // the coastline: a fine line in the index-isobath colour, as on a printed chart
+  float coast = 1.0 - smoothstep(0.0, 0.06 + 1.5 * fwidth(isl), isl);
+  c = mix(c, uIsoIndex.rgb, coast * 0.85);
+
+  // haze with distance
   float fog = smoothstep(uFogNear, uFogFar, vDist);
-  float edge = smoothstep(uHalf * 0.72, uHalf * 0.98, max(abs(vW.x), abs(vW.z)));
-  c = mix(c, uBg, max(fog, edge));
+  c = mix(c, uBg, fog);
   gl_FragColor = vec4(c, 1.0);
 }
 `;
@@ -142,5 +150,57 @@ void main() {
   float d = length(gl_PointCoord - 0.5);
   float a = smoothstep(0.5, 0.0, d);
   gl_FragColor = vec4(uColor, a * a * vA * uAlpha);
+}
+`;
+
+// The island's cut face: a wall under each coastline, like the side of a relief model cut
+// out of the sea. It carries faint strata at the chart's isobath levels (every 0.25 in
+// ln(loss)) and fades into the water with depth. It sits inside the relief group, so it
+// flattens with the chart.
+export const wallVert = /* glsl */ `
+uniform float uBottom;
+attribute float aTop;
+attribute float aY;
+attribute vec2 aN;
+varying float vY;
+varying float vTopY;
+varying vec3 vW;
+varying float vDist;
+varying float vLit;
+void main() {
+  vec4 w = modelMatrix * vec4(position.x, mix(uBottom, aY + 0.004, aTop), position.z, 1.0);
+  vTopY = (modelMatrix * vec4(position.x, aY, position.z, 1.0)).y;
+  vY = w.y;
+  vW = w.xyz;
+  vLit = 0.5 + 0.5 * abs(dot(normalize(aN), normalize(vec2(-0.55, -0.55))));
+  vec4 mv = viewMatrix * w;
+  vDist = -mv.z;
+  gl_Position = projectionMatrix * mv;
+}
+`;
+export const wallFrag = /* glsl */ `
+${FOG_GLSL}
+uniform vec3 uTopC;
+uniform vec3 uIsoC;
+uniform float uMaxH;
+uniform float uK;
+varying float vY;
+varying float vTopY;
+varying vec3 vW;
+varying float vDist;
+varying float vLit;
+void main() {
+  cutaway(vW);
+  // the face nearest the camera dissolves, so the outside of the coast never fills the view
+  float ign = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
+  if (smoothstep(3.0, 6.5, distance(vW, cameraPosition)) < ign) discard;
+  float below = vTopY - vY;
+  float fade = smoothstep(0.0, 2.8, below);
+  vec3 c = mix(uTopC * vLit, uBg, fade);
+  float lv = (vY / uK + uMaxH) / 0.25;
+  float line = 1.0 - smoothstep(0.0, 1.2 * fwidth(lv), abs(fract(lv - 0.5) - 0.5));
+  c = mix(c, uIsoC, line * 0.4 * (1.0 - fade));
+  c = mix(c, uBg, smoothstep(uFogNear, uFogFar, vDist));
+  gl_FragColor = vec4(c, 1.0);
 }
 `;

@@ -1,105 +1,103 @@
+import { useState } from "react";
 import { COURSES, KIT_BUILT, KIT_BYTES, REPO_URL, assetUrl, size, type Course, type Station } from "../lib/content";
-import { goTo } from "../lib/dive";
+import { enterDive } from "../lib/dive";
 import { Icon } from "./Icon";
+import { Html } from "./Station";
 
-/** The three ways into one session: download, read, run. */
+const Label = ({ long, short, compact }: { long: string; short: string; compact: boolean }) =>
+  compact ? <span>{short}</span> : <><span className="l-long">{long}</span><span className="l-short">{short}</span></>;
+
+/** The three ways into one session: download, read, run. Full labels shorten on a phone. */
 export function Downloads({ st, compact = false }: { st: Station; compact?: boolean }) {
   return (
     <div className={`dl${compact ? " dl-compact" : ""}`}>
       <a className="dl-a dl-main" href={assetUrl(st.files.ipynb.path)} download={st.notebook} title={`SHA-256 ${st.files.ipynb.sha256}`}>
         <Icon name="notebook" size={18} />
-        <span>{compact ? ".ipynb" : "Notebook"}</span>
+        <Label long="Notebook" short=".ipynb" compact={compact} />
         <span className="sz">{size(st.files.ipynb.bytes)}</span>
       </a>
       <a className="dl-a" href={assetUrl(st.files.html.path)} target="_blank" rel="noopener">
         <Icon name="render" size={18} />
-        <span>{compact ? "Read" : "Read in the browser"}</span>
+        <Label long="Read in the browser" short="Read" compact={compact} />
       </a>
       {st.course === "basic" && (
         <a className="dl-a" href={st.colab} target="_blank" rel="noopener">
           <Icon name="cloud" size={18} />
-          <span>{compact ? "Colab" : "Open in Colab"}</span>
+          <Label long="Open in Colab" short="Colab" compact={compact} />
         </a>
       )}
     </div>
   );
 }
 
-function CoursePack({ c }: { c: Course }) {
-  const extra = c.id === "advanced" ? "the shared files aij_common.py and tinygpt.py, data/, " : "";
+/** One session in the list: its title and files at a glance, the rest on request. */
+function SessionRow({ st }: { st: Station }) {
+  const [open, setOpen] = useState(false);
+  const id = `row-${st.id}`;
   return (
-    <div className="pack card" data-route={c.id}>
-      <header className="pack-head">
-        <span className={`route route-${c.id}`}>{c.id === "basic" ? "Basic route" : "Advanced route"} · {c.stations.length} sessions</span>
-        <h3 className="h-3">{c.title}</h3>
-        <p className="fog">{c.subtitle}</p>
+    <li className="srow" data-route={st.course} data-open={open ? "" : undefined}>
+      <button type="button" className="srow-t" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
+        <span className="code-link">{st.code}</span>
+        <span className="nm">{st.title}</span>
+        <span className="fog meta">{st.minutes} min{st.hardware ? ` · ${st.hardware.device}` : ""}</span>
+        <Icon name={open ? "minus" : "plus"} size={16} />
+      </button>
+      <Downloads st={st} compact />
+      <button type="button" className="sq srow-dive" onClick={() => enterDive(st.i)} aria-label={`Dive to ${st.code}, ${st.title}`} title="Dive here">
+        <Icon name="descent" size={18} />
+      </button>
+      {open && (
+        <div className="srow-more" id={id}>
+          <span className="label label-s">By the end you can</span>
+          <ol className="outcomes">{st.outcomes.map((o, k) => <Html key={k} as="li" s={o} />)}</ol>
+          <p className="srow-sounding"><Icon name="sounding" size={16} /> <strong className="mono">{st.sounding.value}</strong> <Html s={st.sounding.label} /></p>
+        </div>
+      )}
+    </li>
+  );
+}
+
+function CourseBlock({ c }: { c: Course }) {
+  return (
+    <div className="course" data-route={c.id} id={`route-${c.id}`}>
+      <header className="course-head">
+        <div className="course-t">
+          <span className={`route route-${c.id}`}>{c.id === "basic" ? "Route B · the shelf" : "Route A · the floor"} · {c.stations.length} sessions</span>
+          <h3 className="h-2 az">{c.title}</h3>
+          <p className="fog">
+            {c.id === "basic"
+              ? "For engineers new to machine learning. Runs on a laptop or in Colab."
+              : "After the basic course. Read from the saved outputs; re-running needs a GPU."}
+          </p>
+        </div>
+        <div className="course-files">
+          <a className="btn btn-glow btn-s chamfer" href={assetUrl(c.zip.path)} download>
+            <Icon name="zip" size={18} /> Whole course <span className="sz mono">{size(c.zip.bytes)}</span>
+          </a>
+          <a className="btn btn-line btn-s" href={assetUrl(c.requirements.path)} download>requirements.txt</a>
+          <a className="btn btn-line btn-s" href={c.github} target="_blank" rel="noopener">GitHub <Icon name="arrow-ne" size={14} /></a>
+        </div>
       </header>
-      <ul className="kit">
-        <li>
-          <a href={assetUrl(c.zip.path)} download>
-            <Icon name="zip" size={24} />
-            <span className="name">The whole course<span className="what">All {c.stations.length} notebooks, {extra}README, CHANGES and requirements.txt</span></span>
-            <span className="size">{size(c.zip.bytes)}</span>
-            <Icon name="kit" size={20} />
-          </a>
-        </li>
-        <li>
-          <a href={assetUrl(c.requirements.path)} download>
-            <Icon name="notebook" size={24} />
-            <span className="name">requirements.txt<span className="what">The package versions the saved outputs came from</span></span>
-            <span className="size">{size(c.requirements.bytes)}</span>
-            <Icon name="kit" size={20} />
-          </a>
-        </li>
-        <li>
-          <a href={c.github} target="_blank" rel="noopener">
-            <Icon name="code" size={24} />
-            <span className="name">Source on GitHub<span className="what">{c.dir}/, with the README's setup, downloads and run times</span></span>
-            <span className="size">public</span>
-            <Icon name="arrow-ne" size={20} />
-          </a>
-        </li>
+      <ul className="srows" role="list">
+        {c.stations.map((s) => <SessionRow key={s.id} st={s} />)}
       </ul>
-      <p className="pack-note">
-        {c.id === "basic"
-          ? "The notebooks run on a laptop or in Colab. Sessions 8–10 and 12 are much faster with a GPU; the README lists times per session."
-          : "These notebooks are made to be read from their saved outputs. Re-running them needs a GPU and several gigabytes of models; the README lists times and downloads per session."}
-      </p>
-      <table className="sessions">
-        <caption className="label label-s">Sessions</caption>
-        <thead><tr><th scope="col">Station</th><th scope="col">Session</th><th scope="col"><span className="vh">Files</span></th></tr></thead>
-        <tbody>
-          {c.stations.map((s) => (
-            <tr key={s.id}>
-              <th scope="row"><a href={`#${s.id}`} onClick={(e) => { e.preventDefault(); goTo(s.i); }} className="code-link">{s.code}</a></th>
-              <td>{s.title}{s.minutes !== 60 && <span className="fog"> · {s.minutes} min</span>}</td>
-              <td><Downloads st={s} compact /></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
 
 export function Kit() {
   return (
-    <section className="sec solid" id="kit" aria-labelledby="kit-t">
+    <section className="sec solid kit-sec" id="kit" aria-labelledby="kit-t">
       <div className="wrap">
         <div className="sec-head">
-          <span className="label"><Icon name="kit" size={16} /> Field kit</span>
-          <h2 className="az h-1" id="kit-t">Take it with you</h2>
-          <p className="lead">
-            Every session is a notebook with its outputs saved, so you can read the whole course without running anything. Download it, read it in
-            the browser, or open a basic-course notebook in Colab. {KIT_BYTES ? `${size(KIT_BYTES)} in all, ` : ""}built {KIT_BUILT}.
-          </p>
+          <span className="label"><Icon name="kit" size={16} /> Field kit · {KIT_BYTES ? size(KIT_BYTES) : ""} · built {KIT_BUILT}</span>
+          <h2 className="az h-1" id="kit-t">Every session, ready to take</h2>
+          <p className="lead">Each session is one notebook with its outputs saved, so you can read it without running anything.</p>
         </div>
-        <div className="grid g2 packs">
-          {COURSES.map((c) => <CoursePack key={c.id} c={c} />)}
-        </div>
+        {COURSES.map((c) => <CourseBlock key={c.id} c={c} />)}
         <p className="fog small">
-          Not included: the advanced course's <code>cache/</code> folder (348 MB), which the notebooks rebuild, and the models and datasets they
-          download on first run (listed with sizes in each README). Everything is also in the{" "}
+          Not included: the advanced course's <code>cache/</code> folder (348 MB), which the notebooks rebuild, and the models and datasets
+          they download on first run (listed in each README). Everything is also in the{" "}
           <a href={REPO_URL} target="_blank" rel="noopener">public repository</a>.
         </p>
       </div>

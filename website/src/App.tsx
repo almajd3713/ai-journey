@@ -1,80 +1,114 @@
-import { useEffect, useState } from "react";
-import { COURSES, STATIONS, STATION_BY_ID } from "./lib/content";
-import { bindDive, dive, goTo, onDive } from "./lib/dive";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { STATIONS, STATION_BY_ID } from "./lib/content";
+import { END, dive, enterDive, exitDive, onDive } from "./lib/dive";
 import { loadTerrain, type Terrain } from "./lib/terrain";
-import { applyTheme, canWebGL2, choseThreeD, initialMode, initialTheme, saveMode, type Mode, type Theme } from "./lib/theme";
+import { canWebGL2, choseThreeD, clearOldTheme, initialMode, saveMode, type Mode } from "./lib/theme";
 import { Backdrop } from "./ui/Backdrop";
+import { Dive } from "./ui/Dive";
 import { Gauge } from "./ui/Gauge";
 import { Header } from "./ui/Header";
 import { Sprite } from "./ui/Icon";
 import { Kit } from "./ui/Kit";
-import { Converged, Footer, Guides, Hero, Key, Method, RouteHead, Shelf } from "./ui/Sections";
-import { StationStop } from "./ui/Station";
+import { Footer, Guides, Hero, Method } from "./ui/Sections";
+import { useDive } from "./ui/useDive";
+
+const hashOf = (step: number) => (step === END ? "converged" : STATIONS[step].id);
+const stepOf = (hash: string) => (hash === "converged" ? END : STATION_BY_ID[hash]?.i ?? -1);
 
 export default function App() {
   const [T, setT] = useState<Terrain | null>(null);
-  const [theme, setThemeState] = useState<Theme>(initialTheme);
   const [mode, setModeState] = useState<Mode>(initialMode);
   const [webgl] = useState(canWebGL2);
+  const [heroSeen, setHeroSeen] = useState(true);
+  const { on } = useDive();
+  const saved = useRef({ y: 0, then: "" });
 
-  useEffect(() => { loadTerrain().then(setT).catch((e) => console.error("terrain", e)); }, []);
-  useEffect(() => { applyTheme(theme); }, [theme]);
+  useEffect(() => { clearOldTheme(); loadTerrain().then(setT).catch((e) => console.error("terrain", e)); }, []);
   const setMode = (m: Mode) => { setModeState(m); saveMode(m); };
 
-  // scroll -> dive state, deep links, keyboard and the address bar
+  // the 3D scene renders only while it can be seen: behind the hero, or in the dive
   useEffect(() => {
-    const unbind = bindDive();
-    const id = decodeURIComponent(location.hash.slice(1));
-    if (STATION_BY_ID[id]) requestAnimationFrame(() => goTo(STATION_BY_ID[id].i, false));
-    else if (id) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+    const hero = document.getElementById("surface");
+    if (!hero) return;
+    const io = new IntersectionObserver(([e]) => setHeroSeen(e.isIntersecting), { rootMargin: "0px 0px -10% 0px" });
+    io.observe(hero);
+    return () => io.disconnect();
+  }, []);
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.altKey || e.ctrlKey || e.metaKey) return;
-      const t = e.target as HTMLElement;
-      if (t.closest("input, textarea, select, [contenteditable]")) return;
-      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-        e.preventDefault();
-        const from = dive.lift < 0.5 ? -1 : dive.station;
-        goTo(from + (e.key === "ArrowRight" ? 1 : -1));
+  // after leaving: back to where the page was, or on to a section (the field kit)
+  const settle = () => {
+    const then = saved.current.then;
+    saved.current.then = "";
+    if (then) document.getElementById(then)?.scrollIntoView({ behavior: "smooth" });
+    else window.scrollTo(0, saved.current.y);
+  };
+
+  // The address bar follows the dive: opening it adds a history entry (so Back leaves the
+  // dive, as on a phone), moving between stations replaces it.
+  useEffect(() => {
+    history.scrollRestoration = "manual";
+    let wasOn = false, shown = "";
+    const off = onDive(() => {
+      // while diving, the page behind keeps its place and can't be scrolled or tabbed into
+      // (set here, synchronously, so that leaving can restore the scroll position at once)
+      if (dive.on !== wasOn) {
+        if (dive.on) saved.current.y = window.scrollY;
+        document.documentElement.classList.toggle("diving", dive.on);
+      }
+      if (dive.on) {
+        const want = `#${hashOf(dive.step)}`;
+        if (!wasOn && !history.state?.dive) history.pushState({ dive: 1 }, "", want);
+        else if (want !== shown) history.replaceState({ dive: 1 }, "", want);
+        shown = want;
+      }
+      wasOn = dive.on;
+    });
+    const onPop = (e: PopStateEvent) => {
+      if (dive.on && !e.state?.dive) { exitDive(); settle(); }
+      else if (!dive.on && e.state?.dive) {
+        const s = stepOf(decodeURIComponent(location.hash.slice(1)));
+        if (s >= 0) enterDive(s);
       }
     };
-    window.addEventListener("keydown", onKey);
+    window.addEventListener("popstate", onPop);
 
-    let shown = "";
-    const off = onDive(() => {
-      const inDive = dive.lift > 0.95 && dive.end < 0.05;
-      const want = inDive ? STATIONS[dive.station].id : "";
-      if (want && want !== shown) {
-        shown = want;
-        history.replaceState(null, "", `#${want}`);
-      }
-    });
-    return () => { unbind(); off(); window.removeEventListener("keydown", onKey); };
+    // a deep link opens the dive there; Back then returns to the page
+    const s = stepOf(decodeURIComponent(location.hash.slice(1)));
+    if (s >= 0) {
+      history.replaceState(null, "", location.pathname + location.search);
+      requestAnimationFrame(() => enterDive(s));
+    } else if (location.hash) {
+      const id = location.hash.slice(1);
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+    }
+    return () => { off(); window.removeEventListener("popstate", onPop); };
   }, []);
+
+  const close = useCallback((then = "") => {
+    if (!dive.on) return;
+    saved.current.then = then;
+    exitDive();
+    if (history.state?.dive) history.back();   // popstate settles the page
+    else { history.replaceState(null, "", location.pathname + location.search); settle(); }
+  }, []);
+  const closeDive = useCallback(() => close(), [close]);
+  const toKit = useCallback(() => close("kit"), [close]);
 
   return (
     <>
       <Sprite />
-      <a className="skip" href="#basic-00">Skip to the first session</a>
-      <Header theme={theme} setTheme={setThemeState} mode={mode} setMode={setMode} webgl={webgl} />
-      <Backdrop T={T} mode={mode} theme={theme} onFail={() => setMode("2d")} onSlow={() => { if (!choseThreeD()) setModeState("2d"); }} />
+      <a className="skip" href="#kit">Skip to the sessions and downloads</a>
+      <Header mode={mode} setMode={setMode} webgl={webgl} />
+      <Backdrop T={T} mode={mode} active={on || heroSeen} onFail={() => setMode("2d")} onSlow={() => { if (!choseThreeD()) setModeState("2d"); }} />
       <Gauge T={T} />
       <main id="main">
         <Hero T={T} />
-        <Key />
-        {COURSES.map((c) => (
-          <div key={c.id} className="route-block">
-            {c.id === "advanced" && <Shelf T={T} />}
-            <RouteHead course={c.id} />
-            {c.stations.map((s) => <StationStop key={s.id} st={s} />)}
-          </div>
-        ))}
-        <Converged T={T} />
         <Kit />
         <Guides />
-        <Method T={T} theme={theme} />
+        <Method T={T} />
       </main>
       <Footer />
+      <Dive T={T} mode={mode} setMode={setMode} webgl={webgl} onClose={closeDive} onKit={toKit} />
     </>
   );
 }

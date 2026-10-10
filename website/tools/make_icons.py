@@ -34,6 +34,12 @@ ICONS = {
     "copy":     '<path d="M8 8h12v12H8z"/><path d="M16 4H4v12"/>',
     "check":    '<path d="M4.5 12.5 9.5 17.5 19.5 7"/>',
     "code":     '<path d="M8.5 7 3.5 12l5 5M15.5 7l5 5-5 5M13.5 4.5l-3 15"/>',
+    # the dive's controls
+    "arrow-l":  '<path d="M20 12H5M11 6l-6 6 6 6"/>',
+    "close":    '<path d="M6 6l12 12M18 6 6 18"/>',
+    "plus":     '<path d="M12 5v14M5 12h14"/>',
+    "minus":    '<path d="M5 12h14"/>',
+    "help":     '<path d="M4 4h16v16H4z"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 16.5v1"/>',
 }
 
 GRAD = ('<defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">'

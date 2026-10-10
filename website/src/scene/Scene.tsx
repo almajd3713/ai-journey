@@ -6,11 +6,12 @@ import { useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from "rea
 import * as THREE from "three";
 import { dive } from "../lib/dive";
 import { STATION_COUNT, distOf, type Terrain } from "../lib/terrain";
-import { rgba, token, type Theme } from "../lib/theme";
+import { rgba, token } from "../lib/theme";
 import { STATION_BY_ID } from "../lib/content";
 import markers from "../../content/markers.json";
-import { planktonFrag, planktonVert, terrainFrag, terrainVert } from "./shaders";
-import { K, S, rgb, v3, world, type V3 } from "./world";
+import { islandOf } from "../lib/island";
+import { planktonFrag, planktonVert, terrainFrag, terrainVert, wallFrag, wallVert } from "./shaders";
+import { K, S, fogU, grid, islandTexture, rgb, v3, world, type V3 } from "./world";
 import { Life } from "./Life";
 
 const UP = new THREE.Vector3(0, 1, 0);
@@ -85,6 +86,46 @@ function Floor({ T, P, uniforms }: { T: Terrain; P: Palette; uniforms: Record<st
     () => new THREE.ShaderMaterial({ vertexShader: terrainVert, fragmentShader: terrainFrag, uniforms, side: THREE.DoubleSide }),
     [uniforms],
   );
+  return <mesh geometry={geometry} material={material} frustumCulled={false} />;
+}
+
+/** The island's cut face: one wall under each coastline (see wallVert in shaders.ts). */
+function Wall({ T, uniforms }: { T: Terrain; uniforms: Record<string, THREE.IUniform> }) {
+  const geometry = useMemo(() => {
+    const pos: number[] = [], top: number[] = [], ys: number[] = [], nrm: number[] = [], idx: number[] = [];
+    // the main island only: the islets belong to the flat chart (see ISLAND_GLSL)
+    for (const ring of islandOf(T).coasts.slice(0, 1)) {
+      const base = pos.length / 3, m = ring.length;
+      ring.forEach(([x, z], k) => {
+        const [px, pz] = ring[(k + m - 1) % m], [nx, nz] = ring[(k + 1) % m];
+        const [gx, gy] = grid(T, x, z);
+        const y = (T.h(gx, gy) - T.max) * K;
+        for (const t of [1, 0]) { pos.push(x, 0, z); top.push(t); ys.push(y); nrm.push(nz - pz, -(nx - px)); }
+        const a = base + k * 2, b = base + ((k + 1) % m) * 2;
+        idx.push(a, a + 1, b, b, a + 1, b + 1);
+      });
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(pos), 3));
+    g.setAttribute("aTop", new THREE.BufferAttribute(new Float32Array(top), 1));
+    g.setAttribute("aY", new THREE.BufferAttribute(new Float32Array(ys), 1));
+    g.setAttribute("aN", new THREE.BufferAttribute(new Float32Array(nrm), 2));
+    g.setIndex(idx);
+    return g;
+  }, [T]);
+  const material = useMemo(() => new THREE.ShaderMaterial({
+    vertexShader: wallVert,
+    fragmentShader: wallFrag,
+    side: THREE.DoubleSide,
+    uniforms: {
+      ...fogU(uniforms),
+      uBottom: { value: (T.min - T.max) * K - 1.4 },
+      uTopC: { value: rgb(token("--d4")).multiplyScalar(0.75) },
+      uIsoC: { value: rgb(token("--signal")) },
+      uMaxH: { value: T.max },
+      uK: { value: K },
+    },
+  }), [T, uniforms]);
   return <mesh geometry={geometry} material={material} frustumCulled={false} />;
 }
 
@@ -219,18 +260,24 @@ function Diver({ P, posRef }: { P: Palette; posRef: RefObject<V3> }) {
   );
 }
 
-function Plankton({ P, count }: { P: Palette; count: number }) {
+function Plankton({ T, P, count }: { T: Terrain; P: Palette; count: number }) {
   const geo = useMemo(() => {
+    const I = islandOf(T);
     const pos = new Float32Array(count * 3), seed = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      pos.set([(Math.random() - 0.5) * S * 0.9, -7 + Math.random() * 9, (Math.random() - 0.5) * S * 0.9], i * 3);
+      let x = 0, z = 0;
+      for (let k = 0; k < 20; k++) {   // over the island and just off its coast
+        x = (Math.random() - 0.5) * S * 0.95; z = (Math.random() - 0.5) * S * 0.95;
+        if (I.mainAt(x, z) > -1.2) break;
+      }
+      pos.set([x, -7 + Math.random() * 9, z], i * 3);
       seed[i] = Math.random();
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     g.setAttribute("aSeed", new THREE.BufferAttribute(seed, 1));
     return g;
-  }, [count]);
+  }, [T, count]);
   const uniforms = useMemo(() => ({ uTime: { value: 0 }, uScale: { value: 60 }, uColor: { value: v3() }, uAlpha: { value: 0.5 } }), []);
   useLayoutEffect(() => {
     uniforms.uColor.value = rgb(P.chart ? token("--fog") : P.plankton);
@@ -268,15 +315,14 @@ function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
   // frame-time guard for weak GPUs: first drop to 1x resolution, then give up on 3D
   const perf = useRef({ t0: 0, frames: 0, stage: 0 });
 
-  useEffect(() => {
-    const cam = camera as THREE.PerspectiveCamera;
-    if (wide) cam.setViewOffset(size.width, size.height, -size.width * 0.17, 0, size.width, size.height);
-    else cam.clearViewOffset();
-    cam.updateProjectionMatrix();
-  }, [camera, size, wide]);
+  // Wide screens: the cards are on the left, so the scene moves right. Narrow screens: in the
+  // dive the card is at the bottom, so the scene moves up into the band above it.
+  const shift = useRef(0);
+  useEffect(() => { shift.current = -1; }, [size]);
 
   useFrame((state, dtRaw) => {
     const pf = perf.current, now = performance.now();
+    if (dtRaw > 0.25) { pf.t0 = now; pf.frames = 0; }   // resumed after a pause: not a slow frame
     if (state.clock.elapsedTime > 1.5 && pf.stage < 2) {
       if (!pf.t0) pf.t0 = now;
       pf.frames++;
@@ -289,6 +335,17 @@ function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
       }
     }
     const dt = Math.min(dtRaw, 0.05);
+    {
+      const cam = camera as THREE.PerspectiveCamera;
+      const want = wide ? 0 : dive.on ? 0.3 : 0.06;
+      const was = shift.current;
+      shift.current = was < 0 ? want : was + (want - was) * (1 - Math.exp(-dt * 4));
+      if (Math.abs(shift.current - was) > 1e-4) {
+        if (wide) cam.setViewOffset(size.width, size.height, -size.width * 0.17, 0, size.width, size.height);
+        else cam.setViewOffset(size.width, size.height, 0, size.height * shift.current, size.width, size.height);
+        cam.updateProjectionMatrix();
+      }
+    }
     const lift = smooth(dive.lift);
     const end = smooth(dive.end);
     if (relief.current) relief.current.scale.y = Math.max(lift, 1e-4);
@@ -338,6 +395,7 @@ function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
     uniforms.uFogNear.value = dist * 0.85;
     uniforms.uFogFar.value = dist * 2.6;
     uniforms.uLift.value = lift;
+    uniforms.uCut.value = smooth(Math.max(0, lift - 0.5) * 2) * (1 - end);
     uniforms.uPx.value = Math.min(2, state.viewport.dpr) * (size.height / 800);
     // the water darkens as you go down; the chart view keeps the page's background
     const depth = smooth(Math.min(1, d / T.total));
@@ -364,10 +422,10 @@ function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
   return null;
 }
 
-export default function Scene({ T, theme, tagRef, onSlow }: {
-  T: Terrain; theme: Theme; tagRef: RefObject<HTMLDivElement | null>; onSlow: () => void;
+export default function Scene({ T, active, tagRef, onSlow }: {
+  T: Terrain; active: boolean; tagRef: RefObject<HTMLDivElement | null>; onSlow: () => void;
 }) {
-  const P = useMemo(palette, [theme]);
+  const P = useMemo(palette, []);
   const relief = useRef<THREE.Group>(null);
   const dRef = useRef(distOf(T, dive.p));
   const diverRef = useRef(v3());
@@ -394,6 +452,8 @@ export default function Scene({ T, theme, tagRef, onSlow }: {
     uLift: { value: 0 },      // 0 flat chart .. 1 full relief
     uShaft: { value: 0 },     // sunlight strength, fading with depth
     uPx: { value: 1 },        // point-size scale for the screen
+    uIsland: { value: islandTexture(islandOf(T)) },
+    uCut: { value: 0 },       // the cutaway along the line of sight (see FOG_GLSL)
   }), [T]);
   const mobile = typeof window !== "undefined" && window.innerWidth < 700;
 
@@ -413,15 +473,17 @@ export default function Scene({ T, theme, tagRef, onSlow }: {
       camera={{ fov: 40, near: 0.1, far: 220, position: [0, 30, 6.5] }}
       aria-hidden
       resize={{ scroll: false, debounce: 0 }}
+      frameloop={active ? "always" : "never"}
     >
       <color attach="background" args={[P.bg]} />
       <group ref={relief}>
         <Floor T={T} P={P} uniforms={uniforms} />
+        <Wall T={T} uniforms={uniforms} />
         <Route T={T} P={P} dRef={dRef} />
       </group>
       {!P.chart && <Life T={T} uniforms={uniforms} mobile={mobile} />}
       <Diver P={P} posRef={diverRef} />
-      <Plankton P={P} count={mobile ? 420 : 900} />
+      <Plankton T={T} P={P} count={mobile ? 420 : 900} />
       <Rig T={T} P={P} uniforms={uniforms} relief={relief} dRef={dRef} diverRef={diverRef} tagRef={tagRef} onSlow={onSlow} />
     </Canvas>
   );

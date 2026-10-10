@@ -7,6 +7,7 @@ import { geoPath, geoTransform } from "d3-geo";
 import { STATION_COUNT, distOf, type Terrain } from "./terrain";
 import { rgba, token } from "./theme";
 import { STATIONS } from "./content";
+import { ISLAND_S, islandOf } from "./island";
 
 type RGB = [number, number, number];
 const mix = (a: RGB, b: RGB, t: number): RGB => [0, 1, 2].map((i) => a[i] + (b[i] - a[i]) * t) as RGB;
@@ -64,6 +65,17 @@ export class BathyChart {
     const size = this.size;
     const ramp = ["--d0", "--d1", "--d2", "--d3", "--d4", "--d5", "--d6"].map((v) => rgb255(token(v)));
     const chartTheme = document.documentElement.dataset.theme === "chart";
+    // only the island is drawn (lib/island.ts): clip to its coasts, then draw the coastline
+    const I = islandOf(this.T);
+    const toPx = (w: number) => ((w / ISLAND_S + 0.5) * (n - 1) + 0.5) * (size / n);
+    const coast = new Path2D();
+    I.coasts.forEach((ring) => {
+      ring.forEach(([x, z], k) => (k ? coast.lineTo(toPx(x), toPx(z)) : coast.moveTo(toPx(x), toPx(z))));
+      coast.closePath();
+    });
+    ctx.clearRect(0, 0, size, size);
+    ctx.save();
+    ctx.clip(coast);
     const off = document.createElement("canvas");
     off.width = off.height = n;
     const oc = off.getContext("2d", { willReadFrequently: true })!;
@@ -102,7 +114,12 @@ export class BathyChart {
       ctx.save(); ctx.translate(o, o); ctx.beginPath(); path(c); ctx.strokeStyle = shade; ctx.stroke(); ctx.restore();
       ctx.beginPath(); path(c); ctx.strokeStyle = index ? idx : iso; ctx.lineWidth = (index ? 1.4 : 0.8) * k; ctx.stroke();
     });
-    // label index isobaths with the real loss value
+    ctx.restore();
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 1.6 * k;
+    ctx.strokeStyle = token("--isobath-index");
+    ctx.stroke(coast);
+    // label index isobaths with the real loss value, on the island
     ctx.font = `${Math.round(10 * k)}px "JetBrains Mono", monospace`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -113,7 +130,8 @@ export class BathyChart {
       const ring = best as number[][] | null;
       if (!ring || ring.length < 40) return;
       const m = 8;
-      const pt = ring.slice(Math.floor(ring.length * 0.37)).concat(ring).find(([x, y]) => x > m && y > m && x < n - m && y < n - m);
+      const onIsland = (x: number, y: number) => I.at(((x - 0.5) / (n - 1) - 0.5) * ISLAND_S, ((y - 0.5) / (n - 1) - 0.5) * ISLAND_S) > 0.5;
+      const pt = ring.slice(Math.floor(ring.length * 0.37)).concat(ring).find(([x, y]) => x > m && y > m && x < n - m && y < n - m && onIsland(x, y));
       if (!pt) return;
       const [x, y] = pt;
       const v = Math.exp(c.value);

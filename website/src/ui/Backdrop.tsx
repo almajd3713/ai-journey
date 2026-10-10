@@ -5,7 +5,7 @@ import { BathyChart } from "../lib/chart2d";
 import { dive, onDive } from "../lib/dive";
 import { STATIONS } from "../lib/content";
 import type { Terrain } from "../lib/terrain";
-import type { Mode, Theme } from "../lib/theme";
+import type { Mode } from "../lib/theme";
 
 const Scene = lazy(() => import("../scene/Scene"));
 
@@ -16,7 +16,7 @@ class Guard extends Component<{ onError: () => void; children: ReactNode }, { fa
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function Flat({ T, theme }: { T: Terrain; theme: Theme }) {
+function Flat({ T }: { T: Terrain }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const chart = useRef<BathyChart | null>(null);
   useEffect(() => {
@@ -26,12 +26,11 @@ function Flat({ T, theme }: { T: Terrain; theme: Theme }) {
     const off = onDive(() => c.set(dive.p));
     return () => { off(); c.destroy(); };
   }, [T]);
-  useEffect(() => { chart.current?.redraw(); }, [theme]);
   return <canvas ref={ref} className="flat-chart" aria-hidden="true" />;
 }
 
-export function Backdrop({ T, mode, theme, onFail, onSlow }: {
-  T: Terrain | null; mode: Mode; theme: Theme; onFail: () => void; onSlow: () => void;
+export function Backdrop({ T, mode, active, onFail, onSlow }: {
+  T: Terrain | null; mode: Mode; active: boolean; onFail: () => void; onSlow: () => void;
 }) {
   const tag = useRef<HTMLDivElement>(null);
   const [station, setStation] = useState(0);
@@ -42,12 +41,12 @@ export function Backdrop({ T, mode, theme, onFail, onSlow }: {
     <div className="backdrop" aria-hidden="true" data-mode={mode}>
       {mode === "3d" ? (
         <Guard onError={onFail}>
-          <Suspense fallback={<Flat T={T} theme={theme} />}>
-            <Scene T={T} theme={theme} tagRef={tag} onSlow={onSlow} />
+          <Suspense fallback={<Flat T={T} />}>
+            <Scene T={T} active={active} tagRef={tag} onSlow={onSlow} />
           </Suspense>
         </Guard>
       ) : (
-        <Flat T={T} theme={theme} />
+        <Flat T={T} />
       )}
       {mode === "3d" && (
         <div className="tag" ref={tag} data-route={st.course}>

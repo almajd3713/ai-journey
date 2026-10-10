@@ -6,14 +6,15 @@
 //   the trench and abyss (advanced route)  darkness, tube worms, anglerfish with lures,
 //                                          lanternfish, jellyfish, siphonophores
 // Each station stands in a small reef in its route's colour. Everything is procedural and
-// instanced (one draw call per kind), grows out of the floor as the chart lifts, and is
-// hidden in the light "chart paper" theme.
+// instanced (one draw call per kind), grows out of the floor as the chart lifts, and lives
+// only on the island (lib/island.ts).
 import { useMemo } from "react";
 import * as THREE from "three";
 import { BASIC_COUNT } from "../lib/content";
 import type { Terrain } from "../lib/terrain";
 import { token } from "../lib/theme";
-import { FOG_GLSL, K, S, grid, rgb, rng, v3, world } from "./world";
+import { FOG_GLSL, K, S, fogU, grid, rgb, rng, v3, world } from "./world";
+import { islandOf } from "../lib/island";
 
 type U = Record<string, THREE.IUniform>;
 type Attrs = Record<string, [Float32Array, number]>;
@@ -49,7 +50,10 @@ function seabed(T: Terrain) {
     return { y: (h - T.max) * K, t: (T.max - h) / (T.max - T.min), slope };
   };
   const lim = S * 0.45;
-  return { at, clearance, lim };
+  // only on the island (lib/island.ts), with a margin from its coast
+  const I = islandOf(T);
+  const inside = (x: number, z: number, margin = 0.25) => I.mainAt(x, z) > margin;
+  return { at, clearance, lim, inside };
 }
 
 // ---------------------------------------------------------------- plants (kelp, seagrass)
@@ -108,6 +112,7 @@ function plants(T: Terrain, shared: U, mobile: boolean) {
     let tries = 0, made = 0;
     while (made < patches && tries++ < 6000) {
       const cx = (r() * 2 - 1) * B.lim, cz = (r() * 2 - 1) * B.lim;
+      if (!B.inside(cx, cz, 0.6)) continue;
       const { t } = B.at(cx, cz);
       const maxT = kelp ? 0.5 : 0.62;
       if (t > maxT || r() > 1 - t / maxT) continue;   // denser in shallow water
@@ -117,7 +122,7 @@ function plants(T: Terrain, shared: U, mobile: boolean) {
         const ang = r() * Math.PI * 2, rad = Math.sqrt(r()) * (kelp ? 0.75 : 0.6);
         const x = cx + Math.cos(ang) * rad, z = cz + Math.sin(ang) * rad;
         const c = B.clearance(x, z);
-        if (c < (kelp ? 0.9 : 0.35)) continue;
+        if (c < (kelp ? 0.9 : 0.35) || !B.inside(x, z)) continue;
         const s = B.at(x, z);
         let h = kelp ? 0.9 + r() * 1.2 : 0.15 + r() * 0.3;
         h *= 1 - s.t * 0.8;
@@ -141,7 +146,7 @@ function plants(T: Terrain, shared: U, mobile: boolean) {
       fragmentShader: plantFrag,
       side: THREE.DoubleSide,
       uniforms: {
-        uTime: shared.uTime, uLift: shared.uLift, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf,
+        uTime: shared.uTime, uLift: shared.uLift, ...fogU(shared),
         uRoot: { value: mixHex(abyss, signal, kelp ? 0.1 : 0.14) },
         uTip: { value: mixHex(deep, signal, kelp ? 0.42 : 0.55) },
       },
@@ -204,6 +209,7 @@ function rocks(T: Terrain, shared: U, mobile: boolean) {
   let tries = 0;
   while (yaw.length < N && tries++ < 8000) {
     const x = (r() * 2 - 1) * B.lim, z = (r() * 2 - 1) * B.lim;
+    if (!B.inside(x, z, 0.4)) continue;
     const s = B.at(x, z);
     if (s.t < 0.15 || s.t > 0.9) continue;
     if (r() > 0.25 + s.slope * 1.5) continue;   // more on steep ground
@@ -223,7 +229,7 @@ function rocks(T: Terrain, shared: U, mobile: boolean) {
     vertexShader: rockVert,
     fragmentShader: rockFrag,
     uniforms: {
-      uLift: shared.uLift, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf,
+      uLift: shared.uLift, ...fogU(shared),
       uRock: { value: mixHex(token("--d3"), token("--fog"), 0.16) },
     },
   });
@@ -307,7 +313,7 @@ function reefs(T: Terrain, shared: U, mobile: boolean) {
   let fields = 0, tries = 0;
   while (fields < (mobile ? 6 : 12) && tries++ < 4000) {
     const cx = (r() * 2 - 1) * B.lim, cz = (r() * 2 - 1) * B.lim;
-    if (B.at(cx, cz).t < 0.66 || B.clearance(cx, cz) < 2.2) continue;   // away from the camera's path
+    if (!B.inside(cx, cz, 0.8) || B.at(cx, cz).t < 0.66 || B.clearance(cx, cz) < 2.2) continue;   // away from the camera's path
     fields++;
     for (let k = 0; k < (mobile ? 12 : 20); k++) {
       const ang = r() * Math.PI * 2, rad = Math.sqrt(r()) * 0.5;
@@ -327,7 +333,7 @@ function reefs(T: Terrain, shared: U, mobile: boolean) {
     vertexShader: tubeVert,
     fragmentShader: tubeFrag,
     uniforms: {
-      uTime: shared.uTime, uLift: shared.uLift, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf,
+      uTime: shared.uTime, uLift: shared.uLift, ...fogU(shared),
       uStem: { value: mixHex(token("--deep"), token("--fog"), 0.22) },
     },
   });
@@ -496,7 +502,7 @@ function fishSchool(T: Terrain, shared: U, spec: SchoolSpec, back: THREE.Vector3
     fragmentShader: fishFrag,
     side: THREE.DoubleSide,
     uniforms: {
-      uTime: shared.uTime, uLift: shared.uLift, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf,
+      uTime: shared.uTime, uLift: shared.uLift, ...fogU(shared),
       uBack: { value: back }, uBelly: { value: belly }, uWiggle: { value: wiggle },
     },
   });
@@ -515,7 +521,7 @@ function sparks(shared: U, A: ReturnType<typeof schoolData>, local: number[], co
     fragmentShader: sparkFrag,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, premultipliedAlpha: true,
     uniforms: {
-      uTime: shared.uTime, uLift: shared.uLift, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf,
+      uTime: shared.uTime, uLift: shared.uLift, ...fogU(shared),
       uColor: { value: color }, uScale: { value: scale }, uPx: shared.uPx,
     },
   });
@@ -602,7 +608,7 @@ function mantas(T: Terrain, shared: U, mobile: boolean) {
     fragmentShader: mantaFrag,
     side: THREE.DoubleSide,
     uniforms: {
-      uTime: shared.uTime, uLift: shared.uLift, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf,
+      uTime: shared.uTime, uLift: shared.uLift, ...fogU(shared),
       uBack: { value: mixHex(token("--abyss"), token("--d2"), 0.55) },
       uBelly: { value: mixHex(token("--fog"), token("--foam"), 0.4) },
     },
@@ -662,7 +668,7 @@ function siphonophores(T: Terrain, shared: U, mobile: boolean) {
     fragmentShader: sparkFrag,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, premultipliedAlpha: true,
     uniforms: {
-      uTime: shared.uTime, uLift: shared.uLift, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf,
+      uTime: shared.uTime, uLift: shared.uLift, ...fogU(shared),
       uColor: { value: mixHex(token("--plankton"), token("--signal"), 0.35) }, uScale: { value: 46 }, uPx: shared.uPx,
     },
   });
@@ -764,6 +770,7 @@ function jellies(T: Terrain, shared: U, mobile: boolean) {
   let tries = 0;
   while (sc.length < (mobile ? 8 : 15) && tries++ < 4000) {
     const x = (r() * 2 - 1) * B.lim * 0.9, z = (r() * 2 - 1) * B.lim * 0.9;
+    if (!B.inside(x, z, 0.5)) continue;
     const s = B.at(x, z);
     if (s.t < 0.42 && r() > 0.15) continue;   // mostly in deep water
     const cl = B.clearance(x, z);
@@ -794,7 +801,7 @@ function jellies(T: Terrain, shared: U, mobile: boolean) {
     uCore: { value: mixHex(token("--deep"), token("--cyan"), 0.35) },
     uRim: { value: mixHex(token("--plankton"), token("--cyan"), 0.3) },
   };
-  const common = { uTime: shared.uTime, uLift: shared.uLift, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf };
+  const common = { uTime: shared.uTime, uLift: shared.uLift, ...fogU(shared) };
   const glow = { transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, premultipliedAlpha: true } as const;
   const bells = new THREE.Mesh(bellGeo, new THREE.ShaderMaterial({ vertexShader: bellVert, fragmentShader: bellFrag, side: THREE.DoubleSide, uniforms: { ...common, ...colors }, ...glow }));
   const tentacles = new THREE.LineSegments(tg, new THREE.ShaderMaterial({ vertexShader: tentacleVert, fragmentShader: tentacleFrag, uniforms: { ...common, uRim: colors.uRim }, ...glow }));
@@ -861,7 +868,7 @@ function shafts(T: Terrain, shared: U, mobile: boolean) {
     fragmentShader: shaftFrag,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, premultipliedAlpha: true, side: THREE.DoubleSide,
     uniforms: {
-      uTime: shared.uTime, uLift: shared.uLift, uShaft: shared.uShaft, uBg: shared.uBg, uFogNear: shared.uFogNear, uFogFar: shared.uFogFar, uHalf: shared.uHalf,
+      uTime: shared.uTime, uLift: shared.uLift, uShaft: shared.uShaft, ...fogU(shared),
       uLight: { value: mixHex(token("--foam"), token("--plankton"), 0.3) },
     },
   });

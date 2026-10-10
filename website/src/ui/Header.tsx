@@ -1,10 +1,23 @@
 import { SITE, assetUrl } from "../lib/content";
-import type { Mode, Theme } from "../lib/theme";
+import { enterDive } from "../lib/dive";
+import type { Mode } from "../lib/theme";
 import { Icon } from "./Icon";
 
-export function Header({ theme, setTheme, mode, setMode, webgl }: {
-  theme: Theme; setTheme: (t: Theme) => void; mode: Mode; setMode: (m: Mode) => void; webgl: boolean;
-}) {
+export function ModeToggle({ mode, setMode }: { mode: Mode; setMode: (m: Mode) => void }) {
+  return (
+    <button
+      className="sq"
+      type="button"
+      onClick={() => setMode(mode === "3d" ? "2d" : "3d")}
+      aria-label={mode === "3d" ? "Switch to the flat 2D chart" : "Switch to the 3D dive"}
+      title={mode === "3d" ? "2D chart" : "3D relief"}
+    >
+      <Icon name={mode === "3d" ? "chart2d" : "relief"} />
+    </button>
+  );
+}
+
+export function Header({ mode, setMode, webgl }: { mode: Mode; setMode: (m: Mode) => void; webgl: boolean }) {
   return (
     <header className="header">
       <div className="wrap">
@@ -15,31 +28,14 @@ export function Header({ theme, setTheme, mode, setMode, webgl }: {
           <span className="label label-s">{SITE.cellShort} · {SITE.clubShort}</span>
         </a>
         <nav className="nav" aria-label="Sections">
-          <a className="navlink" href="#basic-00">The dive</a>
-          <a className="navlink" href="#kit">Field kit</a>
+          <a className="navlink" href="#kit">Sessions</a>
           <a className="navlink" href="#guides">Guides</a>
           <a className="navlink" href="#method">The chart</a>
         </nav>
         <div className="controls">
-          {webgl && (
-            <button
-              className="sq"
-              type="button"
-              onClick={() => setMode(mode === "3d" ? "2d" : "3d")}
-              aria-label={mode === "3d" ? "Switch to the flat 2D chart" : "Switch to the 3D dive"}
-              title={mode === "3d" ? "2D chart" : "3D dive"}
-            >
-              <Icon name={mode === "3d" ? "chart2d" : "relief"} />
-            </button>
-          )}
-          <button
-            className="sq"
-            type="button"
-            onClick={() => setTheme(theme === "dark" ? "chart" : "dark")}
-            aria-label={theme === "dark" ? "Switch to the light chart-paper theme" : "Switch to the dark theme"}
-            title={theme === "dark" ? "Chart paper" : "Dark water"}
-          >
-            <Icon name="theme" />
+          {webgl && <ModeToggle mode={mode} setMode={setMode} />}
+          <button type="button" className="btn btn-glow btn-s chamfer" onClick={() => enterDive(0)}>
+            <Icon name="descent" size={18} /> Dive
           </button>
         </div>
       </div>

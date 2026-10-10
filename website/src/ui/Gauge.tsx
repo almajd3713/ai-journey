@@ -28,14 +28,14 @@ export function Gauge({ T }: { T: Terrain | null }) {
       const i = dive.station;
       const k = T.at(distOf(T, dive.p)).k;
       el.style.setProperty("--p", `${(dive.p / (STATION_COUNT - 1)) * 100}%`);
-      el.dataset.on = dive.lift > 0.5 && dive.end < 0.6 ? "1" : "0";
+      el.dataset.on = dive.on && dive.lift > 0.5 && dive.end < 0.6 ? "1" : "0";
       code.current!.textContent = STATIONS[i].code;
       loss.current!.textContent = T.lossAt(k).toPrecision(3);
       step.current!.textContent = String(Math.round(k));
       const z = zoneOf(i);
       zone.current!.textContent = z;
       el.querySelectorAll<HTMLElement>(".zone").forEach((n) => n.toggleAttribute("aria-current", n.dataset.zone === z));
-      if (i !== last && dive.lift > 0.9) {
+      if (i !== last && dive.on && dive.lift > 0.9) {
         last = i;
         visited.add(STATIONS[i].id);
         try { localStorage.setItem(VISITED, JSON.stringify([...visited])); } catch { /* not available */ }

@@ -1,16 +1,15 @@
-// Theme and view-mode preferences. Both are per-visitor conveniences kept in localStorage
-// (wrapped in try/catch: storage can be unavailable), and both are optional.
-export type Theme = "dark" | "chart";
+// The view mode (3D or the flat 2D chart) is a per-visitor convenience kept in localStorage
+// (wrapped in try/catch: storage can be unavailable). The site is dark only; the light
+// "chart paper" tokens stay in the design system for print and the poster.
 export type Mode = "3d" | "2d";
 
 const read = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
 const write = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* not available */ } };
 
-export const initialTheme = (): Theme => (read("aij-theme") === "chart" ? "chart" : "dark");
-export function applyTheme(t: Theme) {
-  if (t === "chart") document.documentElement.dataset.theme = "chart";
-  else delete document.documentElement.dataset.theme;
-  write("aij-theme", t);
+/** Visitors who picked the old light theme would be stuck in it without its toggle. */
+export function clearOldTheme() {
+  delete document.documentElement.dataset.theme;
+  try { localStorage.removeItem("aij-theme"); } catch { /* not available */ }
 }
 
 export function canWebGL2(): boolean {
