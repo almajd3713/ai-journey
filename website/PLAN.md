@@ -4,6 +4,16 @@ AI & Data Science Cell · ENSIA Tech Community · drafted 2026-10-10
 
 > **Update 2026-10-10: built on the club design system.** The base design system now comes from etclub.online (see `design-system/README.md`, specimen at `design-system/index.html`). The club site is already an ocean (abyss, deep, trench, foam, with a depth rail starting at "0 M · Surface"), so the concept became a **dive**: the paper topographic map turned into a **bathymetric chart** in the club's dark palette, where loss is depth. Wherever this plan says map, contour, camp, cairn, benchmark or spring, read chart, isobath, station, ping, sounding or kit. The light paper look survives as the "chart paper" theme for print and the poster. §2 and §4 below are updated; the rest of the plan stands.
 
+> **Status 2026-10-10: built and live** at <https://almajd3713.github.io/ai-journey/> (repository `almajd3713/ai-journey`, deployed by GitHub Pages on every push to `main`). Build order steps 1–4 are done, with most of step 5 and part of step 6. What changed from this plan while building:
+> - **Terrain:** basic Session 6's XOR network (2-4-1, 17 parameters), reproduced exactly from the notebook (losses 0.760, 0.025, 0.00229). The top two directions hold 99.9% of the path. The fine valley grid was dropped because the surface near the minimum has no extra structure.
+> - **Hosting:** GitHub Pages rather than Vercel, so that deploys need only the repository. The workflow re-extracts the content (and fails if it is stale), checks the markers, builds the kit with nbconvert, and builds the site. The domain `journey.etclub.online` waits for a DNS record (see `README.md`).
+> - **Scroll:** native scroll with a damped camera, so no Lenis. Stations are reached when a card's middle crosses the middle of the screen.
+> - **Markers:** `content/markers.json` (not YAML) holds one sounding and one ping per station. `tools/check_markers.py` checks every number against the notebook's text and outputs.
+> - **Advanced course:** download and read only, no Colab link, because these notebooks are read from their saved outputs (decision from the course plan, 2026-10-10).
+> - **Instructor guides** (`INSTRUCTOR_GUIDE.md`) are not in the public repository or the kit until decided (§11, item 3).
+> - Not built yet: free roam / drop a learner, "where do I start?", OG cards, the poster, and the additions in §13.
+> - **Implementation notes, R3F 9.8:** the app runs without `<StrictMode>`; shader materials are constructed with `new THREE.ShaderMaterial(...)` so uniform updates reach them; the 2D charts use CPU-backed canvases (`willReadFrequently`), because GPU-backed ones delayed WebGL context creation by 20–45 s in testing; weak GPUs fall back from 3D to 2D unless the visitor chose 3D.
+
 ## 1. The idea in one paragraph
 
 The site is a **map of a real loss landscape**, and the two courses are a trail down it. Every session is a camp. Scrolling is taking training steps: the camera walks downhill, an altimeter shows the loss falling, and the basic course covers the steep upper slopes, while the advanced course follows the long valley floor where the fine structure is. The ground itself is not invented. It is the measured loss surface of a small network, drawn the way Li et al. (2018) draw one, with the network's own training run as the trail. The site practises what the courses teach: learning is going downhill one small step at a time, and every number shown comes from a real run.
@@ -257,13 +267,15 @@ The terrain and the downloads are committed outputs, so a Vercel deploy only run
 
 No commissioned 3D models, photographs or video are needed. Every visual comes from the data or from code, which keeps the site honest and easy to maintain.
 
-## 11. Decisions for you
+## 11. Decisions
 
-1. **Subdomain:** `journey.etclub.online` (recommended, after the course name), `ai.etclub.online` (the cell), or `descent.etclub.online`. Whoever runs `etclub.online`'s DNS adds a CNAME to `cname.vercel-dns.com`, and the domain is added to the Vercel project.
-2. **Public GitHub repo for the notebooks?** It is needed for "Open in Colab" and gives a clean source link.
-3. **Instructor guides:** public downloads, or kept back?
-4. **Languages:** English only at launch, or French/Arabic later? The content model allows either; this only changes when the strings get translated.
-5. **Terrain network:** Session 6's network (recommended) or Session 7's.
+1. **Subdomain:** `journey.etclub.online` (decided 2026-10-10). Needs the club's DNS: a `CNAME journey → almajd3713.github.io`.
+2. **Public GitHub repo:** yes, `almajd3713/ai-journey` (created 2026-10-10). It holds the two third-edition course folders (without `_build/`, `cache/` or the instructor guides) and the website.
+3. **Instructor guides:** still open. Not published until decided.
+4. **Languages:** English only. The French and Arabic glossary was dropped in the course plan.
+5. **Terrain network:** Session 6's (done).
+6. **Instructors:** Redhouane Lazib leads; more will be added. `content/people.json` takes any number, and two "to be announced" slots show meanwhile.
+7. **Unit name:** "AI & Data Science Cell", as on etclub.online.
 
 ## 12. Build order
 
@@ -273,6 +285,29 @@ No commissioned 3D models, photographs or video are needed. Every visual comes f
 4. **The descent:** camera rig, trail reveal, camps, cards, saddle, threads, altimeter, gradient rose, deep links.
 5. **Interactions:** Guess before you see, free roam with Drop a learner, your trail, Where do I start.
 6. **Polish:** performance pass, accessibility pass, OG cards, poster, Vercel and subdomain.
+
+## 13. Planned additions from the course enhancement plan
+
+Source: `../ENHANCEMENT_PLAN.md` (§5–7, §9, §11), written 2026-10-10 by the session working on the courses. None of this material exists yet; it will be generated into the course folders, and the site picks it up then. The same rules apply: content comes from the notebooks, every quoted number is checked against outputs, and every page works without WebGL.
+
+**New downloads in the field kit.** All of these go through `build_downloads.py` with sizes and checksums, like the notebooks:
+- `exercises/bNN_your_turn.ipynb` and `aNN_your_turn.ipynb` per session, shipped without outputs, with `aij_check.py`. **Solutions are public downloads** (user decision 2026-10-10).
+- Two bug-hunt notebooks (basic, advanced), each with an answer key.
+- Two capstone briefs with rubrics: basic, a full experiment report; advanced, reproducing a paper claim.
+- Two printable cheat sheets (PDF): the basic experiment checklist, and the advanced "transformer at a glance".
+
+The kit section gets a third block, "Practice", and each station links its exercise. The advanced exercises don't depend on `cache/`, so it stays out of the kit.
+
+**Data the site will read** (one source for the notebooks and the site):
+- `_build/pauses.json` per course: every pause question with 2–4 choices, the measured answer and its cell. It replaces the hand-written pings in `content/markers.json`. `check_markers.py` reads it and checks the answers against the outputs, and every pause becomes available, not one per station.
+- `_build/figures.json` per course: each new figure with session, anchor cell, caption, alt text and the numbers it shows with their source cells. The ★ figures go on the station cards. The figures are embedded in the notebooks, so the nbconvert reads in the kit show them too; the course plan's rendering spike checks this.
+- `content/wrecks.json`: a **"Wrecks on the seabed"** gallery of the courses' instructive failures, each with its number and cell. Examples: the hand-written rule beats the model (0.947 against 0.921); the leaked column scores 1.000; the 0.5B judge picks the first answer 97.9% of the time. It is drawn as wrecks on the chart, plus a list. `check_markers.py` checks it.
+- **Precomputed grids for explorables** (kernel-free sliders, every value measured): B04 threshold, B06 descent path, B07 learning rate and L2, B03 k-NN k, A01 d_k, A03 temperature / top-p, A05 compute budget, A09 batch size (from saved outputs), A11 false discoveries. Each sits on its station card. B06's slider can drive the dive itself, since the terrain is its loss surface.
+- An English-only **glossary and concept map**, built from the bolded definitions in the notebooks, as a page linking terms to the stations that define and use them.
+
+**Callbacks** between the courses become more currents in `markers.json`: B04 → A10–A11, and B10–B11 → A00–A01.
+
+**Not on the site:** running notebooks in the browser. JupyterLite was dropped (decision 6): the site only provides files.
 
 ## Sources
 - Li et al., *Visualizing the Loss Landscape of Neural Nets*, NeurIPS 2018: https://arxiv.org/abs/1712.09913
