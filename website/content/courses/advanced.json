@@ -1,0 +1,700 @@
+{
+ "dir": "advanced_ai_journey_third_edition",
+ "code": "A",
+ "title": "Advanced AI Journey",
+ "subtitle": "Inside the language models",
+ "route": "advanced",
+ "id": "advanced",
+ "sessions": [
+  {
+   "n": 0,
+   "title": "From text to probabilities",
+   "summary": [
+    "The basic course used a language model as a box: text goes in, a probability for the next word comes out, and Session 11 gave a first look at the attention inside. This course opens the box. This first session covers the two ends, what goes in (tokens) and what comes out (probabilities), using a real model, GPT-2 small, which we reuse in Sessions 1 to 4."
+   ],
+   "outcomes": [
+    "explain how a byte-pair-encoding (BPE) tokenizer builds its vocabulary, and why the same sentence costs a different number of tokens in different languages",
+    "read a language model's output as a probability distribution and measure what each token costs in bits",
+    "say why perplexity per token cannot be compared across tokenizers, and why one forward pass can score a whole text but cannot generate one"
+   ],
+   "sections": [
+    "What the model reads",
+    "Where the vocabulary comes from",
+    "From ids to vectors",
+    "From vectors to probabilities",
+    "Why perplexity depends on the tokenizer",
+    "One pass to train, one pass per token to generate"
+   ],
+   "pauses": [
+    {
+     "section": "What the model reads",
+     "q": "four sentences of about the same length, one each in English, French, Arabic and Python. Which will need the most tokens, and how many times more than English?"
+    },
+    {
+     "section": "From vectors to probabilities",
+     "q": "which tokens of *The battery is empty, so the robot stopped working and waited beside the charger.* will cost the most bits, and which the fewest?"
+    },
+    {
+     "section": "Why perplexity depends on the tokenizer",
+     "q": "GPT-2 was trained mostly on English. Which language will have the lowest perplexity per token?"
+    }
+   ],
+   "takeaways": [
+    "A tokenizer cuts text into pieces from a vocabulary that was learned by merging frequent pairs. The same meaning costs different numbers of tokens in different languages, and digits and rare words split into fragments.",
+    "A language model outputs a score for each vocabulary entry at each position. A softmax makes these probabilities, and $-\\log_2 p$ is the cost in bits.",
+    "Perplexity is $2^{\\text{mean bits per token}}$. It can be compared only between models that share a tokenizer. Bits per character can be compared more widely.",
+    "Training scores all positions in one pass. Generating needs one pass per new token."
+   ],
+   "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `torch` and `transformers`. The first run downloads GPT-2 (about 500 MB). The outputs are already saved in the notebook. It takes about half a minute on a GPU or a laptop CPU, and numbers in the later cells may differ in the last digit on another machine.",
+   "notebook": "session_00_from_text_to_probabilities.ipynb",
+   "bytes": 78863,
+   "id": "advanced-00",
+   "code": "A00",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "under a minute each",
+    "cpu": "practical"
+   }
+  },
+  {
+   "n": 1,
+   "title": "Attention inside a real model",
+   "summary": [
+    "Session 0 ended with the model scoring every position of a text in a single pass. What lets position 30 use what was said at position 3 is attention. Basic Session 11 built it by hand on a small designed example. This session writes it out for GPT-2, checks that our version reproduces the real model to within rounding error, measures why the scores are divided by $\\sqrt{d_k}$, and then looks for heads in GPT-2 that do an identifiable job."
+   ],
+   "outcomes": [
+    "write scaled dot-product attention with its tensor shapes, and show that it reproduces a layer of a real model",
+    "explain from a measurement why the scores are divided by $\\sqrt{d_k}$",
+    "recognise an induction head from its attention pattern, and test by ablation whether a head with a clear pattern is also one the model needs"
+   ],
+   "sections": [
+    "Attention written out, and checked against GPT-2",
+    "Why the scores are divided by $\\sqrt{d_k}$",
+    "A test where attention has a clear job",
+    "Does a clear pattern mean the head matters?"
+   ],
+   "pauses": [
+    {
+     "section": "Why the scores are divided by $\\sqrt{d_k}$",
+     "q": "without the division, what happens to the largest weight as $d_k$ grows from 4 to 4096, and what happens to the gradient?"
+    },
+    {
+     "section": "A test where attention has a clear job",
+     "q": "a token in the second copy wants to predict what comes next. Which earlier position should its attention head read from?"
+    },
+    {
+     "section": "Does a clear pattern mean the head matters?",
+     "q": "if you remove the five heads with the strongest induction pattern, how many bits per token does the second copy cost? Compare: 0.65 with nothing removed, and 15.6 for pure guessing."
+    }
+   ],
+   "takeaways": [
+    "Attention for one head is $\\operatorname{softmax}(QK^\\top/\\sqrt{d_k}+\\text{mask})\\,V$. Writing it by hand reproduces GPT-2's layer to 1e-6.",
+    "Dividing by $\\sqrt{d_k}$ keeps the softmax from saturating: without it the largest weight is 0.83 at $d_k=64$ and the gradient shrinks as the head size grows.",
+    "GPT-2 has heads with identifiable jobs. Head 4.11 reads the previous token, and heads in layers 5 to 7 copy from an earlier occurrence of the same token.",
+    "A pattern in the attention weights tells you where to test. Ablation tells you whether the head is used, and whether others can take over."
+   ],
+   "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `scipy`, `torch` and `transformers`, and the GPT-2 download from Session 0. The outputs are already saved in the notebook. It takes under a minute on a GPU. The ablation cells run the model several hundred times on 101 tokens, which is quick on a laptop CPU too. Your numbers may differ in the last digit.",
+   "notebook": "session_01_attention_inside_a_real_model.ipynb",
+   "bytes": 213746,
+   "id": "advanced-01",
+   "code": "A01",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "under a minute each",
+    "cpu": "practical"
+   }
+  },
+  {
+   "n": 2,
+   "title": "The transformer block",
+   "summary": [
+    "Session 1 wrote attention out and found heads with identifiable jobs. A transformer is that attention surrounded by a few other pieces, repeated 12 times in GPT-2 small. This session writes one block in about 30 lines of PyTorch, loads GPT-2's weights into it, and checks that twelve copies reproduce GPT-2's output. We then use the block to see what the residual stream is, and look at how position gets into a model that otherwise cannot tell the order of its tokens."
+   ],
+   "outcomes": [
+    "list the parts of a pre-norm transformer block, say which of them mix positions and which work on each position separately, and say where the parameters are",
+    "describe the residual stream as a running total that every block adds to, and read it with the logit lens",
+    "explain why attention needs position information, and compare learned, sinusoidal and rotary positions"
+   ],
+   "sections": [
+    "One block in code",
+    "The residual stream",
+    "Position"
+   ],
+   "pauses": [
+    {
+     "section": "One block in code",
+     "q": "attention mixes information between tokens, and the MLP has the bigger hidden layer. What share of a block's parameters do you expect to sit in the attention?"
+    },
+    {
+     "section": "The residual stream",
+     "q": "after which block do you expect the model's best guess to become the right city?"
+    },
+    {
+     "section": "Position",
+     "q": "with no position information at all, are the two results the same? And does the causal mask change the answer?"
+    }
+   ],
+   "takeaways": [
+    "A pre-norm block is $x' = x + \\operatorname{Attn}(\\operatorname{LN}(x))$ followed by $y = x' + \\operatorname{MLP}(\\operatorname{LN}(x'))$. We rebuilt GPT-2's twelve blocks and matched its logits to 6e-05.",
+    "Attention is the only place where tokens exchange information. The MLP holds two thirds of each block's parameters and works on each position alone.",
+    "Every sub-layer adds to a running total, the residual stream. The logit lens reads it after any block: for *The Eiffel Tower is in the city of*, the guess becomes a city at block 9 and the right city at block 11.",
+    "Without position information the block treats tokens as an unordered set (difference 2.4e-07 after shuffling). GPT-2 learns a position vector per slot, and newer models rotate queries and keys instead (RoPE), which makes the score depend on distance only."
+   ],
+   "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `torch` and `transformers`, and the GPT-2 download from Session 0. The outputs are already saved in the notebook. It runs in about 30 seconds on a GPU or a laptop CPU. Numbers may differ in the last digit.",
+   "notebook": "session_02_the_transformer_block.ipynb",
+   "bytes": 426368,
+   "id": "advanced-02",
+   "code": "A02",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "under a minute each",
+    "cpu": "practical"
+   }
+  },
+  {
+   "n": 3,
+   "title": "Training a small GPT",
+   "summary": [
+    "Session 2 built one block and matched it to GPT-2. This session stacks six of them, trains the result from random weights on 37 million tokens of children's stories, and reads what happens: the loss curve, the samples at different stages, which training settings matter, and how the finished model compares with GPT-2 on the same text. This is a longer session than the others (about 90 minutes), because the training run is the point."
+   ],
+   "outcomes": [
+    "describe each part of a language-model training run (data and tokenizer, model, loss, optimiser, schedule) and read a loss curve from it",
+    "say from measured runs what warm-up, the learning rate and layer-norm placement do to training",
+    "compare sampling settings by how typical, repetitive and varied their output is, and judge a model by bits per character against simple baselines and a larger model"
+   ],
+   "sections": [
+    "Data, tokenizer and baselines",
+    "The model",
+    "The training loop",
+    "What makes training work",
+    "Sampling",
+    "Judging the model"
+   ],
+   "pauses": [
+    {
+     "section": "The model",
+     "q": "with 6 blocks of width 384, how many parameters do you expect, and where will most of them be?"
+    },
+    {
+     "section": "The training loop",
+     "q": "the bigram model costs 5.05 bits per token, which is 3.5 nats. After 3,000 steps, will the transformer's validation loss be above or below that, and by how much?"
+    },
+    {
+     "section": "What makes training work",
+     "q": "which hurts most: no warm-up at a high learning rate, post-norm at a high learning rate, or a low learning rate?"
+    },
+    {
+     "section": "Judging the model",
+     "q": "will GPT-2 (124 million parameters, trained on 40 GB of web text) beat our 11.5-million-parameter model on children's stories?"
+    }
+   ],
+   "takeaways": [
+    "A training run has few moving parts: tokenised data, a model, next-token cross-entropy, AdamW, a warm-up-and-decay schedule, and clipping. We trained an 11.5M-parameter GPT from random weights to 0.65 bits per character in 284 seconds.",
+    "Baselines give the number a model has to beat: 5.05 bits per token (bigram) here, against 2.30 for the transformer.",
+    "Warm-up and norm placement decided whether training worked at a high learning rate: warm-up of 100 steps gave a validation loss of 2.49 and none gave 4.20; post-norm at 0.006 never got below the unigram loss of 5.91 nats.",
+    "Sampling changes the text: greedy decoding repeats itself, high temperature produces noise, and top-p keeps variety without it.",
+    "Compare models in bits per character. On children's stories a model with 11.5M parameters beat GPT-2 small, because its training data matched the task."
+   ],
+   "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `pyarrow`, `torch`, `transformers` and `tokenizers`. The first run downloads the TinyStories shard (about 250 MB) and GPT-2, and encodes the text (a couple of minutes). The saved outputs come from a laptop GPU: the training run takes about 5 minutes, and the whole notebook about 12. Set `QUICK = True` to use 20,000 stories and 600 steps on a CPU, which trains a much weaker model. Numbers may differ slightly on another machine.",
+   "notebook": "session_03_training_a_small_gpt.ipynb",
+   "bytes": 256532,
+   "id": "advanced-03",
+   "code": "A03",
+   "minutes": 90,
+   "hardware": {
+    "device": "GPU",
+    "time": "about 12 minutes",
+    "cpu": "use `QUICK = True` (a weaker model)"
+   }
+  },
+  {
+   "n": 4,
+   "title": "Encoder, decoder, encoder–decoder",
+   "summary": [
+    "Sessions 1 to 3 built and trained a decoder: every token reads only the tokens before it, and the model is trained to predict the next one. GPT-2 is such a model. It is one of three layouts that the same attention-and-MLP block supports. This session runs a real model of each kind on the same sentence: BERT (an encoder), GPT-2 (a decoder) and T5 (an encoder–decoder), and measures what the layout and the training objective change."
+   ],
+   "outcomes": [
+    "say which tokens each of the three layouts can read, and show it from a real model's attention",
+    "explain why a masked-token objective can use the words after a blank and a next-token objective cannot, and what the masking recipe does",
+    "read cross-attention in an encoder–decoder model as an alignment between source and output"
+   ],
+   "sections": [
+    "What each layout can read",
+    "What the objective lets a model use",
+    "How BERT is taught to fill blanks",
+    "Reading and writing: an encoder–decoder",
+    "The three side by side"
+   ],
+   "pauses": [
+    {
+     "section": "What the objective lets a model use",
+     "q": "with the second half of the sentence available, which word will BERT put in the blank? Will its answer be the same without the second half?"
+    },
+    {
+     "section": "How BERT is taught to fill blanks",
+     "q": "BERT's top guess is judged against the original token. Which of the three treatments will it get right most often?"
+    },
+    {
+     "section": "Reading and writing: an encoder–decoder",
+     "q": "*vide* is the French word for *empty*. Which English token should its cross-attention point at?"
+    }
+   ],
+   "takeaways": [
+    "The three layouts differ in the mask. In GPT-2 the share of attention on later tokens is 0 in every layer. In BERT it is 0.59 on average. T5 uses both and adds cross-attention from the decoder to the source.",
+    "The objective decides what the layout is for. BERT with the second half of the sentence put 0.419 on `dead`, and without it the top word changed to `charged` at 0.055. A decoder needs one pass per candidate to use later words.",
+    "BERT's masking recipe is a training task, and we measured it: 70.4% recovered for `[MASK]`, 54.9% for random words, 99.3% for unchanged ones.",
+    "In T5-small, one decoder layer (layer 2) reproduced our hand-written word alignment for all 12 tokens, and layers 4 to 6 did not. Attention in middle layers of all three models collapses onto a single token, so a heatmap needs checking before it is trusted."
+   ],
+   "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `torch` and `transformers`, and the GPT-2 download from Session 0. The first run also downloads BERT-base (about 440 MB) and T5-small (about 240 MB). The outputs are already saved in the notebook. It takes about a minute on a GPU. Section 3 reads the TinyStories shard downloaded in Session 3.",
+   "notebook": "session_04_three_transformer_layouts.ipynb",
+   "bytes": 287644,
+   "id": "advanced-04",
+   "code": "A04",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "about a minute",
+    "cpu": "slow but possible"
+   }
+  },
+  {
+   "n": 5,
+   "title": "Scaling and data",
+   "summary": [
+    "Session 3 trained one model. This session trains twenty, in five sizes and four training lengths on the same stories, and asks how the loss depends on the number of parameters and the number of tokens. We fit a simple law to the results, use it to ask how to split a fixed compute budget, and then check three things that make scaling results harder to read: repeated data, near-duplicate data, and the choice of metric. It is a longer session (about 90 minutes), because the grid is the point."
+   ],
+   "outcomes": [
+    "estimate training compute with $C\\approx 6ND$ and read a grid of runs as loss against parameters and against tokens",
+    "fit a scaling law to your own runs, say how well it fits, and say where its predictions stop being trustworthy",
+    "explain from measurements why repeated data, near-duplicates and a thresholded metric change what a scaling result means"
+   ],
+   "sections": [
+    "A grid of runs",
+    "A fitted law",
+    "Training small models for longer",
+    "Data",
+    "Smooth and thresholded metrics"
+   ],
+   "pauses": [
+    {
+     "section": "A grid of runs",
+     "q": "at 36 million tokens, how far apart do you expect the smallest model (0.2M) and the largest (10.6M) to end up?"
+    },
+    {
+     "section": "A fitted law",
+     "q": "for a fixed compute budget, is the loss lowest for the smallest model, the largest, or something in between?"
+    },
+    {
+     "section": "Data",
+     "q": "which of the three has the lowest validation loss, and which has the lowest training loss?"
+    }
+   ],
+   "takeaways": [
+    "Compute for a dense model is about $6ND$. In our grid, the loss falls steadily with both parameters and tokens, and the best learning rate falls with size (0.012 for the 0.2M model, 0.003 for the 10.6M one).",
+    "A five-parameter law fitted to 15 runs reproduces them to a mean error of 0.031 nats. It is least reliable at the edges: short runs (off by up to 0.37) and any prediction that needs more tokens than we trained on.",
+    "For a fixed compute budget the loss has a broad minimum in model size. A smaller model trained on more tokens reaches the same loss at less cost to run, as long as there is enough text.",
+    "Repeating 4.1 million tokens four times costs 0.06 nats against new data. Repeating 1.0 million tokens 16 times gives a training loss of 1.06 and a validation loss of 2.69.",
+    "MinHash finds copies with 2% of the words changed in every case, and 12% of copies with 10% changed, so the similarity threshold defines what is removed.",
+    "A metric that needs several things right at once amplifies a smooth change: 1.3 times in per-token accuracy became 3.2 times in five-token accuracy."
+   ],
+   "run": "To run it yourself you need the packages from Session 3 plus `scipy`, and the token cache that Session 3 writes. The grid is 20 training runs and a learning-rate sweep, which took about 25 minutes on a laptop GPU. It is not practical on a CPU; the saved outputs are the reference. Numbers may differ slightly on another machine.",
+   "notebook": "session_05_scaling_and_data.ipynb",
+   "bytes": 309568,
+   "id": "advanced-05",
+   "code": "A05",
+   "minutes": 90,
+   "hardware": {
+    "device": "GPU",
+    "time": "about 25 minutes",
+    "cpu": "not practical"
+   }
+  },
+  {
+   "n": 6,
+   "title": "From base model to assistant",
+   "summary": [
+    "Sessions 3 to 5 trained models to continue text. A chat assistant is the same kind of model after more training, on conversations and on people's preferences between answers. This session takes Qwen2.5-0.5B, a small open model released in two versions, base and instruct, and works through what that extra training does and how it is done: the chat template, a reward model learned from preference pairs, picking among samples with that reward model, direct preference optimisation (DPO), and rewards that can be checked exactly."
+   ],
+   "outcomes": [
+    "compare a base model with its instruction-tuned version and point to the tokens the fine-tuning loss is computed on",
+    "train a reward model on preference pairs, measure its accuracy, and show what happens when you optimise against it and check with an independent judge",
+    "run DPO and a checkable-reward experiment and say, with numbers, what each one changed"
+   ],
+   "sections": [
+    "Base and instruct",
+    "A reward model from preferences",
+    "Best-of-N against a proxy",
+    "Direct preference optimisation",
+    "Rewards you can check"
+   ],
+   "pauses": [
+    {
+     "section": "Base and instruct",
+     "q": "the base model has read far more text than any assistant has seen conversations. What will it do with \"Write a haiku about a flat battery.\"?"
+    },
+    {
+     "section": "Best-of-N against a proxy",
+     "q": "as N grows the proxy score of the pick has to rise. Will the gold score rise with it, level off, or fall?"
+    },
+    {
+     "section": "Rewards you can check",
+     "q": "which style will have the higher pass@1, and which the higher pass@8?"
+    }
+   ],
+   "takeaways": [
+    "An instruct model is a base model trained further on conversations in a fixed template. The loss covers the assistant's tokens, including the end-of-turn marker that lets it stop.",
+    "A reward model is a classifier of pairs. Measure it on held-out pairs and against simple baselines such as length before trusting it; ours ranks about one pair in three the wrong way.",
+    "When you optimise against a learned reward, judge the result with something you did not optimise against. Best-of-64 kept improving under the gold judge but reached about two thirds of what gold itself could pick, and part of the gain came from avoiding cut-off answers.",
+    "DPO learned the preference (held-out ranking 0.498 → 0.617) and made answers longer; judged independently, the quality change was small.",
+    "When an answer can be checked, sampling several and voting or checking is a strong baseline: a majority vote over 8 worked answers nearly doubled accuracy on multiplication."
+   ],
+   "run": "To run it yourself you need the packages from Sessions 0–5 (`torch`, `transformers`, `pandas`, `pyarrow`, `scipy`, `matplotlib`). The notebook downloads Qwen2.5-0.5B and Qwen2.5-0.5B-Instruct (about 1 GB each), Qwen2.5-1.5B-Instruct (2.9 GB) and the UltraFeedback preference data (130 MB). It needs a GPU. On our laptop GPU, reading 24,000 answers for the reward models took about 20 minutes in an earlier run (this saved run loaded the cached vectors), generating the 4,096 samples of section 3 took 863 s and DPO 1,709 s; the whole notebook took 52 minutes with the vectors and the arithmetic samples cached. Finished pieces are cached in `cache/s06_*`, so a re-run skips them. It is not practical on a CPU; the saved outputs are the reference.",
+   "notebook": "session_06_from_base_model_to_assistant.ipynb",
+   "bytes": 272103,
+   "id": "advanced-06",
+   "code": "A06",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "52 minutes with its caches (longer from scratch)",
+    "cpu": "not practical"
+   }
+  },
+  {
+   "n": 7,
+   "title": "Fine-tuning in practice",
+   "summary": [
+    "Session 6 changed a model's general behaviour with preference data. Most fine-tuning in practice is narrower: you have one task and a few thousand examples, and you want a small model to do that task reliably. This session teaches Qwen2.5-0.5B-Instruct to turn robot log lines into JSON. We compare a prompt with one worked example, LoRA at four ranks, and ordinary fine-tuning of the last four blocks, on log layouts the model was trained on and on two it never saw."
+   ],
+   "outcomes": [
+    "set up a fine-tuning task with a test that measures generalisation, and measure a prompting baseline before training anything",
+    "implement LoRA from its definition, check that it starts as the original model and merges back into it, and count what it trains",
+    "compare LoRA ranks and full fine-tuning on accuracy, forgetting and storage, and find where each one fails"
+   ],
+   "sections": [
+    "The task and two baselines",
+    "LoRA from its definition",
+    "Training",
+    "Rank, and full fine-tuning",
+    "What the update looks like"
+   ],
+   "pauses": [
+    {
+     "section": "The task and two baselines",
+     "q": "with one worked example in the prompt, how many of the 200 test lines in the training layouts will the model get fully right?"
+    },
+    {
+     "section": "Rank, and full fine-tuning",
+     "q": "rank 32 trains 32 times as many numbers as rank 1. Which of them, if either, will read layout 5?"
+    }
+   ],
+   "takeaways": [
+    "Measure a prompt with a worked example before fine-tuning. Here one example already reached 0.925 on the familiar layouts.",
+    "Test on inputs unlike the training data, and break the score down. An average of 0.52 hid one new layout solved and one failed.",
+    "LoRA trains a fraction of a percent of the weights, starts exactly at the original model and merges back exactly. On this task the rank hardly mattered.",
+    "Fine-tuning learns what the data shows. When a case fails, look at the training data before reaching for a bigger adapter.",
+    "Track forgetting with a loss on unrelated text: here it rose from 1.290 to about 1.35 with LoRA."
+   ],
+   "run": "To run it yourself you need the packages from Session 6. The notebook uses Qwen2.5-0.5B-Instruct (about 1 GB, downloaded in Session 6) and the UltraFeedback test split (2 MB). It took 913 s on our laptop GPU, with 109 s for one LoRA training run. It is not practical on a CPU; the saved outputs are the reference.",
+   "notebook": "session_07_fine_tuning_in_practice.ipynb",
+   "bytes": 82462,
+   "id": "advanced-07",
+   "code": "A07",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "913 s",
+    "cpu": "not practical"
+   }
+  },
+  {
+   "n": 8,
+   "title": "Retrieval, tools and agents",
+   "summary": [
+    "A language model only knows what was in its training data. To answer questions about your own documents, a system has to find the relevant text and put it in front of the model, and to act in the world it has to call tools. This session builds both on a corpus the model has certainly never seen: the text of the basic AI Journey course. We measure two retrievers, add retrieval to Qwen2.5-1.5B-Instruct, let it call a search tool and a calculator on its own, and then plant an instruction in the retrieved text to see whether it obeys."
+   ],
+   "outcomes": [
+    "measure a retriever with Recall@k and MRR on questions whose answers you know, and compare word matching with embeddings",
+    "build a retrieve-then-answer pipeline and an agent loop with tools, and break their failures down by cause",
+    "show how text retrieved from outside can redirect a model, and say what an allowlist does and does not protect against"
+   ],
+   "sections": [
+    "A corpus and questions with known answers",
+    "Two retrievers",
+    "Retrieve, then answer",
+    "Tools and an agent loop",
+    "Instructions hidden in retrieved text"
+   ],
+   "pauses": [
+    {
+     "section": "Two retrievers",
+     "q": "the questions are mostly paraphrases. Which retriever do you expect to do better?"
+    },
+    {
+     "section": "Retrieve, then answer",
+     "q": "closed book, how many of the 36 questions about a course written this year will the model get right?"
+    },
+    {
+     "section": "Instructions hidden in retrieved text",
+     "q": "of the tasks that search and read this passage, how many will obey it?"
+    }
+   ],
+   "takeaways": [
+    "Measure retrieval on its own, with questions whose answer passages you know. Word matching and embeddings fail on different questions, and combining them was the safest choice here.",
+    "Retrieval made the difference between 0 and 23 of 36, and most remaining errors were the model misreading the passages it was given.",
+    "Evaluate an agent on fixed tasks and break failures down by cause. Our 1.5B model searched, but rarely calculated and never retried.",
+    "Retrieved text can carry instructions, and a model may follow them. Allowlists limit what tools can do; they do not make the answers trustworthy."
+   ],
+   "run": "To run it yourself you need the packages from Session 6 plus `scikit-learn`. The notebook downloads the MiniLM sentence-embedding model (91 MB) and uses Qwen2.5-1.5B-Instruct (2.9 GB, downloaded in Session 6). The corpus and the questions are in `data/`. It took 114 s on our laptop GPU. On a CPU the retrieval sections run in a few minutes; the sections with the 1.5B model are slow.",
+   "notebook": "session_08_retrieval_tools_and_agents.ipynb",
+   "bytes": 88523,
+   "id": "advanced-08",
+   "code": "A08",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "114 s",
+    "cpu": "retrieval sections only"
+   }
+  },
+  {
+   "n": 9,
+   "title": "Inference and serving",
+   "summary": [
+    "Training happens once; a deployed model answers requests all day, and the cost and speed of each answer decide what a model is worth in practice. This session measures where the time and memory of generating text go, on our laptop GPU with Qwen2.5-0.5B and 1.5B: the cache that makes decoding affordable, the difference between reading a prompt and writing an answer, batching, attention memory, quantised weights, and a draft model that proposes tokens for a larger one to check."
+   ],
+   "outcomes": [
+    "explain, with measurements, why decoding uses a cache, how large it is, and why decoding one request at a time leaves the GPU mostly idle",
+    "compare naive attention with a fused kernel, and weight quantisation schemes, by memory, time and perplexity",
+    "work out from measured step times whether speculative decoding can pay off on given hardware"
+   ],
+   "sections": [
+    "The KV cache",
+    "Where the time goes",
+    "Attention memory",
+    "Quantised weights",
+    "Speculative decoding"
+   ],
+   "pauses": [
+    {
+     "section": "Where the time goes",
+     "q": "reading a 1,000-token prompt and writing one token both take one pass through the model. Which takes longer?"
+    },
+    {
+     "section": "Quantised weights",
+     "q": "int4 with one scale for a whole matrix uses the same 4 bits per weight as int4 with one scale per row. How different can they be?"
+    }
+   ],
+   "takeaways": [
+    "The KV cache turns each decoding step from a pass over the whole sequence into a pass over one token. Its size is 2 × layers × key/value heads × head size × bytes per token, and grouped-query attention cuts it several times over.",
+    "Prefill is fast and parallel; decoding is one token at a time. At batch 1 the GPU mostly waits, which is why batching many requests costs little extra time per step.",
+    "Eager decoding of small models is limited by per-step overhead, not by memory bandwidth; compiling removes most of it.",
+    "Fused attention kernels give the same result with memory that grows linearly with length instead of quadratically.",
+    "Weight quantisation is cheap at 8 bits; at 4 bits it depends on how many weights share a scale, because of outliers.",
+    "Speculative decoding helps only when a draft step is much cheaper than a target step. Work out the break-even from measured times before relying on it."
+   ],
+   "run": "To run it yourself you need the packages from Session 6. The notebook uses Qwen2.5-0.5B-Instruct and Qwen2.5-1.5B-Instruct (about 1 and 3 GB, downloaded in Session 6). It took 1,489 s on our laptop GPU, on a machine shared with other work, so timings vary from run to run; the patterns are what matter. Section 2 compiles both models, which needs a working C compiler for PyTorch's compiler. On a CPU the timings would be very different and some cells would take hours.",
+   "notebook": "session_09_inference_and_serving.ipynb",
+   "bytes": 132733,
+   "id": "advanced-09",
+   "code": "A09",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "1,489 s",
+    "cpu": "not practical"
+   }
+  },
+  {
+   "n": 10,
+   "title": "Evaluating language models",
+   "summary": [
+    "Every session so far has measured something. This one is about the measurements themselves: what a benchmark score depends on besides the model, how precise it is, whether the model might have seen the test, how far a language model can be trusted as a judge, and how to check that a change did not break anything. We use MMLU, a standard multiple-choice benchmark, and three Qwen2.5 models: 0.5B base, 0.5B instruct and 1.5B instruct."
+   ],
+   "outcomes": [
+    "score a model on a multiple-choice benchmark, give the score with an interval, and show how much the prompt format moves it",
+    "run a simple contamination probe and say what it can and cannot show",
+    "measure a language-model judge's position and length bias by swapping the order of the answers, and use per-item comparisons to catch regressions an average hides"
+   ],
+   "sections": [
+    "Scoring a benchmark",
+    "Has the model seen the test?",
+    "A language model as judge",
+    "Did the change break anything?"
+   ],
+   "pauses": [
+    {
+     "section": "Scoring a benchmark",
+     "q": "the base model has never been trained on chat conversations. What will happen to its score in the chat format?"
+    },
+    {
+     "section": "A language model as judge",
+     "q": "how often will the 0.5B judge pick whichever answer is shown first?"
+    }
+   ],
+   "takeaways": [
+    "A benchmark score depends on the prompt format and the answer extraction as much as on the model. Report the setup, and compare models only within one setup.",
+    "With 1,000 questions, an interval is about ±3 points. Compare models on the same items, with a paired interval, and look at the items where they disagree.",
+    "Contamination is hard to rule out. A probe such as option order gives evidence; new questions written after the training cut-off give a clean test.",
+    "A language-model judge must be checked in both answer orders. A small judge can be almost pure position bias, and a better one still prefers longer answers.",
+    "Check changes item by item against a fixed set of tests. An average that moves a little can hide many answers that changed."
+   ],
+   "run": "To run it yourself you need the packages from Session 6. The notebook downloads the MMLU test and dev splits (3.5 MB, MIT licence) and uses the three Qwen2.5 models from Session 6. Scoring 9,000 prompts took about 10 minutes on our laptop GPU and is cached in `cache/s10_lp.pt`; the whole notebook took 631 s with that cache. It is not practical on a CPU.",
+   "notebook": "session_10_evaluating_llms.ipynb",
+   "bytes": 41490,
+   "id": "advanced-10",
+   "code": "A10",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "631 s with the cached scores (about 10 minutes more without)",
+    "cpu": "not practical"
+   }
+  },
+  {
+   "n": 11,
+   "title": "Experiments you can believe",
+   "summary": [
+    "Sessions 3 and 5 trained many small GPTs and drew conclusions from the differences between them. This session asks how much of such a difference is real. We train the Session 3 model many times with different seeds and settings, and measure the noise from training, the noise from the test set, and what happens when you compare many things and report the best."
+   ],
+   "outcomes": [
+    "compare two training setups with several seeds and a paired interval, and say how many seeds a given difference needs",
+    "tell noise from training apart from noise from the test set, and explain why the best of many runs, and the best of many variants, look better than they are",
+    "keep a record that lets someone rerun a result, and know which differences between reruns to expect"
+   ],
+   "sections": [
+    "One run is an anecdote",
+    "Test-set noise and the best of many",
+    "Many comparisons",
+    "Records and determinism",
+    "Review a flawed study"
+   ],
+   "pauses": [
+    {
+     "section": "One run is an anecdote",
+     "q": "you train A once and B once, with unrelated seeds. How often will A come out ahead?"
+    },
+    {
+     "section": "Test-set noise and the best of many",
+     "q": "the chosen setting is 0.0454 better than the average setting on the large test set. Train the same setting again with 5 new seeds: how much of that gain will remain?"
+    },
+    {
+     "section": "Review a flawed study",
+     "q": "list everything that stops you believing the conclusion, and what experiment would fix each problem."
+    }
+   ],
+   "takeaways": [
+    "A single training run is an anecdote. Use several seeds, give an interval for the difference, and check how many seeds that difference needs.",
+    "The best of many runs is too good: here four-fifths of the winner's gain was a lucky seed. Confirm a choice with new seeds, and choose on a different set from the one you report on.",
+    "A small test set's error is mostly shared between models: the absolute number is poor, the ranking is better. Compare models on the same set.",
+    "Trying many variants and reporting the best produces \"significant\" results from nothing. Count your comparisons and correct for them.",
+    "Record data and code by hash, with every setting. Expect exact reruns on the same machine and small numerical differences elsewhere."
+   ],
+   "run": "To run it yourself you need the packages from Session 3 plus scipy, `tinygpt.py`, and the token cache `cache/tokens_150000.npz` written by Session 3. Training and scoring the 70 models took about 18 minutes on our laptop GPU (the training totals are printed in sections 1 and 2). The results are cached in `cache/s11_runs.json`; with that cache the notebook runs in 151 s. On a CPU, use fewer seeds and sweep settings.",
+   "notebook": "session_11_experiments_you_can_believe.ipynb",
+   "bytes": 137551,
+   "id": "advanced-11",
+   "code": "A11",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "about 18 minutes from scratch, 151 s with its cache",
+    "cpu": "use fewer seeds"
+   }
+  },
+  {
+   "n": 12,
+   "title": "Read a paper, reproduce a claim",
+   "summary": [
+    "Session 7 used LoRA as a tool. This session reads the paper that introduced it, Hu et al. (2021), *LoRA: Low-Rank Adaptation of Large Language Models* (arXiv:2106.09685, version 2), as a set of claims with evidence, and tests three of them at small scale with Session 7's robot-log task on Qwen2.5-0.5B-Instruct. Session 11's tools decide which differences are real."
+   ],
+   "outcomes": [
+    "map a paper into its question, method, evidence and scale, and say what each table can and cannot support",
+    "grade a claim using the paper's own error bars",
+    "design a small reproduction, run it, and report honestly which parts held and which did not, and at what scale"
+   ],
+   "sections": [
+    "A map of the paper",
+    "Which matrices to adapt (Table 5)",
+    "Do different ranks learn the same directions? (Figure 3)",
+    "How does the update relate to W? (Table 7)"
+   ],
+   "pauses": [
+    {
+     "section": "A map of the paper",
+     "q": "in Table 6, which rank is best for $W_q, W_v$ on WikiSQL? Is the evidence strong enough to recommend it?"
+    },
+    {
+     "section": "Do different ranks learn the same directions? (Figure 3)",
+     "q": "$A$ starts as a random matrix and $B$ at zero. Which of the two will carry what the adapter learned?"
+    }
+   ],
+   "takeaways": [
+    "Map a paper before reading it closely: question, method, evidence, scale. Most claims are supported by one table at one scale.",
+    "Grade claims with the paper's own noise. A difference the size of one seed's standard deviation supports nothing.",
+    "A small reproduction tests whether a finding transfers, not whether the paper is right. Report which parts held, which did not, and at what scale.",
+    "Check what an analysis measures before trusting a striking picture: a matrix that barely moves from its random start, or two runs that share random numbers, can produce a convincing heatmap."
+   ],
+   "run": "To run it yourself you need the packages from Session 7 and Qwen2.5-0.5B-Instruct (about 1 GB, downloaded in Session 6). The notebook trains 24 adapters and took 1,126 s on our laptop GPU, on a machine shared with other work. It is not practical on a CPU. The paper's text and the official `loralib` code are in `_build/papers/`.",
+   "notebook": "session_12_read_a_paper_reproduce_a_claim.ipynb",
+   "bytes": 279184,
+   "id": "advanced-12",
+   "code": "A12",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "1,126 s",
+    "cpu": "not practical"
+   }
+  },
+  {
+   "n": 13,
+   "title": "Transformers beyond text",
+   "summary": [
+    "Every model in this course so far has read tokens of text. The same transformer block reads images once an image is cut into patches, and a model trained on images paired with captions can classify photos it was never trained to classify. We use CLIP ViT-B/32 on the 2,000 flower photos of the basic course's Session 9, with the same split, so its results compare directly with the MobileNetV2 model trained there."
+   ],
+   "outcomes": [
+    "explain how a vision transformer turns an image into a sequence of tokens, and check that the patch embedding is one shared matrix",
+    "classify images zero-shot with text prompts, and compare that with a linear classifier trained on a few labelled photos",
+    "inspect attention maps and text search results, and say what they show and what they do not"
+   ],
+   "sections": [
+    "Patches are tokens",
+    "Classifying without training",
+    "A few labelled photos",
+    "Where does the class token look?",
+    "Searching photos with text"
+   ],
+   "pauses": [
+    {
+     "section": "Classifying without training",
+     "q": "which will work best: the bare class name (\"tulip\"), \"a photo of a tulip.\", or \"a photo of a tulip, a type of flower.\"?"
+    },
+    {
+     "section": "A few labelled photos",
+     "q": "how many labelled photos per class will the probe need to match zero-shot?"
+    }
+   ],
+   "takeaways": [
+    "A vision transformer is the text transformer with a different first step: cut the image into patches, multiply each by one shared matrix, add positions.",
+    "A model trained on images with captions can classify by comparing a photo with text prompts. Here zero-shot scores 0.973 against 0.850 and 0.883 for the basic course's trained models, and the wording of the prompt moves it by 5 points.",
+    "A linear probe on the same vectors needs about 50 labelled photos per class to match zero-shot on these classes.",
+    "Read the mistakes: some are errors in the labels. And treat attention maps as a picture of attention, not as an explanation."
+   ],
+   "run": "To run it yourself you need the packages from Session 7 plus Pillow and scikit-learn, the flower photos from the basic course (`~/.cache/ai_journey/flower_photos`, downloaded by its Session 9), and `openai/clip-vit-base-patch32` (about 600 MB, downloaded on first run). The notebook took about a minute on our laptop GPU. It also runs on a CPU, more slowly: computing the 2,000 image vectors is the slow step.",
+   "notebook": "session_13_transformers_beyond_text.ipynb",
+   "bytes": 3934426,
+   "id": "advanced-13",
+   "code": "A13",
+   "minutes": 60,
+   "hardware": {
+    "device": "GPU",
+    "time": "48 s",
+    "cpu": "slower, practical"
+   }
+  }
+ ]
+}

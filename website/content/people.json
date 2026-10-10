@@ -1,0 +1,17 @@
+{
+ "_about": "Instructors (guides). Add one object per person. 'courses' lists the courses they guide; 'sessions' (optional) lists station ids they lead, such as \"advanced-06\". 'photo' is a path under public/people/ or null for a monogram.",
+ "people": [
+  {
+   "id": "redhouane-lazib",
+   "name": "Redhouane Lazib",
+   "role": "Lead instructor",
+   "courses": ["basic", "advanced"],
+   "sessions": null,
+   "photo": null,
+   "bio": "",
+   "links": {}
+  }
+ ],
+ "openSlots": 2,
+ "openSlotNote": "More guides join this edition as sessions are assigned."
+}

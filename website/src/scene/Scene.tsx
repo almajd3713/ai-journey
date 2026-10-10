@@ -1,0 +1,421 @@
+// The 3D dive (React Three Fiber). Loaded lazily: the page works without it.
+// World: the chart is S x S units, centred on the origin; height is (log-loss - max) * K,
+// so the surface is y = 0 at the highest loss and the floor goes down from there.
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from "react";
+import * as THREE from "three";
+import { dive } from "../lib/dive";
+import { STATION_COUNT, distOf, type Terrain } from "../lib/terrain";
+import { rgba, token, type Theme } from "../lib/theme";
+import { STATION_BY_ID } from "../lib/content";
+import markers from "../../content/markers.json";
+import { planktonFrag, planktonVert, terrainFrag, terrainVert } from "./shaders";
+
+const S = 24;
+const K = 1.0;
+const UP = new THREE.Vector3(0, 1, 0);
+
+type V3 = THREE.Vector3;
+const v3 = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
+const smooth = (t: number) => t * t * (3 - 2 * t);
+const rgb = (hex: string) => v3(...(rgba(hex).slice(0, 3) as [number, number, number]));
+
+/** grid coordinates to world, at full relief */
+function world(T: Terrain, gx: number, gy: number, lift = 0, out: V3 = v3()): V3 {
+  return out.set((gx / (T.n - 1) - 0.5) * S, (T.h(gx, gy) - T.max) * K + lift, (gy / (T.n - 1) - 0.5) * S);
+}
+
+function palette() {
+  return {
+    bg: token("--abyss"),
+    ramp: ["--d0", "--d1", "--d2", "--d3", "--d4", "--d5", "--d6"].map((v) => rgb(token(v))),
+    iso: rgba(token("--isobath")),
+    isoIndex: rgba(token("--isobath-index")),
+    isoLit: rgba(token("--isobath-lit")),
+    isoShade: rgba(token("--isobath-shade")),
+    basic: token("--route-basic"),
+    advanced: token("--route-advanced"),
+    thread: token("--route-thread"),
+    plankton: token("--plankton"),
+    chart: document.documentElement.dataset.theme === "chart",
+  };
+}
+type Palette = ReturnType<typeof palette>;
+
+function Floor({ T, P, uniforms }: { T: Terrain; P: Palette; uniforms: Record<string, THREE.IUniform> }) {
+  const geometry = useMemo(() => {
+    const n = T.n, H = T.H, cell = S / (n - 1);
+    const pos = new Float32Array(n * n * 3), h = new Float32Array(n * n), g = new Float32Array(n * n * 2);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const k = j * n + i;
+      pos[k * 3] = (i / (n - 1) - 0.5) * S;
+      pos[k * 3 + 1] = (H[k] - T.max) * K;
+      pos[k * 3 + 2] = (j / (n - 1) - 0.5) * S;
+      h[k] = H[k];
+      const i0 = Math.max(0, i - 1), i1 = Math.min(n - 1, i + 1), j0 = Math.max(0, j - 1), j1 = Math.min(n - 1, j + 1);
+      g[k * 2] = (H[j * n + i1] - H[j * n + i0]) / ((i1 - i0) * cell);
+      g[k * 2 + 1] = (H[j1 * n + i] - H[j0 * n + i]) / ((j1 - j0) * cell);
+    }
+    const idx = new Uint32Array((n - 1) * (n - 1) * 6);
+    let q = 0;
+    for (let j = 0; j < n - 1; j++) for (let i = 0; i < n - 1; i++) {
+      const a = j * n + i, b = a + 1, c = a + n, d = c + 1;
+      idx.set([a, c, b, b, c, d], q);
+      q += 6;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("aH", new THREE.BufferAttribute(h, 1));
+    geo.setAttribute("aG", new THREE.BufferAttribute(g, 2));
+    geo.setIndex(new THREE.BufferAttribute(idx, 1));
+    geo.computeBoundingSphere();
+    return geo;
+  }, [T]);
+
+  // layout effects: passive effects inside the R3F tree were not applied before drawing
+  useLayoutEffect(() => {
+    uniforms.uRamp.value = P.ramp;
+    uniforms.uIso.value = new THREE.Vector4(...P.iso);
+    uniforms.uIsoIndex.value = new THREE.Vector4(...P.isoIndex);
+    uniforms.uIsoLit.value = new THREE.Vector4(...P.isoLit);
+    uniforms.uIsoShade.value = new THREE.Vector4(...P.isoShade);
+    uniforms.uBg.value = rgb(P.bg);
+    uniforms.uPingColor.value = rgb(P.plankton);
+    uniforms.uShadeBase.value = P.chart ? 0.92 : 0.8;
+    uniforms.uShadeAmp.value = P.chart ? 0.3 : 0.62;
+    uniforms.uCaustic.value = P.chart ? 0 : 1;
+  }, [P, uniforms]);
+
+  // built here rather than as <shaderMaterial uniforms={...}>, so that the material holds
+  // this exact uniforms object and the per-frame updates reach the shader
+  const material = useMemo(
+    () => new THREE.ShaderMaterial({ vertexShader: terrainVert, fragmentShader: terrainFrag, uniforms, side: THREE.DoubleSide }),
+    [uniforms],
+  );
+  return <mesh geometry={geometry} material={material} frustumCulled={false} />;
+}
+
+/** The route: travelled part as a glowing tube, the rest dashed; stations as sounding
+ *  lines with rings; currents as arcs between the courses. */
+function Route({ T, P, dRef }: { T: Terrain; P: Palette; dRef: RefObject<number> }) {
+  const tube = useRef<THREE.Mesh>(null);
+  const stationRefs = useRef<(THREE.Group | null)[]>([]);
+  const threadRefs = useRef<(THREE.Line | null)[]>([]);
+
+  const built = useMemo(() => {
+    const step = 2;
+    const points: V3[] = [];
+    for (let i = 0; i < T.pts.length; i += step) points.push(world(T, T.pts[i][0], T.pts[i][1], 0.035));
+    const last = T.pts[T.pts.length - 1];
+    points.push(world(T, last[0], last[1], 0.035));
+    const curve = new THREE.CatmullRomCurve3(points, false, "centripetal");
+    const segs = 900, radial = 6;
+    const tubeGeo = new THREE.TubeGeometry(curve, segs, 0.045, radial, false);
+    const cb = new THREE.Color(P.basic), ca = new THREE.Color(P.advanced);
+    const col = new Float32Array(tubeGeo.attributes.position.count * 3);
+    for (let s = 0; s <= segs; s++) {
+      const c = cb.clone().lerp(ca, s / segs);
+      for (let r = 0; r <= radial; r++) col.set([c.r, c.g, c.b], (s * (radial + 1) + r) * 3);
+    }
+    tubeGeo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+    const linePts = curve.getPoints(700);
+    const lineGeo = new THREE.BufferGeometry().setFromPoints(linePts);
+    const lcol = new Float32Array(linePts.length * 3);
+    linePts.forEach((_, i) => { const c = cb.clone().lerp(ca, i / (linePts.length - 1)); lcol.set([c.r, c.g, c.b], i * 3); });
+    lineGeo.setAttribute("color", new THREE.BufferAttribute(lcol, 3));
+    const ahead = new THREE.Line(lineGeo, new THREE.LineDashedMaterial({ vertexColors: true, dashSize: 0.16, gapSize: 0.14, transparent: true, opacity: 0.55 }));
+    ahead.computeLineDistances();
+
+    const stations = T.stations.map((st, i) => ({
+      pos: world(T, st.x, st.y, 0.02),
+      color: cb.clone().lerp(ca, i / (STATION_COUNT - 1)),
+    }));
+    const threads = markers.currents.map((c) => {
+      const a = stations[STATION_BY_ID[c.from].i].pos, b = stations[STATION_BY_ID[c.to].i].pos;
+      const mid = a.clone().add(b).multiplyScalar(0.5);
+      mid.y = Math.max(a.y, b.y) + 1.6 + a.distanceTo(b) * 0.18;
+      const pts = new THREE.QuadraticBezierCurve3(a.clone().setY(a.y + 0.9), mid, b.clone().setY(b.y + 0.9)).getPoints(80);
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const line = new THREE.Line(geo, new THREE.LineDashedMaterial({ color: new THREE.Color(P.thread), dashSize: 0.1, gapSize: 0.1, transparent: true, opacity: 0.3 }));
+      line.computeLineDistances();
+      return { line, from: STATION_BY_ID[c.from].i, to: STATION_BY_ID[c.to].i };
+    });
+    return { tubeGeo, segs, radial, ahead, stations, threads };
+  }, [T, P]);
+
+  const ring = useMemo(() => new THREE.RingGeometry(0.1, 0.15, 40).rotateX(-Math.PI / 2), []);
+  const mast = useMemo(() => new THREE.CylinderGeometry(0.008, 0.008, 0.9, 6).translate(0, 0.45, 0), []);
+  const buoy = useMemo(() => new THREE.OctahedronGeometry(0.055).translate(0, 0.92, 0), []);
+
+  useFrame(() => {
+    const d = dRef.current ?? 0;
+    const frac = d / T.total;
+    if (tube.current) {
+      const segsDone = Math.round(frac * built.segs);
+      tube.current.geometry.setDrawRange(0, segsDone * built.radial * 6);
+    }
+    const now = dive.station;
+    stationRefs.current.forEach((g, i) => {
+      if (!g) return;
+      const target = i === now ? 1.7 : 1;
+      const s = g.scale.x + (target - g.scale.x) * 0.12;
+      g.scale.setScalar(s);
+      const past = i <= Math.round(dive.p + 0.001);
+      g.children.forEach((m) => {
+        const mat = (m as THREE.Mesh).material as THREE.MeshBasicMaterial;
+        mat.opacity = i === now ? 1 : past ? 0.85 : 0.45;
+      });
+    });
+    built.threads.forEach((t, k) => {
+      const l = threadRefs.current[k];
+      if (!l) return;
+      const on = now === t.from || now === t.to;
+      const m = l.material as THREE.LineDashedMaterial;
+      m.opacity += ((on ? 0.95 : 0.22) - m.opacity) * 0.1;
+    });
+  });
+
+  return (
+    <group>
+      <mesh ref={tube} geometry={built.tubeGeo}>
+        <meshBasicMaterial vertexColors toneMapped={false} />
+      </mesh>
+      <primitive object={built.ahead} />
+      {built.stations.map((s, i) => (
+        <group key={i} position={s.pos} ref={(g) => { stationRefs.current[i] = g; }}>
+          <mesh geometry={ring}><meshBasicMaterial color={s.color} transparent side={THREE.DoubleSide} toneMapped={false} /></mesh>
+          <mesh geometry={mast}><meshBasicMaterial color={s.color} transparent toneMapped={false} /></mesh>
+          <mesh geometry={buoy}><meshBasicMaterial color={s.color} transparent toneMapped={false} /></mesh>
+        </group>
+      ))}
+      {built.threads.map((t, k) => (
+        <primitive key={k} object={t.line} ref={(l: THREE.Line | null) => { threadRefs.current[k] = l; }} />
+      ))}
+    </group>
+  );
+}
+
+function glowTexture() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 64;
+  const g = c.getContext("2d")!;
+  const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grd.addColorStop(0, "rgba(255,255,255,1)");
+  grd.addColorStop(0.25, "rgba(255,255,255,.45)");
+  grd.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = grd;
+  g.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+}
+
+function Diver({ P, posRef }: { P: Palette; posRef: RefObject<V3> }) {
+  const g = useRef<THREE.Group>(null);
+  const tex = useMemo(glowTexture, []);
+  useFrame((state) => {
+    if (!g.current) return;
+    g.current.position.copy(posRef.current);
+    g.current.position.y += 0.16 + Math.sin(state.clock.elapsedTime * 1.6) * 0.03;
+  });
+  return (
+    <group ref={g}>
+      <mesh><sphereGeometry args={[0.07, 20, 14]} /><meshBasicMaterial color={P.plankton} toneMapped={false} /></mesh>
+      <sprite scale={[0.9, 0.9, 0.9]}>
+        <spriteMaterial map={tex} color={P.plankton} transparent opacity={P.chart ? 0.35 : 0.8} blending={P.chart ? THREE.NormalBlending : THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+      </sprite>
+    </group>
+  );
+}
+
+function Plankton({ P, count }: { P: Palette; count: number }) {
+  const geo = useMemo(() => {
+    const pos = new Float32Array(count * 3), seed = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      pos.set([(Math.random() - 0.5) * S * 0.9, -7 + Math.random() * 9, (Math.random() - 0.5) * S * 0.9], i * 3);
+      seed[i] = Math.random();
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    g.setAttribute("aSeed", new THREE.BufferAttribute(seed, 1));
+    return g;
+  }, [count]);
+  const uniforms = useMemo(() => ({ uTime: { value: 0 }, uScale: { value: 60 }, uColor: { value: v3() }, uAlpha: { value: 0.5 } }), []);
+  useLayoutEffect(() => {
+    uniforms.uColor.value = rgb(P.chart ? token("--fog") : P.plankton);
+    uniforms.uAlpha.value = P.chart ? 0.35 : 0.55;
+  }, [P, uniforms]);
+  const { size } = useThree();
+  useFrame((s) => {
+    uniforms.uTime.value = s.clock.elapsedTime;
+    uniforms.uScale.value = 9 * Math.min(2, s.viewport.dpr) * (size.height / 800);
+  });
+  const material = useMemo(
+    () => new THREE.ShaderMaterial({ vertexShader: planktonVert, fragmentShader: planktonFrag, uniforms, transparent: true, depthWrite: false }),
+    [uniforms],
+  );
+  material.blending = P.chart ? THREE.NormalBlending : THREE.AdditiveBlending;
+  return <points geometry={geo} material={material} frustumCulled={false} />;
+}
+
+/** Scroll drives everything: lift, the diver's distance along the route, and the camera. */
+function Rig({ T, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
+  T: Terrain;
+  onSlow: () => void;
+  uniforms: Record<string, THREE.IUniform>;
+  relief: RefObject<THREE.Group | null>;
+  dRef: RefObject<number>;
+  diverRef: RefObject<V3>;
+  tagRef: RefObject<HTMLDivElement | null>;
+}) {
+  const { camera, size } = useThree();
+  const look = useRef(v3(0, 0, 0));
+  const tmp = useMemo(() => ({ a: v3(), b: v3(), dir: v3(), side: v3(), pos: v3(), at: v3(), p: v3(), tag: v3() }), []);
+  const wide = size.width >= 1000;
+  // frame-time guard for weak GPUs: first drop to 1x resolution, then give up on 3D
+  const perf = useRef({ t0: 0, frames: 0, stage: 0 });
+
+  useEffect(() => {
+    const cam = camera as THREE.PerspectiveCamera;
+    if (wide) cam.setViewOffset(size.width, size.height, -size.width * 0.17, 0, size.width, size.height);
+    else cam.clearViewOffset();
+    cam.updateProjectionMatrix();
+  }, [camera, size, wide]);
+
+  useFrame((state, dtRaw) => {
+    const pf = perf.current, now = performance.now();
+    if (state.clock.elapsedTime > 1.5 && pf.stage < 2) {
+      if (!pf.t0) pf.t0 = now;
+      pf.frames++;
+      if (now - pf.t0 > 2500) {
+        const ms = (now - pf.t0) / pf.frames;
+        if (ms > 50 && pf.stage === 0) { state.setDpr(1); pf.stage = 1; }
+        else if (ms > 50) { pf.stage = 2; onSlow(); }
+        else pf.stage = 2;
+        pf.t0 = now; pf.frames = 0;
+      }
+    }
+    const dt = Math.min(dtRaw, 0.05);
+    const lift = smooth(dive.lift);
+    const end = smooth(dive.end);
+    if (relief.current) relief.current.scale.y = Math.max(lift, 1e-4);
+
+    // the diver eases toward the scroll position
+    const target = distOf(T, dive.p);
+    dRef.current += (target - dRef.current) * (1 - Math.exp(-dt * 5));
+    const d = dRef.current;
+    const pt = T.at(d);
+    world(T, pt.x, pt.y, 0.02, tmp.p);
+    tmp.p.y *= Math.max(lift, 1e-4);
+    diverRef.current.copy(tmp.p);
+
+    // heading: from slightly behind to a little ahead along the route
+    const a = T.at(d - T.total * 0.03), b = T.at(d + T.total * 0.06);
+    world(T, a.x, a.y, 0, tmp.a);
+    world(T, b.x, b.y, 0, tmp.b);
+    tmp.dir.subVectors(tmp.b, tmp.a).setY(0).normalize();
+    tmp.side.crossVectors(tmp.dir, UP).normalize();
+
+    const aspect = size.width / size.height;
+    // a little higher on the flat floor, where the far side of the valley rises into view
+    const far = d / T.total;
+    const back = aspect < 1 ? 6.4 : 4.6, up = (aspect < 1 ? 2.6 : 1.7) + far * 0.9;
+    // follow view
+    const fx = tmp.p.x - tmp.dir.x * back + tmp.side.x * 1.3, fy = tmp.p.y + up, fz = tmp.p.z - tmp.dir.z * back + tmp.side.z * 1.3;
+    const lx = tmp.p.x + tmp.dir.x * 2.6, ly = tmp.p.y - 0.35, lz = tmp.p.z + tmp.dir.z * 2.6;
+    // chart view (top-down) and overview (after the last station)
+    const top = aspect < 1 ? [0, 44, 9] : [0, 30, 6.5];
+    const over = aspect < 1 ? [-3, 17, 21] : [-2, 12.5, 15.5];
+    let px = top[0] + (fx - top[0]) * lift, py = top[1] + (fy - top[1]) * lift, pz = top[2] + (fz - top[2]) * lift;
+    let ax = lx * lift, ay = ly * lift, az = lz * lift;
+    px += (over[0] - px) * end; py += (over[1] - py) * end; pz += (over[2] - pz) * end;
+    ax += (1 - ax) * end; ay += (-2.6 - ay) * end; az += (-0.5 - az) * end;
+
+    const k = 1 - Math.exp(-dt * 3.2);
+    camera.position.lerp(tmp.pos.set(px, py, pz), k);
+    look.current.lerp(tmp.at.set(ax, ay, az), k);
+    camera.lookAt(look.current);
+
+    // uniforms
+    const t = state.clock.elapsedTime;
+    uniforms.uTime.value = t;
+    uniforms.uDiver.value.copy(tmp.p);
+    uniforms.uPing.value = (t % 2.8) / 2.8;
+    const dist = camera.position.distanceTo(look.current);
+    uniforms.uFogNear.value = dist * 0.85;
+    uniforms.uFogFar.value = dist * 2.6;
+
+    // the current station's tag, placed over its buoy
+    const el = tagRef.current;
+    if (el) {
+      const st = T.stations[dive.station];
+      world(T, st.x, st.y, 0, tmp.tag);
+      tmp.tag.y = tmp.tag.y * Math.max(lift, 1e-4) + 1.55 * lift + 0.1;
+      tmp.tag.project(camera);
+      const vis = tmp.tag.z < 1 && lift > 0.6 && end < 0.5;
+      el.style.opacity = vis ? "1" : "0";
+      // keep the tag clear of the depth gauge on the right
+      const tx = Math.min(((tmp.tag.x + 1) / 2) * size.width, size.width - 430);
+      el.style.transform = `translate(${tx}px, ${((1 - tmp.tag.y) / 2) * size.height}px)`;
+    }
+  });
+  return null;
+}
+
+export default function Scene({ T, theme, tagRef, onSlow }: {
+  T: Terrain; theme: Theme; tagRef: RefObject<HTMLDivElement | null>; onSlow: () => void;
+}) {
+  const P = useMemo(palette, [theme]);
+  const relief = useRef<THREE.Group>(null);
+  const dRef = useRef(distOf(T, dive.p));
+  const diverRef = useRef(v3());
+  const uniforms = useMemo<Record<string, THREE.IUniform>>(() => ({
+    uRamp: { value: Array.from({ length: 7 }, () => v3()) },
+    uMin: { value: T.min },
+    uMax: { value: T.max },
+    uRelief: { value: K * 1.2 },
+    uShadeBase: { value: 0.8 },
+    uShadeAmp: { value: 0.62 },
+    uIso: { value: new THREE.Vector4() },
+    uIsoIndex: { value: new THREE.Vector4() },
+    uIsoLit: { value: new THREE.Vector4() },
+    uIsoShade: { value: new THREE.Vector4() },
+    uBg: { value: v3() },
+    uFogNear: { value: 20 },
+    uFogFar: { value: 60 },
+    uHalf: { value: S / 2 },
+    uTime: { value: 0 },
+    uDiver: { value: v3() },
+    uPingColor: { value: v3() },
+    uPing: { value: 0 },
+    uCaustic: { value: 1 },
+  }), [T]);
+  const mobile = typeof window !== "undefined" && window.innerWidth < 700;
+
+  // R3F 9.8 measures its container with a ResizeObserver whose first report can arrive
+  // before the measuring hook's own effect has run; that report is dropped and the canvas
+  // stays 300 x 150 with no renderer. A resize event after mount measures it again.
+  useEffect(() => {
+    const ids = [60, 400].map((ms) => window.setTimeout(() => window.dispatchEvent(new Event("resize")), ms));
+    return () => ids.forEach(clearTimeout);
+  }, []);
+
+  return (
+    <Canvas
+      flat
+      dpr={[1, mobile ? 1.5 : 1.75]}
+      gl={{ antialias: true, powerPreference: "default", alpha: false }}
+      camera={{ fov: 40, near: 0.1, far: 220, position: [0, 30, 6.5] }}
+      aria-hidden
+      resize={{ scroll: false, debounce: 0 }}
+    >
+      <color attach="background" args={[P.bg]} />
+      <group ref={relief}>
+        <Floor T={T} P={P} uniforms={uniforms} />
+        <Route T={T} P={P} dRef={dRef} />
+      </group>
+      <Diver P={P} posRef={diverRef} />
+      <Plankton P={P} count={mobile ? 420 : 900} />
+      <Rig T={T} uniforms={uniforms} relief={relief} dRef={dRef} diverRef={diverRef} tagRef={tagRef} onSlow={onSlow} />
+    </Canvas>
+  );
+}
+

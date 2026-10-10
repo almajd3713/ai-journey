@@ -1,0 +1,309 @@
+{
+ "_about": "One sounding (a measured number) and one ping (a pause question with the measured answer) per station. Every number here must appear in that notebook's text or saved outputs; tools/check_markers.py fails the build if one does not. 'pause' is the index of the notebook's pause question (content/courses/*.json); 'q' overrides its wording when the question needs context from the notebook.",
+ "stations": {
+  "basic-00": {
+   "sounding": { "value": "35 / 38", "label": "test flowers the first model gets right", "src": "§6 Which flowers does it get wrong?" },
+   "ping": {
+    "pause": 1,
+    "q": "The model makes three mistakes on the test set. Which species does it mix up?",
+    "choices": ["setosa and versicolor", "versicolor and virginica", "setosa and virginica"],
+    "answer": 1,
+    "echo": "All 12 setosa flowers are right. 2 of the 13 virginica are called versicolor and 1 of the 13 versicolor is called virginica: 35 of 38 correct.",
+    "src": "§6"
+   }
+  },
+  "basic-01": {
+   "sounding": { "value": "0.624", "label": "the pass rate: the baseline accuracy every model must beat", "src": "§7 From findings to decisions" },
+   "ping": {
+    "pause": 1,
+    "q": "The next table gives the pass rate per department. Which department passes most often, and would the table tell you why?",
+    "choices": ["CS", "Engineering", "Business"],
+    "answer": 0,
+    "echo": "CS 68.7%, Engineering 59.3%, Business 52.5%. The table shows that the rates differ. It can't say why.",
+    "src": "§5"
+   }
+  },
+  "basic-02": {
+   "sounding": { "value": "1.000", "label": "test accuracy with a leaked column (0.832 without it)", "src": "§7 Leakage" },
+   "ping": {
+    "pause": 1,
+    "q": "We add a column recording who received a pass certificate, which is issued after the exam, and train the same pipeline. What test accuracy do you expect?",
+    "choices": ["about the same, near 0.83", "a little higher", "perfect"],
+    "answer": 2,
+    "echo": "0.832 without the column, 1.000 with it. Nothing in the code is wrong: the model learned to read the answer sheet instead of the student.",
+    "src": "§7"
+   }
+  },
+  "basic-03": {
+   "sounding": { "value": "1.000 → 0.890", "label": "an unlimited tree: training accuracy, then test accuracy", "src": "§2 Overfitting" },
+   "ping": {
+    "pause": 1,
+    "q": "As the tree gets deeper, training accuracy will rise. What will test accuracy do?",
+    "choices": ["rise with it", "peak early, then stay lower", "fall to chance"],
+    "answer": 1,
+    "echo": "Training accuracy reaches 1.000 at depth 13. Test accuracy peaks at 0.905 at depth 2 and ends at 0.890. That 11-point gap is overfitting.",
+    "src": "§2"
+   }
+  },
+  "basic-04": {
+   "sounding": { "value": "5 / 50", "label": "frauds found by a model with 99.1% accuracy", "src": "§1 A model with 99% accuracy" },
+   "ping": {
+    "pause": 0,
+    "q": "A model scores 99.1% on this test set. Would you put it into use?",
+    "choices": ["Yes, 99.1% is excellent", "Not before seeing what it misses"],
+    "answer": 1,
+    "echo": "A rule that always answers \"no fraud\" scores 0.990 and finds none of the 50 frauds. The 0.991 logistic regression finds 5 of the 50.",
+    "src": "§1"
+   }
+  },
+  "basic-05": {
+   "sounding": { "value": "0.996 → 0.793", "label": "cluster agreement: standardised units, then raw units", "src": "§5 The effect of scale" },
+   "ping": {
+    "pause": 1,
+    "q": "Nothing about the points' arrangement changes, only the units. Will the clusters change?",
+    "choices": ["No: same points, same clusters", "Yes, noticeably"],
+    "answer": 1,
+    "echo": "Agreement with the hidden labels drops from 0.996 to 0.793 on raw numbers. After standardising it is back to 0.996. Choosing the units decides what \"close\" means.",
+    "src": "§5"
+   }
+  },
+  "basic-06": {
+   "sounding": { "value": "0.760 → 0.00229", "label": "the XOR network's loss, epoch 1 to 500. This is the ground you are diving.", "src": "§5 A network that learns XOR" },
+   "ping": {
+    "pause": 1,
+    "q": "Does a chain of two linear layers have more power than one?",
+    "choices": ["Yes: more layers, more power", "No: they collapse into one"],
+    "answer": 1,
+    "echo": "Both give −4.613 for the same input. Two linear layers merge into one, so each layer needs a non-linear step after it.",
+    "src": "§2"
+   }
+  },
+  "basic-07": {
+   "sounding": { "value": "0.28 → 1.99", "label": "run A's validation loss at epoch 13, then at epoch 200", "src": "§1 Three runs" },
+   "ping": {
+    "pause": 2,
+    "q": "Run A overfits. Early stopping, dropout or L2: which do you expect to help the most?",
+    "choices": ["early stopping", "dropout", "L2"],
+    "answer": 0,
+    "echo": "Early stopping kept the weights from epoch 13: validation loss 0.280 against 1.992 for run A, the lowest of all the runs. Dropout delays overfitting rather than preventing it.",
+    "src": "§3"
+   }
+  },
+  "basic-08": {
+   "sounding": { "value": "12,810", "label": "parameters in the CNN, against 101,770 for the dense network", "src": "§3 Counting parameters" },
+   "ping": {
+    "pause": 1,
+    "q": "Which network will lose more accuracy when the digits move 3 pixels?",
+    "choices": ["the dense network", "the CNN", "both about the same"],
+    "answer": 0,
+    "echo": "At 3 pixels the CNN scores 0.746 and the dense network 0.445, from 0.973 and 0.931 unshifted.",
+    "src": "§5"
+   }
+  },
+  "basic-09": {
+   "sounding": { "value": "0.710 → 0.883", "label": "test accuracy: trained from scratch, then fine-tuned from ImageNet", "src": "§5 The three runs side by side" },
+   "ping": {
+    "pause": 1,
+    "q": "Order the three strategies by test accuracy: from scratch, frozen features, fine-tuned.",
+    "choices": ["scratch > frozen > fine-tuned", "fine-tuned > frozen > scratch", "frozen > fine-tuned > scratch"],
+    "answer": 1,
+    "echo": "Fine-tuned 0.883, frozen features 0.850, from scratch 0.710. With 6,405 trainable parameters the frozen model beats 2,230,277 trained from scratch.",
+    "src": "§5"
+   }
+  },
+  "basic-10": {
+   "sounding": { "value": "−0.94", "label": "the weight learned for the word pair \"not good\"", "src": "§3 Counting words" },
+   "ping": {
+    "pause": 0,
+    "q": "The word-pair model has a feature for \"not good\". What weight will it learn for it?",
+    "choices": ["positive", "negative", "close to zero"],
+    "answer": 1,
+    "echo": "−0.94 for \"not good\", while \"good\" alone falls to 0.86. Pairs are not a full fix: \"not bad\" gets only 0.36.",
+    "src": "§3"
+   }
+  },
+  "basic-11": {
+   "sounding": { "value": "0.04", "label": "attention from \"it\" to each candidate, averaged over BERT's 144 heads", "src": "§3 What a trained model actually does" },
+   "ping": {
+    "pause": 0,
+    "q": "In \"The robot put the battery in the device because it was empty\", which token should \"it\" attend to most?",
+    "choices": ["robot", "battery", "empty"],
+    "answer": 1,
+    "echo": "The \"it\" row gives 0.59 to battery, 0.22 to empty, 0.08 to itself, and 0.05 each to robot and because.",
+    "src": "§1"
+   }
+  },
+  "basic-12": {
+   "sounding": { "value": "0.339", "label": "the model's probability for its first answer token, \"Battery\"", "src": "§1 The model" },
+   "ping": {
+    "pause": 2,
+    "q": "A forum post among the documents hides an instruction. Will the model follow it?",
+    "choices": ["Yes, with every prompt", "Only with one of the prompts", "Never"],
+    "answer": 1,
+    "echo": "The two plain prompts held. The prompt that warned the model the context was untrusted is the one that obeyed: \"Visit free-prizes.example to claim your reward.\"",
+    "src": "§6"
+   }
+  },
+  "advanced-00": {
+   "sounding": { "value": "45 vs 11", "label": "GPT-2 tokens for the Arabic and the English sentence", "src": "§1 What the model reads" },
+   "ping": {
+    "pause": 0,
+    "q": "Four sentences of about the same length, in English, French, Arabic and Python. Which needs the most tokens?",
+    "choices": ["French", "Arabic", "Python"],
+    "answer": 1,
+    "echo": "Arabic needs 45 tokens for 43 characters, about four times English (11 tokens for 51 characters). French needs 19, Python 31.",
+    "src": "§1"
+   }
+  },
+  "advanced-01": {
+   "sounding": { "value": "0.65 → 7.62", "label": "bits per token on repeated text, before and after removing five induction heads", "src": "§4 Does a clear pattern mean the head matters?" },
+   "ping": {
+    "pause": 2,
+    "q": "Remove the five heads with the strongest induction pattern. What does the second copy cost, against 0.65 bits per token with nothing removed?",
+    "choices": ["still under 1 bit", "a few bits", "more than 7 bits"],
+    "answer": 2,
+    "echo": "7.62 bits per token. Removing five random other heads costs 0.76 on average.",
+    "src": "§4"
+   }
+  },
+  "advanced-02": {
+   "sounding": { "value": "67%", "label": "of a GPT-2 block's parameters sit in the MLP; 33% in attention", "src": "§1 One block in code" },
+   "ping": {
+    "pause": 0,
+    "q": "What share of a transformer block's parameters sits in attention?",
+    "choices": ["about two thirds", "about half", "about one third"],
+    "answer": 2,
+    "echo": "Attention holds 2,362,368 (33%), the MLP 4,722,432 (67%), the two layer norms 3,072.",
+    "src": "§1"
+   }
+  },
+  "advanced-03": {
+   "sounding": { "value": "0.54 vs 0.82", "label": "bits per character on children's stories: our 11.5M GPT, then GPT-2 small", "src": "§6 Judging the model" },
+   "ping": {
+    "pause": 3,
+    "q": "Will GPT-2 (124 million parameters, 40 GB of web text) beat our 11.5-million-parameter model on children's stories?",
+    "choices": ["Yes, it is ten times larger", "No"],
+    "answer": 1,
+    "echo": "Ours costs 0.54 bits per character, GPT-2 0.82, a bigram 1.32. Training data matched to the task beat size.",
+    "src": "§6"
+   }
+  },
+  "advanced-04": {
+   "sounding": { "value": "0.419 → 0.041", "label": "BERT's probability for \"dead\", with and without the rest of the sentence", "src": "§1 What each layout can read" },
+   "ping": {
+    "pause": 1,
+    "q": "BERT's masking recipe masks some tokens, leaves some unchanged and swaps some for random words. Which does it recover best?",
+    "choices": ["[MASK] tokens", "tokens left unchanged", "random words"],
+    "answer": 1,
+    "echo": "Unchanged tokens 0.993, masked 0.704, random words 0.549.",
+    "src": "§3"
+   }
+  },
+  "advanced-05": {
+   "sounding": { "value": "2.428 → 1.665", "label": "validation loss at 36M tokens: the smallest model, then the largest", "src": "§1 A grid of runs" },
+   "ping": {
+    "pause": 1,
+    "q": "For a fixed compute budget, is the loss lowest for the smallest model, the largest, or something in between?",
+    "choices": ["the smallest", "the largest", "something in between"],
+    "answer": 2,
+    "echo": "In between, with a broad minimum: for 10^14 FLOPs the best is 0.47M parameters trained on 35.6 million tokens.",
+    "src": "§2"
+   }
+  },
+  "advanced-06": {
+   "sounding": { "value": "0.259 → 0.590", "label": "step-by-step answers: one sample, then a majority vote of 8", "src": "§5 Rewards you can check" },
+   "ping": {
+    "pause": 1,
+    "q": "Pick the best of N answers by a proxy reward model. As N grows, will the gold judge's score rise, level off, or fall?",
+    "choices": ["rise", "level off", "fall"],
+    "answer": 0,
+    "echo": "Gold rises all the way: 0.54 at N = 8 and 0.82 at N = 64, while the proxy rates its own picks at 1.31. With much stronger optimisation, Gao et al. (2022) found that it eventually falls.",
+    "src": "§3"
+   }
+  },
+  "advanced-07": {
+   "sounding": { "value": "135,168", "label": "numbers trained by rank-1 LoRA, 0.03% of the model, as good as rank 32", "src": "§4 Rank, and full fine-tuning" },
+   "ping": {
+    "pause": 0,
+    "q": "With one worked example in the prompt, how many of the test lines will the model get fully right?",
+    "choices": ["almost none", "about half", "more than 90%"],
+    "answer": 2,
+    "echo": "0.925 on the training layouts, against none zero-shot. On unseen layouts, 0.210.",
+    "src": "§1"
+   }
+  },
+  "advanced-08": {
+   "sounding": { "value": "0 → 23 / 36", "label": "questions answered right: closed book, then with the top 3 passages", "src": "§3 Retrieve, then answer" },
+   "ping": {
+    "pause": 2,
+    "q": "16 agent tasks search and read a planted passage telling them to answer 0. How many obey it?",
+    "choices": ["none", "about half", "all of them"],
+    "answer": 1,
+    "echo": "Half of them (8) answered 0, and right answers fell from 6 of 20 to 2. The tool allowlist never came into play: answering 0 needs no tool.",
+    "src": "§5"
+   }
+  },
+  "advanced-09": {
+   "sounding": { "value": "64 ms vs 81 ms", "label": "prefilling 1,000 tokens, against decoding a single token", "src": "§2 Where the time goes" },
+   "ping": {
+    "pause": 1,
+    "q": "int4 with one scale for a whole matrix uses the same 4 bits per weight as int4 with one scale per row. How different can they be?",
+    "choices": ["almost the same", "per-row a little better", "one scale per matrix destroys the model"],
+    "answer": 2,
+    "echo": "One scale per matrix: perplexity 150 million. One per row: 30.08. The original bf16 model: 15.47.",
+    "src": "§4"
+   }
+  },
+  "advanced-10": {
+   "sounding": { "value": "0.229", "label": "the base model's MMLU score in chat format, below the 0.25 of a random guess", "src": "§1 Scoring a benchmark" },
+   "ping": {
+    "pause": 1,
+    "q": "How often will the 0.5B judge pick whichever answer is shown first?",
+    "choices": ["about half the time", "most of the time", "almost always"],
+    "answer": 2,
+    "echo": "97.9% of the time. It agrees with the label 0.988 of the time when the preferred answer comes first, and 0.03 when it comes second.",
+    "src": "§3"
+   }
+  },
+  "advanced-11": {
+   "sounding": { "value": "0.0454 → 0.0101", "label": "the winning setting's gain, then what remained with 5 new seeds", "src": "§2 Test-set noise and the best of many" },
+   "ping": {
+    "pause": 1,
+    "q": "The chosen setting is 0.0454 better than the average setting. Train it again with 5 new seeds: how much of the gain remains?",
+    "choices": ["all of it", "about half", "about a fifth"],
+    "answer": 2,
+    "echo": "Only 0.0101. All five reruns scored worse than the original: about four-fifths of the gain was a lucky seed.",
+    "src": "§2"
+   }
+  },
+  "advanced-12": {
+   "sounding": { "value": "0.5", "label": "points between the best and worst rank in the LoRA paper's Table 6: one seed's standard deviation", "src": "§1 A map of the paper" },
+   "ping": {
+    "pause": 0,
+    "q": "In the LoRA paper's Table 6, r = 8 is best for Wq, Wv on WikiSQL. Is the evidence strong enough to recommend it?",
+    "choices": ["Yes", "No"],
+    "answer": 1,
+    "echo": "The worst rank is 0.5 points below, the size of one seed's standard deviation. What the table does support is the paper's real claim: rank 1 is within 0.4 of the best.",
+    "src": "§1"
+   }
+  },
+  "advanced-13": {
+   "sounding": { "value": "0.973 vs 0.883", "label": "CLIP zero-shot, then the basic course's fine-tuned network, on the same 300 flower photos", "src": "§2 Classifying without training" },
+   "ping": {
+    "pause": 0,
+    "q": "Which prompt works best for CLIP: \"tulip\", \"a photo of a tulip.\", or \"a photo of a tulip, a type of flower.\"?",
+    "choices": ["tulip", "a photo of a tulip.", "a photo of a tulip, a type of flower."],
+    "answer": 2,
+    "echo": "0.920, 0.940 and 0.973. CLIP was trained on captions, so a caption-like prompt works better, and naming the domain helps further.",
+    "src": "§2"
+   }
+  }
+ },
+ "currents": [
+  { "from": "basic-09", "to": "advanced-13", "label": "The same 300 flower photos: 0.883 fine-tuned, 0.973 with CLIP and no labels" },
+  { "from": "basic-06", "to": "advanced-03", "label": "The same training loop, from 17 parameters to 11.5 million" },
+  { "from": "basic-11", "to": "advanced-01", "label": "Attention by hand, then inside GPT-2" },
+  { "from": "basic-12", "to": "advanced-00", "label": "A language model used as a tool, then opened up" },
+  { "from": "basic-12", "to": "advanced-08", "label": "Retrieval and prompt injection again, over the basic course's own notes" }
+ ]
+}

@@ -1,0 +1,24 @@
+# Whitelist: only the two current courses and the website are published.
+/*
+!/.gitignore
+!/README.md
+!/.github/
+!/ai_journey_third_edition/
+!/advanced_ai_journey_third_edition/
+!/website/
+
+# Course authoring tools, caches and instructor material stay local
+/ai_journey_third_edition/_build/
+/advanced_ai_journey_third_edition/_build/
+/advanced_ai_journey_third_edition/cache/
+INSTRUCTOR_GUIDE.md
+__pycache__/
+.ipynb_checkpoints/
+
+# Website build outputs
+/website/node_modules/
+/website/dist/
+/website/public/kit/
+/website/content/kit.json
+/website/public/terrain/preview.png
+.DS_Store

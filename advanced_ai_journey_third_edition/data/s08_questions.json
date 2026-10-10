@@ -1,0 +1,182 @@
+[
+ {
+  "question": "What accuracy does always guessing the most common flower species get?",
+  "gold": "0.316",
+  "answer": "0\\.316"
+ },
+ {
+  "question": "How much does k-NN suffer when one feature is measured in much larger units and nothing is rescaled?",
+  "gold": "0.705",
+  "answer": "0\\.705"
+ },
+ {
+  "question": "What share of the students passed the course?",
+  "gold": "63.0%",
+  "answer": "\\b63\\b|\\b315\\b"
+ },
+ {
+  "question": "Which department had the best pass rate?",
+  "gold": "69.6%",
+  "answer": "69\\.6|\\bCS\\b|computer science"
+ },
+ {
+  "question": "Which numeric column is most strongly correlated with passing?",
+  "gold": "0.348",
+  "answer": "previous.?grade"
+ },
+ {
+  "question": "How many students have no earlier grade recorded?",
+  "gold": "22 students have no",
+  "answer": "\\b22\\b"
+ },
+ {
+  "question": "What happens to test accuracy when the certificate column that leaks the answer is kept?",
+  "gold": "scores 1.000",
+  "answer": "1\\.0|100\\s?%"
+ },
+ {
+  "question": "What were the five cross-validation scores for the student pipeline, and their mean?",
+  "gold": "0.792",
+  "answer": "0\\.79"
+ },
+ {
+  "question": "At what depth does a decision tree fit its training data perfectly?",
+  "gold": "depth 13",
+  "answer": "\\b13\\b"
+ },
+ {
+  "question": "How many weights does the small convolutional digit classifier have?",
+  "gold": "12,810",
+  "answer": "12,?810"
+ },
+ {
+  "question": "How do the two digit networks cope when every image is moved three pixels sideways?",
+  "gold": "0.725",
+  "answer": "0\\.725|72\\.5"
+ },
+ {
+  "question": "How many of the test digits does the CNN get wrong?",
+  "gold": "344",
+  "answer": "\\b344\\b"
+ },
+ {
+  "question": "Which way of summarising the feature maps is most robust to shifted digits?",
+  "gold": "Global max pooling",
+  "answer": "max(imum)? pool"
+ },
+ {
+  "question": "How long did it take to train the flower classifier from random weights?",
+  "gold": "390 seconds",
+  "answer": "\\b390\\b"
+ },
+ {
+  "question": "How much does starting from ImageNet weights help on the flower photos?",
+  "gold": "0.663 to 0.853",
+  "answer": "0\\.853|85\\.3"
+ },
+ {
+  "question": "How many parameters are trained when the pretrained backbone is frozen?",
+  "gold": "6,405",
+  "answer": "6,?405"
+ },
+ {
+  "question": "Which learning rate was used when the last layers of MobileNetV2 were unfrozen?",
+  "gold": "0.00001",
+  "answer": "0\\.00001|1e-0?5|10\\^-5|10⁻⁵"
+ },
+ {
+  "question": "How accurate is the bag-of-words model with bigrams on the movie reviews?",
+  "gold": "0.885",
+  "answer": "0\\.885|88\\.5"
+ },
+ {
+  "question": "What weight does the model learn for the phrase \"not good\"?",
+  "gold": "−0.98",
+  "answer": "0\\.98"
+ },
+ {
+  "question": "Why did the recurrent network lose to word counting on the reviews?",
+  "gold": "0.823",
+  "answer": "0\\.823|more data|overfit"
+ },
+ {
+  "question": "How many parameters does the LSTM sentiment model have, and where are most of them?",
+  "gold": "648,353",
+  "answer": "648,?353"
+ },
+ {
+  "question": "In the fraud example, how many fraudulent transactions does the logistic regression catch?",
+  "gold": "finds 5 of the 50",
+  "answer": "\\b5\\b|\\bfive\\b"
+ },
+ {
+  "question": "Which decision threshold was chosen to catch at least 95% of malignant tumours?",
+  "gold": "0.463",
+  "answer": "0\\.463"
+ },
+ {
+  "question": "What recall did the tumour classifier reach on the final test set?",
+  "gold": "recall 0.905",
+  "answer": "0\\.905|90\\.5"
+ },
+ {
+  "question": "Which regularisation strength C gave the best cross-validated F1?",
+  "gold": "0.972",
+  "answer": "C\\s*=\\s*1(?![\\d.])|C of 1(?![\\d.])|C is 1(?![\\d.])"
+ },
+ {
+  "question": "What silhouette score does K-means reach with four clusters?",
+  "gold": "0.757",
+  "answer": "0\\.757"
+ },
+ {
+  "question": "How much variance do the first two principal components of the digits keep?",
+  "gold": "21.6%",
+  "answer": "21\\.6"
+ },
+ {
+  "question": "How many principal components are needed to keep 90% of the variance in the digit images?",
+  "gold": "31 of the 64",
+  "answer": "\\b31\\b"
+ },
+ {
+  "question": "How well does clustering the digit images recover the real digits?",
+  "gold": "0.478",
+  "answer": "0\\.478"
+ },
+ {
+  "question": "What does the small network output for the four XOR rows after training?",
+  "gold": "0.998",
+  "answer": "0\\.99[89]"
+ },
+ {
+  "question": "Which learning rate made training get stuck and never improve?",
+  "gold": "stalls at 0.14",
+  "answer": "\\b1\\.0\\b|rate of 1\\b"
+ },
+ {
+  "question": "Which weight-decay setting gave the lowest validation loss?",
+  "gold": "L2 at 0.01",
+  "answer": "0\\.01(?!\\d)"
+ },
+ {
+  "question": "How many parameters does the overly flexible network have compared with its training points?",
+  "gold": "66,817",
+  "answer": "66,?817"
+ },
+ {
+  "question": "In the toy attention example, which word does \"it\" attend to most?",
+  "gold": "0.59 to *battery*",
+  "answer": "battery"
+ },
+ {
+  "question": "Which GPT-2 head points most strongly from \"it\" to robot?",
+  "gold": "layer 4, head 11",
+  "answer": "layer 4.{0,12}head 11"
+ },
+ {
+  "question": "What cut-off on the retrieval score separates answerable from unanswerable questions?",
+  "gold": "set it to 0.28",
+  "answer": "0\\.28(?!\\d)"
+ }
+]

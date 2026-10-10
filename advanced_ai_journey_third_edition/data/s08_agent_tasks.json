@@ -1,0 +1,156 @@
+[
+ {
+  "task": "How many more parameters does the dense digit network have than the CNN?",
+  "target": 88960,
+  "needs": [
+   "101,770",
+   "12,810"
+  ]
+ },
+ {
+  "task": "How many times more parameters does the dense digit network have than the CNN?",
+  "target": 7.944574551131928,
+  "needs": [
+   "101,770",
+   "12,810"
+  ]
+ },
+ {
+  "task": "By how many percentage points does ImageNet pretraining raise the flower test accuracy compared with training from scratch?",
+  "target": 19.0,
+  "needs": [
+   "0.663",
+   "0.853"
+  ]
+ },
+ {
+  "task": "By how many percentage points do word pairs improve the TF-IDF movie-review model over single words?",
+  "target": 0.7,
+  "needs": [
+   "0.878",
+   "0.885"
+  ]
+ },
+ {
+  "task": "By how many percentage points does the TF-IDF model with word pairs beat the LSTM on the movie-review test set?",
+  "target": 6.2,
+  "needs": [
+   "0.885",
+   "0.823"
+  ]
+ },
+ {
+  "task": "How many percentage points separate the CS pass rate from the Business pass rate?",
+  "target": 14.2,
+  "needs": [
+   "69.6%",
+   "55.4%"
+  ]
+ },
+ {
+  "task": "In the fraud example, how many of the 50 frauds in the test set does the logistic regression miss?",
+  "target": 45,
+  "needs": [
+   "finds 5 of the 50"
+  ]
+ },
+ {
+  "task": "How many of the 10,000 test digits does the CNN classify correctly?",
+  "target": 9656,
+  "needs": [
+   "344"
+  ]
+ },
+ {
+  "task": "How much test accuracy does k-NN lose when one feature is multiplied by 1,000 without scaling?",
+  "target": 0.214,
+  "needs": [
+   "0.919",
+   "0.705"
+  ]
+ },
+ {
+  "task": "How many times fewer parameters are trained with frozen features than when training the flower network from scratch?",
+  "target": 348.20874316939893,
+  "needs": [
+   "2,230,277",
+   "6,405"
+  ]
+ },
+ {
+  "task": "How many weights are in the LSTM's embedding layer (vocabulary size times embedding width)?",
+  "target": 640000,
+  "needs": [
+   "20,000 words × 32"
+  ]
+ },
+ {
+  "task": "How many more students passed than failed?",
+  "target": 130,
+  "needs": [
+   "315",
+   "185"
+  ]
+ },
+ {
+  "task": "What percentage of the variance in the digit images is lost when only the first two principal components are kept?",
+  "target": 78.4,
+  "needs": [
+   "21.6%"
+  ]
+ },
+ {
+  "task": "How many times longer did the from-scratch flower run take than the frozen-feature run?",
+  "target": 10.263157894736842,
+  "needs": [
+   "390",
+   "38 seconds"
+  ]
+ },
+ {
+  "task": "How many parameters does the first dense layer of the digit network have (784 inputs, 128 neurons, with biases)?",
+  "target": 100480,
+  "needs": [
+   "100,480"
+  ]
+ },
+ {
+  "task": "How much lower is the decision tree's test accuracy at full depth than at its best depth?",
+  "target": 0.015,
+  "needs": [
+   "0.905",
+   "0.890"
+  ]
+ },
+ {
+  "task": "How much higher is the silhouette score for K = 4 than for K = 3?",
+  "target": 0.035,
+  "needs": [
+   "0.757",
+   "0.722"
+  ]
+ },
+ {
+  "task": "By how much does the logistic regression's accuracy exceed the always-no-fraud rule in the fraud example?",
+  "target": 0.001,
+  "needs": [
+   "0.990",
+   "0.991"
+  ]
+ },
+ {
+  "task": "By how much does the first iris model's test accuracy exceed the majority-class baseline?",
+  "target": 0.605,
+  "needs": [
+   "0.921",
+   "0.316"
+  ]
+ },
+ {
+  "task": "How many malignant tumours in the test set does the final model miss, as a share of all malignant test cases (in percent)?",
+  "target": 9.523809523809524,
+  "needs": [
+   "38 of the 42"
+  ]
+ }
+]

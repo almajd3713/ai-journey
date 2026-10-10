@@ -1,0 +1,146 @@
+/* AI Journey components.
+ * "ETC" marks a component copied from etclub.online with the same look.
+ * "AIJ" marks a component new to this site, built from the same parts. */
+
+/* ETC: header (sticky, blurred) */
+.header { position: sticky; top: 0; z-index: 40; background: var(--header-bg); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 72px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; }
+.brand img { width: 36px; height: 36px; }
+.brand .az { font-size: 18px; white-space: nowrap; }
+.brand .sep { width: 1px; height: 22px; background: var(--line-2); }
+@media (max-width: 520px) { .brand .sep, .brand .label { display: none; } }
+.navlink { padding: 12px 2px; font-size: 15px; font-weight: 500; text-decoration: none; background-image: var(--grad); background-repeat: no-repeat; background-position: 0 100%; background-size: 0 2px; transition: background-size .35s var(--ease-out); }
+.navlink:hover, .navlink[aria-current] { background-size: 100% 2px; }
+
+/* ETC: buttons. Primary is the gradient with a chamfered corner. */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 26px; border: 0; cursor: pointer; white-space: nowrap; font: inherit; font-size: 16px; font-weight: 700; line-height: 1; text-decoration: none; transition: transform .15s, box-shadow .3s, background .2s, color .2s; }
+.btn:active { transform: translateY(1px); }
+.btn .arr { transition: transform .25s var(--ease-out); }
+.btn:hover .arr { transform: translateX(3px); }
+.btn-glow { background: var(--grad); color: var(--ink); }
+.btn-glow:hover { box-shadow: var(--glow-cyan); }
+.btn-line { background: none; color: var(--foam); box-shadow: inset 0 0 0 1.5px var(--line-2); }
+.btn-line:hover { box-shadow: inset 0 0 0 1.5px var(--foam); }
+.btn-ink { background: var(--ink); color: #E9F3F1; }
+.btn-s { min-height: 40px; padding: 0 16px; font-size: 14px; }
+
+/* ETC: square icon button and chip */
+.sq { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; flex: none; background: none; border: 0; color: var(--foam); cursor: pointer; box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .2s; }
+.sq:hover { box-shadow: inset 0 0 0 1px var(--foam); }
+.chip { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 12px; font-family: var(--font-mono); font-size: 12px; box-shadow: inset 0 0 0 1px var(--line-2); }
+
+/* ETC: panels and cards. Square, deep, no borders: a 1px inset line when needed. */
+.panel { background: var(--deep); padding: clamp(24px, 3vw, 44px); position: relative; overflow: hidden; }
+.panel-line { box-shadow: inset 0 0 0 1.5px var(--line); }
+.panel-glow { background: radial-gradient(90% 60% at 85% 0%, #12C2F01F, transparent 70%), var(--deep); }
+.panel-foam { background: #E9F3F1; color: #04140D; }
+.panel-foam .label, .panel-foam .fog { color: #3F5A5E; }
+.panel-grad { background: var(--grad); color: var(--ink); }
+.panel-grad .label { color: #04140DB3; }
+.grid { display: grid; gap: 16px; }
+@media (min-width: 760px) { .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* ETC: stats row (gradient number, dot, mono label) */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 28px 24px; border-top: 2px solid; border-image: var(--grad) 1; padding-top: 24px; }
+.stat .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--cyan); margin-bottom: 14px; }
+.stat:first-child .dot { background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+
+/* ETC: progress steps (done / now / todo) */
+.steps { list-style: none; margin: 0; padding: 0; }
+.st { position: relative; display: grid; grid-template-columns: 28px 1fr; gap: 16px; padding-bottom: 22px; }
+.st .dot { position: relative; z-index: 1; width: 28px; height: 28px; border-radius: 50%; background: var(--abyss); box-shadow: inset 0 0 0 2px var(--line-2); display: flex; align-items: center; justify-content: center; }
+.st .bar { position: absolute; left: 13px; top: 28px; bottom: 0; width: 2px; background: var(--line-2); }
+.st:last-child .bar { display: none; }
+.st[data-state=done] .dot, .st[data-state=done] .bar { background: var(--grad); box-shadow: none; }
+.st[data-state=now] .dot { box-shadow: inset 0 0 0 2px var(--cyan), 0 0 18px #12C2F080; }
+.st[data-state=now] .dot::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--cyan); }
+.st[data-state=todo] .t { color: var(--fog); }
+.st .t { font-weight: 700; }
+.st .s { color: var(--fog); font-size: 14px; }
+
+/* ETC: choice buttons (.lv), reused by the ping card */
+.lv { min-height: 48px; padding: 10px 18px; border: 0; background: none; color: var(--foam); font: inherit; font-weight: 600; text-align: left; cursor: pointer; box-shadow: inset 0 0 0 1.5px var(--line-2); transition: box-shadow .2s, background .2s; }
+.lv:hover { box-shadow: inset 0 0 0 1.5px var(--foam); }
+.lv[aria-checked=true] { background: var(--grad); color: var(--ink); box-shadow: none; }
+
+/* AIJ: route chip. A short gradient tick shows which course a thing belongs to. */
+.route { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.route::before { content: ""; width: 22px; height: 2px; background: currentColor; box-shadow: 0 0 10px currentColor; }
+.route-basic { color: var(--route-basic); }
+.route-advanced { color: var(--route-advanced); }
+
+/* AIJ: station card, one per session. A panel with the route colour as a 2px top edge
+   (like the club's .port:before), a station code, and the session's real outcomes. */
+.station { background: var(--deep); position: relative; padding: clamp(22px, 2.6vw, 36px); display: flex; flex-direction: column; gap: 18px; }
+.station::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 2px; background: var(--rc, var(--route-basic)); }
+.station[data-route=advanced] { --rc: var(--route-advanced); }
+.station .code { font-family: var(--font-display); font-size: 15px; color: var(--rc, var(--route-basic)); letter-spacing: .04em; }
+.station .meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.station ol { margin: 0; padding-left: 20px; color: var(--fog); }
+.station ol li { margin: 4px 0; }
+.station ol li::marker { font-family: var(--font-mono); color: var(--rc, var(--route-basic)); }
+
+/* AIJ: sounding, a real measured number with its source cell */
+.sounding { display: grid; gap: 6px; padding-top: 14px; border-top: 1px solid var(--line); }
+.sounding .v { font-family: var(--font-display); font-size: 30px; line-height: 1; color: var(--sounding); }
+.sounding .src { font-family: var(--font-mono); font-size: 11px; color: var(--fog); }
+
+/* AIJ: ping card (guess before you see). Choices are .lv; the echo is the measured answer. */
+.ping { background: var(--deep); padding: clamp(22px, 2.6vw, 36px); display: grid; gap: 16px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.ping .q { font-size: 19px; font-weight: 700; line-height: 1.35; margin: 0; }
+.ping .choices { display: grid; gap: 8px; }
+.ping .echo { display: none; padding: 16px 18px; background: var(--abyss); box-shadow: inset 2px 0 0 var(--echo-right); }
+.ping[data-answered] .echo { display: block; }
+.ping .lv[data-verdict=wrong][aria-checked=true] { background: none; color: var(--foam); box-shadow: inset 0 0 0 1.5px var(--echo-wrong); }
+
+/* AIJ: kit row, one downloadable file */
+.kit { list-style: none; margin: 0; padding: 0; }
+.kit li { border-bottom: 1px solid var(--line); }
+.kit a { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto 20px; align-items: center; gap: 14px; padding: 14px 4px; text-decoration: none; transition: background .2s; }
+.kit a:hover { background: var(--trench); }
+.kit .name { font-weight: 600; overflow-wrap: anywhere; }
+.kit .what { display: block; color: var(--fog); font-size: 14px; font-weight: 400; }
+.kit .size { font-family: var(--font-mono); font-size: 12px; color: var(--fog); white-space: nowrap; }
+
+/* AIJ: guide card (instructors). Portrait panel like the club's crew cards (.port),
+   with a monogram when there is no photo. Any number of guides; layout is a grid. */
+.guides { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.guide .port { aspect-ratio: 4 / 5; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; background: radial-gradient(80% 60% at 50% 30%, #12C2F024, transparent 70%), var(--deep); }
+.guide .port::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 2px; background: var(--grad); transform-origin: 0; transform: scaleX(.25); transition: transform .5s var(--ease-out); }
+.guide:hover .port::before { transform: scaleX(1); }
+.guide .mono-gram { font-family: var(--font-display); font-size: 64px; color: transparent; -webkit-text-stroke: 1.5px var(--cyan); }
+.guide .who { padding-top: 14px; display: grid; gap: 4px; }
+.guide .nm { font-weight: 700; font-size: 18px; }
+.guide-slot .port { background: none; box-shadow: inset 0 0 0 1.5px var(--line-2); }
+.guide-slot .port::before { display: none; }
+
+/* AIJ: depth gauge, the HUD that shows the loss as depth. It extends the club's
+   right-hand depth rail ("0 M · Surface · Universe ...") with a live loss readout. */
+.gauge { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: stretch; }
+.gauge .rail { position: relative; width: 2px; background: var(--line-2); margin-left: 7px; }
+.gauge .fill { position: absolute; inset: 0 0 auto 0; height: var(--p, 0%); background: var(--grad); }
+.gauge .bob { position: absolute; left: 50%; top: var(--p, 0%); width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--abyss); border: 2px solid var(--cyan); box-shadow: 0 0 14px #12C2F080; }
+.gauge .zones { position: relative; min-height: 280px; }
+.gauge .zone { position: absolute; left: 0; top: var(--at); transform: translateY(-50%); white-space: nowrap; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--fog); transition: color .2s; }
+.gauge .zone[aria-current] { color: var(--foam); }
+.readout { display: grid; gap: 2px; }
+.readout .v { font-family: var(--font-display); font-size: 34px; line-height: 1; }
+
+/* AIJ: chart frame for the bathymetric map (canvas inside) */
+.chart { position: relative; background: var(--d6); box-shadow: inset 0 0 0 1px var(--line); }
+.chart canvas { width: 100%; height: auto; aspect-ratio: 1; }
+.chart figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--fog); background: var(--abyss); }
+.legend { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; font-size: 14px; }
+.legend li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center; }
+.ramp { height: 10px; background: linear-gradient(90deg, var(--d0), var(--d1), var(--d2), var(--d3), var(--d4), var(--d5), var(--d6)); box-shadow: inset 0 0 0 1px var(--line); }
+
+/* AIJ: range slider in club style (scrubbing the training step) */
+.scrub { -webkit-appearance: none; appearance: none; width: 100%; height: 2px; background: var(--line-2); outline-offset: 8px; }
+.scrub::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--abyss); border: 2px solid var(--cyan); box-shadow: 0 0 12px #12C2F080; cursor: pointer; }
+.scrub::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--abyss); border: 2px solid var(--cyan); cursor: pointer; }
+
+/* ETC: entrance animation */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise 1s var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) { .rise { animation: none; } }

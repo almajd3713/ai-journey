@@ -1,0 +1,19 @@
+{
+ "club": "ENSIA Tech Community",
+ "clubShort": "ETC",
+ "clubUrl": "https://www.etclub.online",
+ "school": "ENSIA",
+ "cell": "AI & Data Science Cell",
+ "cellShort": "AI & Data Science",
+ "title": "AI Journey",
+ "tagline": "The Descent",
+ "edition": "Third edition",
+ "year": 2026,
+ "domain": "journey.etclub.online",
+ "repo": "almajd3713/ai-journey",
+ "branch": "main",
+ "courseDirs": {
+  "basic": "ai_journey_third_edition",
+  "advanced": "advanced_ai_journey_third_edition"
+ }
+}

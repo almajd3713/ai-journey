@@ -1,0 +1,20 @@
+# Advanced AI Journey, third edition. Python 3.12.
+# Versions are the ones the saved outputs were produced with; newer versions should work.
+# torch: install the CUDA wheel for your GPU from https://pytorch.org first (the plain PyPI wheel may be CPU-only on some systems).
+torch>=2.14.1
+transformers>=5.19.0
+accelerate>=1.15.0
+tokenizers>=0.23.2
+huggingface_hub>=1.33.0
+safetensors>=0.8.0
+pyarrow>=25.0.1
+pandas>=3.0.6
+numpy>=2.5.3
+scipy>=1.18.1
+scikit-learn>=1.9.1
+matplotlib>=3.11.2
+pillow>=12.3.0
+jupyterlab>=4.6.4
+ipykernel>=7.4.0
+nbformat>=5.11.1
+nbclient>=0.11.0

@@ -1,0 +1,30 @@
+{
+  "name": "ai-journey-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "data": "python -I tools/extract_content.py && python -I tools/check_markers.py && python -I tools/build_downloads.py"
+  },
+  "dependencies": {
+    "@react-three/fiber": "9.8.1",
+    "d3-contour": "4.0.2",
+    "d3-geo": "3.1.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/d3-contour": "3.0.6",
+    "@types/d3-geo": "3.1.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/three": "0.186.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "typescript": "5.9.3",
+    "vite": "8.3.1"
+  }
+}

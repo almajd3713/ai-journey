@@ -1,0 +1,131 @@
+/* AI Journey design tokens
+ *
+ * Layer 1 is the ENSIA Tech Community base, copied from etclub.online's production
+ * stylesheet (October 2026). Keep these values identical to the club site; if the club
+ * changes them, change them here.
+ *
+ * Layer 2 adds what the AI Journey site needs and the club site does not have: the depth
+ * scale for the bathymetric chart, isobath (contour) colours, the two course routes,
+ * and the "chart paper" light theme for print.
+ */
+
+/* Layer 1: ETC base (inherited, do not edit) */
+:root {
+  /* ocean colours, deepest first */
+  --abyss: #040D12;       /* page background */
+  --deep: #0A1A21;        /* panels, cards */
+  --trench: #10252E;      /* hovered panels */
+  --ink: #04140D;         /* text on gradient or foam */
+  --foam: #E9F3F1;        /* main text; light panels */
+  --fog: #8FA3A6;         /* secondary text */
+
+  /* signal colours */
+  --signal: #19F08B;
+  --cyan: #12C2F0;
+  --etcode: #FF8A2A;      /* reserved for ETCode; not used by AI Journey */
+  --danger: #FF6B5E;
+  --plankton: #7FE9F5;    /* the club's drifting particles (.pk) */
+
+  --grad: linear-gradient(100deg, #19F08B 0%, #12C2F0 100%);
+  --evgrad: linear-gradient(100deg, #FF8A2A 0%, #FFB45C 100%);
+
+  /* lines are foam at low alpha */
+  --line: #E9F3F11C;
+  --line-2: #E9F3F138;
+
+  /* glows used on hover and selected states */
+  --glow-cyan: 0 0 32px #12C2F073;
+  --glow-cyan-soft: 0 0 30px #12C2F040;
+
+  /* type */
+  --font-display: "Azonix", "Archivo", "Arial Black", sans-serif;  /* always uppercase */
+  --font-body: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --body-size: 17px;
+  --body-leading: 1.55;
+
+  /* motion */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-io: cubic-bezier(.65, 0, .35, 1);
+
+  /* rhythm */
+  --sec: clamp(96px, 10vw, 160px);   /* vertical space between sections */
+  --cut-s: 12px;                     /* .chamfer corner */
+  --cut-l: 28px;                     /* .cut corner */
+  --header-bg: #040D12D1;            /* with backdrop-filter: blur(14px) */
+}
+
+/* Layer 2: AI Journey extensions */
+:root {
+  /* Layout, as the club's .wrap: 1320px max, 16-40px gutter. */
+  --wrap: 1320px;
+  --gutter: clamp(16px, 3vw, 40px);
+
+  /* The two routes travel along the club gradient: the basic course is the signal end,
+     the advanced course the cyan end. The whole journey is the brand gradient. */
+  --route-basic: var(--signal);
+  --route-advanced: var(--cyan);
+  --route-thread: var(--plankton);   /* currents: real links between the two courses */
+
+  /* Depth scale for the chart: loss is depth, so a high loss is shallow (lighter) water
+     and a low loss is the abyss. d0 = surface ... d6 = abyss. Derived by mixing the
+     club's trench/cyan into abyss so the chart sits inside the existing palette. */
+  --d0: #2A7C82;
+  --d1: #1F646C;
+  --d2: #174E58;
+  --d3: #113B45;
+  --d4: #0C2A33;
+  --d5: #081A22;
+  --d6: #040D12;
+
+  /* Isobaths (depth contours) with Tanaka-style lighting: lit edges in foam, shadowed
+     edges in abyss, every fourth line (an index isobath) heavier and labelled. */
+  --isobath: #12C2F04D;
+  --isobath-index: #19F08BB3;
+  --isobath-lit: #E9F3F12E;
+  --isobath-shade: #00000073;
+  --sounding: var(--foam);           /* depth labels: real measured loss values */
+
+  /* Answer states for ping cards (guess before you see) */
+  --echo-right: var(--signal);
+  --echo-wrong: var(--danger);
+}
+
+/* "Chart paper": a light theme for print and the poster. The club site is dark only, so
+   this is an extension: foam becomes the paper and ink the linework, like the club's
+   light Read-IT card. */
+:root[data-theme="chart"] {
+  --abyss: #E9F3F1;
+  --deep: #DDEBE8;
+  --trench: #CFE2DE;
+  --foam: #04140D;
+  --fog: #3F5A5E;
+  --line: #04140D1F;
+  --line-2: #04140D40;
+  --header-bg: #E9F3F1D9;
+  --route-basic: #0A9E5B;
+  --route-advanced: #0A86A8;
+  --route-thread: #0F6F86;
+  --d0: #F2F8F6;
+  --d1: #DCEEEA;
+  --d2: #C4E3DF;
+  --d3: #A9D6D3;
+  --d4: #8BC5C6;
+  --d5: #6AAFB4;
+  --d6: #4C969E;
+  --isobath: #04140D33;
+  --isobath-index: #04140D8C;
+  --isobath-lit: #FFFFFF80;
+  --isobath-shade: #04140D33;
+  --sounding: #04140D;
+  --glow-cyan: 0 0 0 transparent;
+  --glow-cyan-soft: 0 0 0 transparent;
+}
+
+@media print {
+  :root {
+    --abyss: #FFFFFF; --deep: #F1F6F5; --foam: #04140D; --fog: #3F5A5E;
+    --line: #04140D26; --line-2: #04140D4D;
+    --route-basic: #0A9E5B; --route-advanced: #0A86A8;
+  }
+}

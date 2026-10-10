@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#040D12">
+<title>AI Journey Design System</title>
+<link rel="icon" href="assets/club/brand/etc-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  /* specimen-page layout only; not part of the system */
+  .sec-head { display: grid; gap: 14px; margin-bottom: 40px; }
+  .sec-head .label { color: var(--cyan); }
+  .divider { border-top: 1px solid var(--line); }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .sw { background: var(--deep); }
+  .sw .chipc { height: 72px; box-shadow: inset 0 0 0 1px var(--line); }
+  .sw .meta { padding: 10px 12px 12px; display: grid; gap: 2px; }
+  .sw .meta b { font-size: 14px; }
+  .sw .meta span { font-family: var(--font-mono); font-size: 11px; color: var(--fog); }
+  .sw .meta .tag.new { color: var(--ink); }
+  .tag { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; padding: 2px 6px; box-shadow: inset 0 0 0 1px var(--line-2); justify-self: start; margin-top: 4px; }
+  .tag.new { color: var(--ink); background: var(--grad); box-shadow: none; }
+  .type-row { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; padding: 22px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  @media (max-width: 700px) { .type-row { grid-template-columns: 1fr; gap: 8px; } }
+  .gloss { width: 100%; border-collapse: collapse; }
+  .gloss th, .gloss td { text-align: left; padding: 16px 12px 16px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .gloss th { font-family: var(--font-mono); font-weight: 400; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--fog); }
+  .gloss td:first-child { white-space: nowrap; }
+  @media (max-width: 700px) {
+    .gloss thead { display: none; }
+    .gloss tr { display: grid; gap: 4px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .gloss td { border: 0; padding: 0; }
+    .gloss td:nth-child(3) { color: var(--fog); }
+  }
+  .gloss .i { width: 24px; height: 24px; color: var(--cyan); display: inline-block; vertical-align: -6px; margin-right: 10px; }
+  .i { width: 20px; height: 20px; flex: none; }
+  .chart-layout { display: grid; gap: 24px; }
+  @media (min-width: 980px) { .chart-layout { grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr); } }
+  .chart-side { display: grid; gap: 28px; align-content: start; }
+  .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; }
+  .icon-cell { background: var(--deep); display: grid; justify-items: center; gap: 10px; padding: 18px 8px 12px; }
+  .icon-cell .pair { display: flex; gap: 14px; }
+  .icon-cell img, .icon-cell svg { width: 24px; height: 24px; }
+  .icon-cell span { font-family: var(--font-mono); font-size: 11px; color: var(--fog); }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .hero { padding-top: clamp(48px, 7vw, 96px); padding-bottom: clamp(48px, 6vw, 80px); position: relative; overflow: hidden; }
+  .hero-grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 980px) { .hero-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); } }
+  .kicker { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .kicker img { height: 18px; width: auto; }
+  .kicker .bar { width: 1px; height: 16px; background: var(--line-2); }
+  .hero-emblem { width: min(380px, 70vw); margin-inline: auto; filter: drop-shadow(0 20px 60px #12C2F040); }
+  .pk { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--plankton); opacity: .5; }
+  footer { border-top: 1px solid var(--line); padding: 32px 0; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+  footer img { height: 22px; width: auto; display: inline-block; vertical-align: middle; margin-right: 10px; }
+  nav.links { display: none; gap: 24px; }
+  @media (min-width: 900px) { nav.links { display: flex; } }
+  :root[data-theme="chart"] .hero-emblem { filter: none; }
+  :root[data-theme="chart"] .brand img, :root[data-theme="chart"] footer img { filter: invert(1) hue-rotate(180deg); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="AI Journey, home">
+      <img src="assets/club/brand/etc-mark.svg" alt="">
+      <span class="az">AI Journey</span>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="label label-s">AI &amp; Data Science · ETC</span>
+    </a>
+    <nav class="links" aria-label="Sections">
+      <a class="navlink" href="#foundations">Foundations</a>
+      <a class="navlink" href="#dive">The dive</a>
+      <a class="navlink" href="#chart">Chart</a>
+      <a class="navlink" href="#components">Components</a>
+      <a class="navlink" href="#icons">Icons</a>
+    </nav>
+    <button class="sq" id="theme" type="button" aria-label="Switch to chart paper theme" title="Theme: abyss / chart paper">
+      <svg class="i"><use href="#i-theme"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero: how the system looks on the real site -->
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div style="display:grid; gap:28px">
+        <div class="kicker">
+          <img src="assets/club/brand/ensia-light.webp" alt="ENSIA">
+          <span class="bar" aria-hidden="true"></span>
+          <span class="label label-s">ENSIA Tech Community · AI &amp; Data Science Cell · Design system v0.1</span>
+        </div>
+        <h1 class="az h-hero">AI Journey<br><span class="outline">The</span> <span class="gtext">Descent.</span></h1>
+        <p class="lead">Learning is going downhill one small step at a time. Twenty-seven sessions, two courses, one dive down a real loss surface: from the surface, where the machine knows nothing, to the abyss.</p>
+        <div class="row">
+          <a class="btn btn-glow chamfer" href="#chart">Begin the dive <svg class="i arr"><use href="#i-arrow-r"/></svg></a>
+          <a class="btn btn-line" href="#components">Read the chart</a>
+        </div>
+      </div>
+      <img class="hero-emblem" src="assets/club/brand/etc-emblem.svg" alt="ENSIA Tech Community emblem">
+    </div>
+    <div class="wrap" style="margin-top:56px">
+      <div class="stats">
+        <div class="stat"><div class="dot"></div><div class="num">27</div><div class="label label-s">Stations</div></div>
+        <div class="stat"><div class="dot"></div><div class="num">2</div><div class="label label-s">Courses</div></div>
+        <div class="stat"><div class="dot"></div><div class="num">60</div><div class="label label-s">Minutes each</div></div>
+        <div class="stat"><div class="dot"></div><div class="num">0</div><div class="label label-s">Invented numbers</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 Foundations -->
+  <section class="sec divider" id="foundations">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">01 · Foundations</span>
+        <h2 class="az h-1">Built on the <span class="gtext">club</span></h2>
+        <p class="lead">Every base value is copied from etclub.online. Tiles marked <span class="tag new" style="display:inline">new</span> are AI Journey extensions, built inside the same palette.</p>
+      </div>
+
+      <h3 class="h-3" style="margin-bottom:16px">Ocean</h3>
+      <div class="swatches" id="sw-ocean"></div>
+      <h3 class="h-3" style="margin:40px 0 16px">Signal</h3>
+      <div class="swatches" id="sw-signal"></div>
+      <h3 class="h-3" style="margin:40px 0 16px">Depth scale and routes</h3>
+      <div class="swatches" id="sw-depth"></div>
+
+      <h3 class="h-3" style="margin:56px 0 8px">Type</h3>
+      <div class="type-row"><span class="label">Azonix · display<br>always uppercase</span><span class="az h-1">Station <span class="gtext">B06</span></span></div>
+      <div class="type-row"><span class="label">Archivo 800 · 125%<br>titles (.xp)</span><span class="h-3" style="font-size:28px">From a Linear Model to a Neural Network</span></div>
+      <div class="type-row"><span class="label">Archivo 400 · 17/1.55<br>body</span><span style="max-width:62ch">Sessions 0 to 5 used models from scikit-learn, and logistic regression came up more than once. A neural network is built from the same part: multiply the inputs by weights, add a bias, and pass the result through a function.</span></div>
+      <div class="type-row"><span class="label">JetBrains Mono<br>labels, numbers, files</span><span><span class="label" style="color:var(--foam)">Step 0120 · loss 0.412 · lr 0.30</span><br><span class="mono fog" style="font-size:14px">session_06_neural_networks.ipynb · 252 KB</span></span></div>
+
+      <h3 class="h-3" style="margin:56px 0 16px">Shape and motion</h3>
+      <div class="grid g3">
+        <div class="panel chamfer"><span class="label">.chamfer · 12px cut</span><p class="fog" style="margin:10px 0 0">Buttons and small cards. Corners are cut, never rounded.</p></div>
+        <div class="panel cut"><span class="label">.cut · 28px cut</span><p class="fog" style="margin:10px 0 0">Large panels and media.</p></div>
+        <div class="panel panel-line"><span class="label">ease-out · .16 1 .3 1</span><p class="fog" style="margin:10px 0 0">Entrances and hovers. ease-io (.65 0 .35 1) for camera moves and progress bars.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 The dive: vocabulary -->
+  <section class="sec divider" id="dive">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">02 · The dive</span>
+        <h2 class="az h-1">Loss is <span class="gtext">depth</span></h2>
+        <p class="lead">The club is an ocean: abyss, trench, deep, foam. On this site, training a model is a dive down its loss surface, and every word below names something real.</p>
+      </div>
+      <table class="gloss">
+        <thead><tr><th>Word</th><th>On the site</th><th>In the course</th></tr></thead>
+        <tbody>
+          <tr><td><svg class="i"><use href="#i-surface"/></svg><b>Surface</b></td><td>The start of the trail, step 0</td><td>Random weights: high loss, the machine knows nothing yet</td></tr>
+          <tr><td><svg class="i"><use href="#i-descent"/></svg><b>Shelf → Slope</b></td><td>The steep upper part, where the basic route runs</td><td>Basic course, sessions 0–12: most of the loss falls here</td></tr>
+          <tr><td><svg class="i"><use href="#i-trench"/></svg><b>Trench → Abyss</b></td><td>The long valley floor, where the advanced route runs</td><td>Advanced course, sessions 0–13: slow, careful progress on details</td></tr>
+          <tr><td><svg class="i"><use href="#i-station"/></svg><b>Station</b></td><td>A stop on the trail, coded B00–B12 and A00–A13</td><td>One session</td></tr>
+          <tr><td><svg class="i"><use href="#i-sounding"/></svg><b>Sounding</b></td><td>A depth number on the chart or a card</td><td>A real number from a notebook's saved output</td></tr>
+          <tr><td><svg class="i"><use href="#i-ping"/></svg><b>Ping</b></td><td>Guess first, then the echo comes back</td><td>A pause question and its measured answer</td></tr>
+          <tr><td><svg class="i"><use href="#i-current"/></svg><b>Current</b></td><td>A dotted line between stations of the two courses</td><td>A real link, such as A13 reusing B09's flower photos</td></tr>
+          <tr><td><svg class="i"><use href="#i-kit"/></svg><b>Kit</b></td><td>The downloads</td><td>Notebooks, browser renders, Colab, zips</td></tr>
+          <tr><td><svg class="i"><use href="#i-guide"/></svg><b>Guides</b></td><td>The people on the cartouche and the Guides section</td><td>The instructors, from people.json</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 03 The chart -->
+  <section class="sec divider" id="chart">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">03 · The chart</span>
+        <h2 class="az h-1">A real <span class="gtext">seafloor</span></h2>
+        <p class="lead">A bathymetric chart of a measured loss surface. Isobaths are lit like Tanaka contours; index isobaths carry real loss values. Drag the step to dive.</p>
+      </div>
+      <div class="chart-layout">
+        <figure class="chart" style="margin:0">
+          <canvas id="bathy" role="img" aria-label="Bathymetric chart of a loss surface with the training trail and 27 stations"></canvas>
+          <figcaption><span>PCA plane of the training run · 129 × 129 grid</span><span id="explained"></span></figcaption>
+        </figure>
+        <div class="chart-side">
+          <div class="gauge" id="gauge">
+            <div class="rail"><div class="fill"></div><div class="bob"></div></div>
+            <div style="display:grid; grid-template-columns: 1fr auto; gap: 16px">
+              <div class="zones">
+                <span class="zone" data-z="0" style="--at:0%">Surface · B00</span><span class="zone" data-z="1" style="--at:11.5%">Shelf · B03</span><span class="zone" data-z="2" style="--at:30.8%">Slope · B08</span><span class="zone" data-z="3" style="--at:50%">Trench · A00</span><span class="zone" data-z="4" style="--at:76.9%">Abyss · A07</span>
+              </div>
+              <div class="readout" style="align-self:end; text-align:right">
+                <span class="label label-s">Training loss</span>
+                <span class="v gtext" id="r-loss">0.869</span>
+                <span class="label label-s" id="r-step">Step 0000</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid; gap:12px">
+            <label class="label" for="scrub">Training step</label>
+            <input class="scrub" id="scrub" type="range" min="0" max="1000" value="0">
+            <div class="row" style="justify-content:space-between">
+              <span class="route route-basic" id="r-station">B00</span>
+              <span class="fog" id="r-title" style="font-size:14px">Teaching a Machine from Examples</span>
+            </div>
+          </div>
+          <ul class="legend">
+            <li><span class="ramp"></span><span>Depth tint: shallow = high loss, abyss = low</span></li>
+            <li><svg width="28" height="10"><path d="M0 5h28" stroke="var(--isobath-index)" stroke-width="1.6"/></svg><span>Index isobath, labelled with the loss</span></li>
+            <li><svg width="28" height="10"><path d="M0 5h28" stroke="var(--route-basic)" stroke-width="2.4"/></svg><span>Basic route, B00–B12</span></li>
+            <li><svg width="28" height="10"><path d="M0 5h28" stroke="var(--route-advanced)" stroke-width="2.4"/></svg><span>Advanced route, A00–A13</span></li>
+            <li><svg width="28" height="10"><path d="M0 5h28" stroke="var(--route-thread)" stroke-width="1.6" stroke-dasharray="3 4"/></svg><span>Current: a link between the courses</span></li>
+          </ul>
+          <p class="fog" style="font-size:14px; margin:0">Specimen terrain: a small network on two moons, a stand-in for the Session 6 network the real site will use. The trail is the projection of its real training run; the gauge shows that run's real loss.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 Components -->
+  <section class="sec divider" id="components">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">04 · Components</span>
+        <h2 class="az h-1">The <span class="gtext">kit</span></h2>
+        <p class="lead">Club components keep the club's look. New ones are built from the same parts: deep panels, inset lines, the gradient, mono labels.</p>
+      </div>
+
+      <h3 class="h-3" style="margin-bottom:16px">Actions and labels</h3>
+      <div class="row" style="margin-bottom:48px">
+        <a class="btn btn-glow chamfer" href="#chart">Begin the dive <svg class="i arr"><use href="#i-arrow-r"/></svg></a>
+        <a class="btn btn-line" href="#chart">Read the chart</a>
+        <a class="btn btn-line btn-s" href="#kit"><svg class="i"><use href="#i-kit"/></svg>Field kit</a>
+        <span class="chip">60 min</span><span class="chip">PyTorch</span><span class="chip">CPU · about 20 s</span>
+        <span class="route route-basic">Basic · 13 stations</span>
+        <span class="route route-advanced">Advanced · 14 stations</span>
+      </div>
+
+      <div class="grid g2" style="align-items:start">
+        <article class="station" data-route="basic">
+          <div class="row" style="justify-content:space-between">
+            <span class="code">B04</span>
+            <div class="meta"><span class="chip">60 min</span><span class="chip">scikit-learn</span></div>
+          </div>
+          <h3 class="h-3">Evaluation: When Is a Model Good?</h3>
+          <p class="fog" style="margin:0">We start with a model that scores 99% and is useless, then build an evaluation procedure in a fixed order so the final score is honest.</p>
+          <div>
+            <span class="label label-s">By the end you can</span>
+            <ol>
+              <li>say why accuracy can mislead, and read a confusion matrix, precision and recall instead;</li>
+              <li>choose a decision threshold from a stated policy, using data that is not the test set;</li>
+              <li>follow the order tune → choose threshold → lock → test once.</li>
+            </ol>
+          </div>
+          <div class="grid g2" style="gap:20px">
+            <div class="sounding"><span class="v">0.953 → 0.905</span><span class="label label-s">Recall: validation → test, opened once</span><span class="src">session_04 · section 6</span></div>
+            <div class="sounding"><span class="v">5 / 50</span><span class="label label-s">Frauds found by the 99.1% model</span><span class="src">session_04 · section 1</span></div>
+          </div>
+          <div class="row">
+            <a class="btn btn-glow btn-s chamfer" href="#kit"><svg class="i"><use href="#i-notebook"/></svg>Notebook</a>
+            <a class="btn btn-line btn-s" href="#kit"><svg class="i"><use href="#i-render"/></svg>Read online</a>
+          </div>
+        </article>
+
+        <div class="ping" id="ping">
+          <div class="row" style="justify-content:space-between">
+            <span class="label" style="color:var(--cyan)"><svg class="i" style="display:inline-block; vertical-align:-5px; margin-right:6px"><use href="#i-ping"/></svg>Ping · B04</span>
+            <span class="label label-s">Guess before you see</span>
+          </div>
+          <p class="q">Fraud detection, 1% of transactions are fraud. A model scores 99.1% accuracy on the test set. Would you put it into use?</p>
+          <div class="choices" role="radiogroup" aria-label="Your guess">
+            <button class="lv" role="radio" aria-checked="false" data-verdict="wrong">Yes: 99.1% is excellent</button>
+            <button class="lv" role="radio" aria-checked="false" data-verdict="right">Not yet: first check what it misses</button>
+          </div>
+          <div class="echo" aria-live="polite">
+            <span class="label label-s" style="color:var(--echo-right)">Echo · measured</span>
+            <p style="margin:8px 0 0">A rule that always answers "no fraud" scores <b>0.990</b> and finds none of the 50 frauds. The logistic regression scores <b>0.991</b> and finds <b>5 of 50</b>. It misses 45. When one class is rare, accuracy is dominated by the common class.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="h-3" id="kit" style="margin:56px 0 16px">Kit rows</h3>
+      <ul class="kit">
+        <li><a href="#kit"><svg class="i" style="color:var(--cyan)"><use href="#i-notebook"/></svg><span class="name">Notebook with saved outputs<span class="what">session_04_evaluation_and_generalization.ipynb</span></span><span class="size">172 KB · ipynb</span><svg class="i"><use href="#i-kit"/></svg></a></li>
+        <li><a href="#kit"><svg class="i" style="color:var(--cyan)"><use href="#i-render"/></svg><span class="name">Read in the browser<span class="what">Rendered at build time, no setup needed</span></span><span class="size">html</span><svg class="i"><use href="#i-arrow-ne"/></svg></a></li>
+        <li><a href="#kit"><svg class="i" style="color:var(--cyan)"><use href="#i-cloud"/></svg><span class="name">Open in Colab<span class="what">Needs the notebooks in a public GitHub repo</span></span><span class="size">colab</span><svg class="i"><use href="#i-arrow-ne"/></svg></a></li>
+        <li><a href="#kit"><svg class="i" style="color:var(--cyan)"><use href="#i-zip"/></svg><span class="name">Basic course, everything<span class="what">13 notebooks, README, requirements.txt</span></span><span class="size">zip</span><svg class="i"><use href="#i-kit"/></svg></a></li>
+      </ul>
+
+      <h3 class="h-3" style="margin:56px 0 16px">Guides</h3>
+      <div class="guides" id="guides"></div>
+
+      <h3 class="h-3" style="margin:56px 0 16px">Progress</h3>
+      <div class="grid g2">
+        <ol class="steps">
+          <li class="st" data-state="done"><span class="dot"></span><span class="bar"></span><div><div class="t">B05 · Finding Structure Without Labels</div><div class="s">Visited</div></div></li>
+          <li class="st" data-state="now"><span class="dot"></span><span class="bar"></span><div><div class="t">B06 · From a Linear Model to a Neural Network</div><div class="s">You are here</div></div></li>
+          <li class="st" data-state="todo"><span class="dot"></span><span class="bar"></span><div><div class="t">B07 · Reading the Curves</div><div class="s">Next station</div></div></li>
+        </ol>
+        <div class="panel panel-grad cut" style="display:grid; gap:14px; align-content:start">
+          <span class="label">Shelf break · checkpoint</span>
+          <span class="az h-2">basic.pt saved</span>
+          <p style="margin:0; max-width:46ch">The basic route ends at the shelf break. The advanced course resumes training from here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 Icons -->
+  <section class="sec divider" id="icons">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">05 · Icons</span>
+        <h2 class="az h-1">One <span class="gtext">grammar</span></h2>
+        <p class="lead">24px grid, 1.6 stroke, square caps, miter joins. Foam (-f) and gradient (-g) variants, as on the club site.</p>
+      </div>
+      <h3 class="h-3" style="margin-bottom:16px">New for AI Journey</h3>
+      <div class="icon-grid" id="icons-new"></div>
+      <h3 class="h-3" style="margin:40px 0 16px">From the club</h3>
+      <div class="icon-grid" id="icons-club"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><img src="assets/club/brand/etc-mark.svg" alt="">ENSIA Tech Community · AI &amp; Data Science Cell</span>
+    <span class="label label-s">AI Journey design system · v0.1 · 2026-10-10</span>
+  </div>
+</footer>
+
+<script src="icons/icons.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="data/spike_terrain.js"></script>
+<script src="chart.js"></script>
+<script>
+(function () {
+  // Swatches: read live from the tokens so the page always shows the real values
+  const sw = (id, items) => document.getElementById(id).innerHTML = items.map(([v, name, note, isNew]) =>
+    `<div class="sw"><div class="chipc" style="background:var(${v})"></div><div class="meta"><b>${name}</b><span>${v} · <span data-v="${v}"></span></span><span>${note}</span>${isNew ? '<span class="tag new">new</span>' : '<span class="tag">club</span>'}</div></div>`).join("");
+  sw("sw-ocean", [["--abyss","Abyss","Page background"],["--deep","Deep","Panels, cards"],["--trench","Trench","Hover"],["--foam","Foam","Text, light panels"],["--fog","Fog","Secondary text"],["--ink","Ink","Text on gradient"]]);
+  sw("sw-signal", [["--signal","Signal","Gradient start"],["--cyan","Cyan","Gradient end, focus"],["--plankton","Plankton","Particles; the diver",],["--danger","Danger","Errors; wrong echo"],["--etcode","ETCode","Reserved for ETCode"]]);
+  sw("sw-depth", [["--d0","d0 · Surface","High loss",1],["--d2","d2 · Shelf","",1],["--d4","d4 · Slope","",1],["--d5","d5 · Trench","",1],["--d6","d6 · Abyss","Low loss (= abyss)",1],["--route-basic","Basic route","= signal",1],["--route-advanced","Advanced route","= cyan",1],["--isobath-index","Index isobath","",1]]);
+  const fill = () => document.querySelectorAll("[data-v]").forEach(e => e.textContent = getComputedStyle(document.documentElement).getPropertyValue(e.dataset.v).trim().toUpperCase());
+  fill();
+
+  // Guides: data-driven, any number of people (people.json on the real site)
+  const people = [{ name: "Redhouane Lazib", role: "Lead instructor", scope: "Basic and advanced courses" }];
+  const initials = (n) => n.split(/\s+/).map(w => w[0]).slice(0, 2).join("");
+  document.getElementById("guides").innerHTML = people.map(p =>
+    `<article class="guide"><div class="port"><span class="mono-gram az">${initials(p.name)}</span></div><div class="who"><span class="nm xp">${p.name}</span><span class="label label-s">${p.role}</span><span class="fog" style="font-size:14px">${p.scope}</span></div></article>`).join("") +
+    `<article class="guide guide-slot"><div class="port"><svg class="i" style="width:32px;height:32px;color:var(--fog)"><use href="#i-guide"/></svg></div><div class="who"><span class="nm xp fog">Next guide</span><span class="label label-s">Add an entry to people.json</span></div></article>`;
+
+  // Icons
+  document.getElementById("icons-new").innerHTML = window.AIJ_ICONS.filter(n => n !== "theme").map(n =>
+    `<div class="icon-cell"><div class="pair"><img src="icons/${n}-g.svg" alt=""><svg style="color:var(--foam)"><use href="#i-${n}"/></svg></div><span>${n}</span></div>`).join("");
+  const club = ["ai","dev","design","media","events","marketing","globe","jelly","workshop","idea","mic","bolt","chip","trophy","calendar","pin","users","arrow-ne"];
+  const has = { "ai":"fg","dev":"fg","design":"fg","media":"fg","events":"fg","marketing":"fg","globe":"fg","jelly":"fg","workshop":"fg","idea":"g","mic":"g","bolt":"g","chip":"g","trophy":"f","calendar":"f","pin":"f","users":"f","arrow-ne":"f" };
+  document.getElementById("icons-club").innerHTML = club.map(n =>
+    `<div class="icon-cell"><div class="pair">${has[n].includes("g") ? `<img src="assets/club/icons/${n}-g.svg" alt="">` : ""}${has[n].includes("f") ? `<img src="assets/club/icons/${n}-f.svg" alt="">` : ""}</div><span>${n}</span></div>`).join("");
+
+  // Ping
+  const ping = document.getElementById("ping");
+  ping.querySelectorAll(".lv").forEach(b => b.addEventListener("click", () => {
+    ping.querySelectorAll(".lv").forEach(x => x.setAttribute("aria-checked", x === b ? "true" : "false"));
+    ping.dataset.answered = b.dataset.verdict;
+  }));
+
+  // Chart + gauge
+  const titles = ["Teaching a Machine from Examples","Reading a Dataset","Preprocessing and Leakage","Four Ways to Draw a Boundary","Evaluation: When Is a Model Good?","Finding Structure Without Labels","From a Linear Model to a Neural Network","Training a Neural Network: Reading the Curves","Computer Vision","Transfer Learning","How Text Becomes Numbers","Attention","Language Models in Systems",
+    "From text to probabilities","Attention inside a real model","The transformer block","Training a small GPT","Encoder, decoder, encoder–decoder","Scaling and data","From base model to assistant","Fine-tuning in practice","Retrieval, tools and agents","Inference and serving","Evaluating language models","Experiments you can believe","Read a paper, reproduce a claim","Transformers beyond text"];
+  const T = window.SPIKE_TERRAIN;
+  document.getElementById("explained").textContent = `Top 2 PCs: ${(T.explained * 100).toFixed(1)}% of the trail`;
+  const gauge = document.getElementById("gauge"), zones = gauge.querySelectorAll(".zone");
+  const st = document.getElementById("r-station");
+  const chart = BathyChart(document.getElementById("bathy"), T, (m) => {
+    // The rail is the journey (station by station); the readout is the run's real loss.
+    gauge.style.setProperty("--p", (m.progress * 100).toFixed(1) + "%");
+    const z = m.station <= 2 ? 0 : m.station <= 7 ? 1 : m.station <= 12 ? 2 : m.station <= 19 ? 3 : 4;
+    zones.forEach(e => e.toggleAttribute("aria-current", +e.dataset.z === z));
+    document.getElementById("r-loss").textContent = m.loss.toFixed(3);
+    document.getElementById("r-step").textContent = "Step " + String(m.step).padStart(4, "0");
+    st.textContent = m.code; st.className = "route " + (m.station < 13 ? "route-basic" : "route-advanced");
+    document.getElementById("r-title").textContent = titles[m.station];
+  });
+  const scrub = document.getElementById("scrub");
+  scrub.addEventListener("input", (e) => chart.set(e.target.value / 1000));
+  const start = +(new URLSearchParams(location.search).get("p") || 0);  // ?p=0.6 opens mid-dive
+  scrub.value = start * 1000; chart.set(start);
+
+  // Theme: abyss (default, like the club) or chart paper (print, poster)
+  const btn = document.getElementById("theme");
+  btn.addEventListener("click", () => {
+    const r = document.documentElement, toChart = r.dataset.theme !== "chart";
+    if (toChart) r.dataset.theme = "chart"; else delete r.dataset.theme;
+    btn.setAttribute("aria-label", toChart ? "Switch to abyss theme" : "Switch to chart paper theme");
+    try { localStorage.setItem("aij-theme", toChart ? "chart" : "abyss"); } catch (e) {}
+    fill(); chart.redraw();
+  });
+  try { if (localStorage.getItem("aij-theme") === "chart") btn.click(); } catch (e) {}
+  document.fonts && document.fonts.ready.then(() => chart.redraw());
+})();
+</script>
+</body>
+</html>
