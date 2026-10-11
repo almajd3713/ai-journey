@@ -10,7 +10,7 @@
 // only on the island (lib/island.ts).
 import { useMemo } from "react";
 import * as THREE from "three";
-import { BASIC_COUNT } from "../lib/content";
+import { BASIC_COUNT, STATION_BY_ID, WRECKS } from "../lib/content";
 import type { Terrain } from "../lib/terrain";
 import { token } from "../lib/theme";
 import { FOG_GLSL, K, S, fogU, grid, rgb, rng, v3, world } from "./world";
@@ -875,6 +875,41 @@ function shafts(T: Terrain, shared: U, mobile: boolean) {
   return new THREE.Mesh(geo, mat);
 }
 
+// ---------------------------------------------------------------- wrecks (content/wrecks.json)
+// A sunken hull beside each station that has a wreck: an open half-cylinder lying on the
+// floor, with the rock shading. Decoration that marks real content: the wreck's card in
+// the dive holds its number.
+function wrecks(T: Terrain, shared: U) {
+  if (!WRECKS.length) return null;
+  const B = seabed(T);
+  const hull = new THREE.CylinderGeometry(0.5, 0.5, 1, 14, 1, true, Math.PI / 2, Math.PI)
+    .rotateZ(Math.PI / 2)            // the axis lies along x, the open side up
+    .scale(1, 0.75, 1);
+  hull.computeVertexNormals();
+  const base: number[] = [], scale: number[] = [], yaw: number[] = [];
+  WRECKS.forEach((w, k) => {
+    const i = STATION_BY_ID[w.station].i, st = T.stations[i];
+    const p = world(T, st.x, st.y);
+    // to one side of the route (across its direction here), where the island continues
+    const d = (i / (T.stations.length - 1)) * T.total, a = T.at(d - 2), c = T.at(d + 2);
+    const dir = Math.atan2(c.y - a.y, c.x - a.x) + Math.PI / 2;
+    for (const side of [1, -1]) {
+      const x = p.x + Math.cos(dir) * side * (1.0 + k * 0.4), z = p.z + Math.sin(dir) * side * (1.0 + k * 0.4);
+      if (!B.inside(x, z, 0.5)) continue;
+      const s = B.at(x, z);
+      base.push(x, s.y + 0.05, z); scale.push(0.9, 0.38, 0.32); yaw.push(dir + 0.6);
+      break;
+    }
+  });
+  if (!yaw.length) return null;
+  const geo = instanced(hull, yaw.length, { aBase: [new Float32Array(base), 3], aScale: [new Float32Array(scale), 3], aYaw: [new Float32Array(yaw), 1] });
+  const mat = new THREE.ShaderMaterial({
+    vertexShader: rockVert, fragmentShader: rockFrag, side: THREE.DoubleSide,
+    uniforms: { uLift: shared.uLift, ...fogU(shared), uRock: { value: mixHex(token("--d4"), token("--fog"), 0.3) } },
+  });
+  return new THREE.Mesh(geo, mat);
+}
+
 // ---------------------------------------------------------------- the diver's bubbles
 const bubbleVert = /* glsl */ `
 uniform float uTime;
@@ -931,6 +966,8 @@ export function Life({ T, uniforms, mobile }: { T: Terrain; uniforms: U; mobile:
       shafts(T, uniforms, mobile),
       bubbles(uniforms),
     ];
+    const hulls = wrecks(T, uniforms);
+    if (hulls) list.push(hulls);
     list.forEach((o) => {
       o.frustumCulled = false;
       // transparent glows draw after the solid life

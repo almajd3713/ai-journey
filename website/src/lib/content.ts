@@ -7,10 +7,24 @@ import basic from "../../content/courses/basic.json";
 import advanced from "../../content/courses/advanced.json";
 import markers from "../../content/markers.json";
 import kit from "../../content/kit.json";
+import wrecksFile from "../../content/wrecks.json";
 
 export type CourseId = "basic" | "advanced";
 
 export interface FileEntry { path: string; bytes: number; sha256: string }
+
+/** a wreck on the seabed: a run that went wrong, with its measured number (content/wrecks.json) */
+export interface Wreck { id: string; station: string; title: string; claim: string; number: string; cell: number }
+export const WRECKS: Wreck[] = wrecksFile.wrecks as Wreck[];
+
+export interface Credit { author?: string; licence?: string; name?: string; url?: string; source_url?: string; changes?: string; file?: string }
+
+/** a figure from the course's site/figures.json (copied into the kit by build_downloads.py) */
+export interface Figure {
+  id: string; session: string; star: boolean; caption: string; alt: string; file: FileEntry;
+  /** image credits for photos (kind I); the course files give a list of these */
+  licence: Credit | Credit[] | null;
+}
 
 export interface Ping {
   q: string;
@@ -43,6 +57,8 @@ export interface Station {
   colab: string;
   github: string;
   guides: Person[];
+  figures: Figure[];
+  wrecks: Wreck[];
 }
 
 export interface Person {
@@ -69,6 +85,20 @@ export interface Course {
 }
 
 export const SITE = site;
+
+/** the session dates (content/site.json "schedule"); empty until the instructors fill it */
+export interface Session { station: string; at: string; place?: string }
+export const SCHEDULE: (Session & { date: Date })[] = ((site as { schedule?: Session[] }).schedule ?? [])
+  .map((x) => ({ ...x, date: new Date(x.at) }))
+  .filter((x) => !Number.isNaN(x.date.getTime()))
+  .sort((a, b) => a.date.getTime() - b.date.getTime());
+/** the next session from now (a session counts as current for 3 hours after it starts) */
+export function nextSession(now = new Date()) {
+  return SCHEDULE.find((x) => x.date.getTime() + 3 * 3600e3 > now.getTime()) ?? null;
+}
+export const sessionOf = (id: string) => SCHEDULE.find((x) => x.station === id) ?? null;
+export const whenText = (d: Date) =>
+  d.toLocaleString(undefined, { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 export const REPO_URL = `https://github.com/${site.repo}`;
 const blob = (dir: string, file: string) => `${REPO_URL}/blob/${site.branch}/${dir}/${file}`;
 const colab = (dir: string, file: string) =>
@@ -128,6 +158,8 @@ export const COURSES: Course[] = (["basic", "advanced"] as CourseId[]).map((cid)
       colab: colab(c.dir, s.notebook),
       github: blob(c.dir, s.notebook),
       guides: guidesFor(cid, s.id),
+      figures: ((k as { figures?: Figure[] }).figures ?? []).filter((f) => f.session === s.code),
+      wrecks: WRECKS.filter((w) => w.station === s.id),
     };
   });
   return {

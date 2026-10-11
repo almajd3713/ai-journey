@@ -1,7 +1,9 @@
 """Fail if a number quoted on the site is not in its notebook.
 
 Every number in a station's sounding and ping (value, echo) must appear in that
-notebook's markdown or saved outputs. Same idea as the courses' _build/checknums.py.
+notebook's markdown or saved outputs. Every number in a wreck (content/wrecks.json)
+must appear in the saved output of the code cell it names. Same idea as the courses'
+_build/checknums.py.
 
     python -I tools/check_markers.py
 """
@@ -40,6 +42,45 @@ def notebook_text(path):
     return norm("\n".join(parts))
 
 
+def code_cell_output(path, index):
+    """saved output text of the notebook's index-th code cell (0-based), or None"""
+    cells = [c for c in json.loads(path.read_text())["cells"] if c["cell_type"] == "code"]
+    if not 0 <= index < len(cells):
+        return None
+    parts = []
+    for o in cells[index].get("outputs", []):
+        parts.append("".join(o.get("text", "")))
+        parts.append("".join(o.get("data", {}).get("text/plain", "")))
+        parts.append("".join(o.get("data", {}).get("text/html", "")))
+    return norm("\n".join(parts))
+
+
+def check_wrecks(courses):
+    path = SITE / "content" / "wrecks.json"
+    if not path.exists():
+        return 0, 0
+    wrecks = json.loads(path.read_text())["wrecks"]
+    bad = 0
+    for w in wrecks:
+        course, n = w["station"].split("-")
+        s = next((x for x in courses.get(course, {}).get("sessions", []) if x["n"] == int(n)), None)
+        if not s:
+            print(f"wreck {w['id']}: no station {w['station']}")
+            bad += 1
+            continue
+        out = code_cell_output(ROOT / DIRS[course] / s["notebook"], w["cell"])
+        if out is None:
+            print(f"wreck {w['id']}: {s['notebook']} has no code cell {w['cell']}")
+            bad += 1
+            continue
+        have = numbers(out)
+        missing = sorted(x for x in numbers(w["number"] + " " + w["claim"]) if x not in have and not re.fullmatch(r"\d", x))
+        if missing:
+            print(f"wreck {w['id']}: not in code cell {w['cell']}'s output: {missing}")
+            bad += 1
+    return len(wrecks), bad
+
+
 def main():
     markers = json.loads((SITE / "content" / "markers.json").read_text())
     courses = {c: json.loads((SITE / "content" / "courses" / f"{c}.json").read_text()) for c in DIRS}
@@ -60,7 +101,9 @@ def main():
             if missing:
                 print(f"{sid} {field}: not in the notebook: {missing}")
                 bad += 1
-    print(f"{len(markers['stations'])} stations checked, {bad} problems")
+    n_wrecks, bad_wrecks = check_wrecks(courses)
+    bad += bad_wrecks
+    print(f"{len(markers['stations'])} stations and {n_wrecks} wrecks checked, {bad} problems")
     sys.exit(1 if bad else 0)
 
 

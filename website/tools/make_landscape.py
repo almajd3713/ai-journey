@@ -11,6 +11,9 @@ Outputs (in <out>/terrain/):
   height.f32       coarse grid, float32 log-loss, row-major, N x N
   terrain.json     grid extents, trajectory, true losses, PCA info, provenance
   preview.png      contour preview for a visual check
+  slices.json      other slices through the final weights (other directions), and the
+                   same network trained at other learning rates ("other dives")
+  slice-<id>.f32   each slice's grid, float32 log-loss, SLICE_N x SLICE_N
 
 Run:  python -I tools/make_landscape.py public
 """
@@ -25,7 +28,15 @@ from torch import nn
 
 OUT = Path(sys.argv[1] if len(sys.argv) > 1 else "public") / "terrain"
 N = 257
+SLICE_N = 129
 SEED = 42
+# Other dives: the same network, data and seed, trained with Adam at these learning rates
+OTHER_LRS = [0.005, 0.02, 0.1, 0.2, 0.5]
+# a run is drawn on the chart only if it stays in the chart's plane: at least this share
+# of its movement lies in the plane, and the surface under its projected path is within
+# this many units of ln(loss) of its true loss at every step
+FIT_MIN = 0.85
+DEPTH_MAX = 0.25
 # The notebook's printed values (session_06_neural_networks.ipynb, section 5)
 EXPECTED = {0: 0.760, 99: 0.025, 499: 0.00229}
 
@@ -45,9 +56,9 @@ def flat(model):
     return torch.cat([p.detach().reshape(-1) for p in model.parameters()]).double().numpy()
 
 
-def train():
+def train(lr=0.05):
     model = build()
-    opt = torch.optim.Adam(model.parameters(), lr=0.05)
+    opt = torch.optim.Adam(model.parameters(), lr=lr)
     weights, losses = [flat(model)], []
     for _ in range(500):
         loss = loss_fn(model(X), Y)
@@ -144,6 +155,64 @@ def main():
         },
     }
     (OUT / "terrain.json").write_text(json.dumps(meta, separators=(",", ":")))
+
+    # other slices through the final weights: the first and third principal directions (the
+    # plane misses the third), and two random directions (seeded, orthonormal)
+    rng = np.random.default_rng(SEED)
+    r = rng.standard_normal((2, W.shape[1]))
+    r1 = r[0] / np.linalg.norm(r[0])
+    r2 = r[1] - (r[1] @ r1) * r1
+    r2 /= np.linalg.norm(r2)
+    share = S**2 / (S**2).sum()
+    slices = []
+    for sid, a_dir, b_dir, label in [
+        ("pc1-pc3", d1, Vt[2], "First and third principal directions"),
+        ("random", r1, r2, "Two random directions"),
+    ]:
+        Ps = D @ np.stack([a_dir, b_dir], 1)
+        moved = float(((D @ np.stack([a_dir, b_dir], 1)) ** 2).sum() / (D**2).sum())
+        cs = (Ps.min(0) + Ps.max(0)) / 2
+        sx, sy = [cs[0] - half, cs[0] + half], [cs[1] - half, cs[1] + half]
+        Zs = np.log(grid(final, a_dir, b_dir, sx, sy, SLICE_N)).astype(np.float32)
+        Zs.tofile(OUT / f"slice-{sid}.f32")
+        slices.append({
+            "id": sid, "label": label, "n": SLICE_N, "x": sx, "y": sy,
+            "min": float(Zs.min()), "max": float(Zs.max()),
+            "moved": round(moved, 5),
+            "trail": [[round(float(a), 5), round(float(b), 5)] for a, b in Ps],
+            "trailSurfaceLoss": [round(float(v), 6) for v in batch_loss(final + Ps[:, :1] * a_dir + Ps[:, 1:] * b_dir)],
+        })
+        print(f"slice {sid}: {moved * 100:.2f}% of the path's movement; log-loss {Zs.min():.2f} .. {Zs.max():.2f}")
+    # the chart's own plane, for comparison
+    print(f"slice pc1-pc2 (the chart): {share[:2].sum() * 100:.2f}%")
+
+    # other dives: train again at other learning rates and measure how well each run fits
+    # the chart's plane before drawing it there
+    B = np.stack([d1, d2], 1)
+    runs = []
+    for lr in OTHER_LRS:
+        Wr, lr_losses, lr_final = train(lr)
+        Dr = Wr - final
+        Pr = Dr @ B
+        R = Dr - Pr @ B.T
+        fit = float(1 - (R**2).sum() / (Dr**2).sum())
+        true_r = np.append(lr_losses, lr_final)
+        surf_r = batch_loss(final + Pr @ B.T)
+        depth_err = float(np.abs(np.log(surf_r) - np.log(true_r)).max())
+        on_chart = fit >= FIT_MIN and depth_err <= DEPTH_MAX
+        assert np.isfinite(true_r).all()
+        runs.append({
+            "lr": lr, "fit": round(fit, 4), "depthErr": round(depth_err, 3), "onChart": on_chart,
+            "trueLoss": [round(float(v), 7) for v in true_r],
+            **({"trail": [[round(float(a), 5), round(float(b), 5)] for a, b in Pr]} if on_chart else {}),
+        })
+        print(f"lr {lr}: fit {fit:.3f}, depth error {depth_err:.2f} -> {'on the chart' if on_chart else 'off the plane'}; final loss {true_r[-1]:.5g}")
+    (OUT / "slices.json").write_text(json.dumps({
+        "about": "Other slices through the final weights, and the Session 6 network trained at other learning rates "
+        "(same data, seed and initial weights; Adam). A run is drawn on the chart only if it stays in the chart's plane.",
+        "fitMin": FIT_MIN, "depthMax": DEPTH_MAX, "chartMoved": round(float(share[:2].sum()), 5),
+        "slices": slices, "runs": runs,
+    }, separators=(",", ":")))
     print(f"grid log-loss {logZ.min():.3f} .. {logZ.max():.3f}; loss {Z.min():.5f} .. {Z.max():.3f}")
     print(f"trail surface loss {trail_surface[0]:.4f} -> {trail_surface[-1]:.5f}; true {true_loss[0]:.4f} -> {true_loss[-1]:.5f}")
 

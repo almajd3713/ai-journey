@@ -8,6 +8,8 @@ import { STATION_COUNT, distOf, type Terrain } from "./terrain";
 import { rgba, token } from "./theme";
 import { STATIONS } from "./content";
 import { ISLAND_S, islandOf } from "./island";
+import { getLearners, learnerColor } from "./learner";
+import { toponyms } from "./toponyms";
 
 type RGB = [number, number, number];
 const mix = (a: RGB, b: RGB, t: number): RGB => [0, 1, 2].map((i) => a[i] + (b[i] - a[i]) * t) as RGB;
@@ -17,7 +19,12 @@ const css = (c: RGB, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
 export interface ChartOptions {
   /** fraction of the chart cropped from each side, to frame the route */
   labels?: "few" | "all";
+  /** place names (lib/toponyms.ts); off for the other slices, where they would not apply */
+  names?: boolean;
 }
+
+/** a route drawn faintly on the chart: another training run, in grid coordinates */
+export interface Ghost { pts: [number, number][]; label: string }
 
 // The chart's canvases use CPU-backed contexts (willReadFrequently). With GPU-backed 2D
 // canvases, their drawing queued in the GPU process ahead of the 3D scene's WebGL context,
@@ -26,6 +33,7 @@ export class BathyChart {
   private base = document.createElement("canvas");
   private size = 0;
   private p = 0;
+  private ghosts: Ghost[] = [];
   private ro: ResizeObserver;
   constructor(private canvas: HTMLCanvasElement, private T: Terrain, private opts: ChartOptions = {}) {
     this.ro = new ResizeObserver(() => this.render(false));
@@ -33,7 +41,16 @@ export class BathyChart {
   }
   destroy() { this.ro.disconnect(); }
   set(p: number) { this.p = p; this.render(false); }
+  setGhosts(g: Ghost[]) { this.ghosts = g; this.render(false); }
   redraw() { this.render(true); }
+
+  /** grid coordinates under a screen point, or null when it is off the chart */
+  gridAt(clientX: number, clientY: number): [number, number] | null {
+    const r = this.canvas.getBoundingClientRect();
+    const s = r.width / this.T.n;
+    const gx = (clientX - r.left) / s - 0.5, gy = (clientY - r.top) / s - 0.5;
+    return gx >= 0 && gy >= 0 && gx <= this.T.n - 1 && gy <= this.T.n - 1 ? [gx, gy] : null;
+  }
 
   /** grid coordinates of the station nearest to a click, or -1 */
   hit(clientX: number, clientY: number): number {
@@ -57,7 +74,50 @@ export class BathyChart {
     const ctx = this.canvas.getContext("2d", { willReadFrequently: true })!;
     ctx.clearRect(0, 0, w, w);
     ctx.drawImage(this.base, 0, 0);
+    this.drawGhosts(ctx);
     this.drawRoute(ctx);
+    this.drawLearners(ctx);
+  }
+
+  private drawGhosts(ctx: CanvasRenderingContext2D) {
+    if (!this.ghosts.length) return;
+    const s = this.size / this.T.n, k = this.size / 640, X = (v: number) => v * s + s / 2;
+    ctx.save();
+    ctx.strokeStyle = token("--plankton");
+    ctx.fillStyle = token("--plankton");
+    ctx.lineWidth = 1.4 * k;
+    ctx.setLineDash([2 * k, 3 * k]);
+    ctx.font = `${Math.round(9.5 * k)}px "JetBrains Mono", monospace`;
+    ctx.textAlign = "left";
+    for (const g of this.ghosts) {
+      ctx.globalAlpha = 0.85;
+      ctx.beginPath();
+      g.pts.forEach(([x, y], i) => (i ? ctx.lineTo(X(x), X(y)) : ctx.moveTo(X(x), X(y))));
+      ctx.stroke();
+      const [ex, ey] = g.pts[g.pts.length - 1];
+      ctx.globalAlpha = 1;
+      ctx.beginPath(); ctx.arc(X(ex), X(ey), 2.6 * k, 0, Math.PI * 2); ctx.fill();
+      const lw = ctx.measureText(g.label).width;
+      ctx.fillText(g.label, Math.min(this.size - lw - 4 * k, X(ex) + 6 * k), Math.min(this.size - 4 * k, X(ey) + 12 * k));
+    }
+    ctx.restore();
+  }
+
+  private drawLearners(ctx: CanvasRenderingContext2D) {
+    const s = this.size / this.T.n, k = this.size / 640, X = (v: number) => v * s + s / 2;
+    ctx.lineCap = "round"; ctx.lineJoin = "round";
+    for (const L of getLearners()) {
+      const c = learnerColor(L.opt);
+      ctx.beginPath();
+      L.pts.forEach(([x, y], i) => (i ? ctx.lineTo(X(x), X(y)) : ctx.moveTo(X(x), X(y))));
+      ctx.strokeStyle = c; ctx.lineWidth = 1.8 * k; ctx.stroke();
+      ctx.fillStyle = c;
+      for (const [x, y] of L.pts) ctx.fillRect(X(x) - 1.2 * k, X(y) - 1.2 * k, 2.4 * k, 2.4 * k);
+      const [hx, hy] = L.pts[L.pts.length - 1];
+      ctx.beginPath(); ctx.arc(X(hx), X(hy), 3.6 * k, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill();
+      const [sx0, sy0] = L.pts[0];
+      ctx.beginPath(); ctx.arc(X(sx0), X(sy0), 3 * k, 0, Math.PI * 2); ctx.lineWidth = 1.4 * k; ctx.stroke();
+    }
   }
 
   private drawBase(ctx: CanvasRenderingContext2D) {
@@ -142,6 +202,25 @@ export class BathyChart {
       ctx.fillStyle = token("--sounding");
       ctx.fillText(label, x * s, y * s + 0.5 * k);
     });
+    if (this.opts.names !== false) this.drawNames(ctx);
+  }
+
+  /** place names (lib/toponyms.ts), in italics as on a sea chart, each with its number */
+  private drawNames(ctx: CanvasRenderingContext2D) {
+    const s = this.size / this.T.n, k = this.size / 640;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+    for (const t of toponyms(this.T)) {
+      const x = t.gx * s + s / 2, y = t.gy * s + s / 2;
+      ctx.font = `italic 600 ${Math.round(12 * k)}px Archivo, sans-serif`;
+      ctx.fillStyle = token("--foam");
+      ctx.globalAlpha = 0.9;
+      ctx.fillText(t.name, x, y - 3 * k);
+      ctx.font = `${Math.round(8.5 * k)}px "JetBrains Mono", monospace`;
+      ctx.fillStyle = token("--fog");
+      ctx.fillText(t.sub, x, y + 9 * k);
+      ctx.globalAlpha = 1;
+    }
   }
 
   private drawRoute(ctx: CanvasRenderingContext2D) {

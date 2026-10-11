@@ -15,5 +15,7 @@
  "courseDirs": {
   "basic": "ai_journey_third_edition",
   "advanced": "advanced_ai_journey_third_edition"
- }
+ },
+ "scheduleNote": "Session dates, filled in by the instructors: [{\"station\": \"basic-04\", \"at\": \"2026-10-16T18:00+01:00\", \"place\": \"ENSIA, room …\"}]. Empty means no dates are shown.",
+ "schedule": []
 }

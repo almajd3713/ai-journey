@@ -9,7 +9,9 @@ import { Gauge } from "./ui/Gauge";
 import { Header } from "./ui/Header";
 import { Sprite } from "./ui/Icon";
 import { Kit } from "./ui/Kit";
-import { Footer, Guides, Hero, Method } from "./ui/Sections";
+import { LearnerPanel } from "./ui/Learner";
+import { Method } from "./ui/Method";
+import { Footer, Guides, Hero } from "./ui/Sections";
 import { useDive } from "./ui/useDive";
 
 const hashOf = (step: number) => (step === END ? "converged" : STATIONS[step].id);
@@ -102,7 +104,7 @@ export default function App() {
       <Backdrop T={T} mode={mode} active={on || heroSeen} onFail={() => setMode("2d")} onSlow={() => { if (!choseThreeD()) setModeState("2d"); }} />
       <Gauge T={T} />
       <main id="main">
-        <Hero T={T} />
+        <Hero T={T} learner={T ? <LearnerPanel T={T} /> : null} />
         <Kit />
         <Guides />
         <Method T={T} />

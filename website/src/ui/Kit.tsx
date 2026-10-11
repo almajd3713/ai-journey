@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { COURSES, KIT_BUILT, KIT_BYTES, REPO_URL, assetUrl, size, type Course, type Station } from "../lib/content";
+import { COURSES, KIT_BUILT, KIT_BYTES, REPO_URL, assetUrl, nextSession, sessionOf, size, whenText, type Course, type Station } from "../lib/content";
 import { enterDive } from "../lib/dive";
+import { clearLog, useLog } from "../lib/log";
 import { Icon } from "./Icon";
 import { Html } from "./Station";
 
@@ -31,15 +32,19 @@ export function Downloads({ st, compact = false }: { st: Station; compact?: bool
 }
 
 /** One session in the list: its title and files at a glance, the rest on request. */
-function SessionRow({ st }: { st: Station }) {
+function SessionRow({ st, seen, pinged }: { st: Station; seen: boolean; pinged: boolean }) {
   const [open, setOpen] = useState(false);
   const id = `row-${st.id}`;
+  const when = sessionOf(st.id), isNext = !!when && nextSession()?.station === st.id;
   return (
     <li className="srow" data-route={st.course} data-open={open ? "" : undefined}>
       <button type="button" className="srow-t" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
         <span className="code-link">{st.code}</span>
-        <span className="nm">{st.title}</span>
-        <span className="fog meta">{st.minutes} min{st.hardware ? ` · ${st.hardware.device}` : ""}</span>
+        <span className="nm">
+          {st.title}
+          {seen && <span className="seen-mark" title={pinged ? "Visited in your dive, ping answered" : "Visited in your dive"}>{pinged ? "visited · pinged" : "visited"}</span>}
+        </span>
+        <span className="fog meta">{when ? <span className={`when${isNext ? " is-next" : ""}`}>{isNext ? "next · " : ""}{whenText(when.date)}</span> : <>{st.minutes} min{st.hardware ? ` · ${st.hardware.device}` : ""}</>}</span>
         <Icon name={open ? "minus" : "plus"} size={16} />
       </button>
       <Downloads st={st} compact />
@@ -58,6 +63,7 @@ function SessionRow({ st }: { st: Station }) {
 }
 
 function CourseBlock({ c }: { c: Course }) {
+  const log = useLog();
   return (
     <div className="course" data-route={c.id} id={`route-${c.id}`}>
       <header className="course-head">
@@ -79,9 +85,20 @@ function CourseBlock({ c }: { c: Course }) {
         </div>
       </header>
       <ul className="srows" role="list">
-        {c.stations.map((s) => <SessionRow key={s.id} st={s} />)}
+        {c.stations.map((s) => <SessionRow key={s.id} st={s} seen={log.visited.includes(s.id)} pinged={s.id in log.pings} />)}
       </ul>
     </div>
+  );
+}
+
+function LogNote() {
+  const log = useLog();
+  if (!log.visited.length && !Object.keys(log.pings).length) return null;
+  return (
+    <p className="fog small log-note">
+      Your dive log: {log.visited.length} of 27 stations visited, {Object.keys(log.pings).length} pings answered. It is kept in this browser
+      only. <button type="button" className="linkish" onClick={clearLog}>Clear it</button>
+    </p>
   );
 }
 
@@ -95,9 +112,10 @@ export function Kit() {
           <p className="lead">Each session is one notebook with its outputs saved, so you can read it without running anything.</p>
         </div>
         {COURSES.map((c) => <CourseBlock key={c.id} c={c} />)}
+        <LogNote />
         <p className="fog small">
-          Not included: the advanced course's <code>cache/</code> folder (348 MB), which the notebooks rebuild, and the models and datasets
-          they download on first run (listed in each README). Everything is also in the{" "}
+          Not included: the models and datasets the notebooks download on first run (each course's README lists them). Everything is also in
+          the{" "}
           <a href={REPO_URL} target="_blank" rel="noopener">public repository</a>.
         </p>
       </div>

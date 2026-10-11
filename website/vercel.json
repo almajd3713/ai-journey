@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "installCommand": "npm ci && python3 -m pip install --user nbconvert==7.17.1 nbformat==5.11.1",
+  "buildCommand": "python3 -I tools/build_downloads.py && npm run build",
+  "outputDirectory": "dist"
+}

@@ -1,14 +1,18 @@
-import { useEffect, useRef } from "react";
-import { COURSES, KIT_BYTES, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, REPO_URL, SITE, STATIONS, assetUrl, size } from "../lib/content";
+import { type ReactNode } from "react";
+import { STATION_BY_ID, COURSES, KIT_BYTES, nextSession, whenText, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, REPO_URL, SITE, STATIONS, assetUrl, size } from "../lib/content";
 import { enterDive, stepTo } from "../lib/dive";
-import { BathyChart } from "../lib/chart2d";
+import { useLog } from "../lib/log";
 import type { Terrain } from "../lib/terrain";
 import { Icon } from "./Icon";
 
 const fileCount = STATIONS.length * 2 + COURSES.length * 2;
 
-export function Hero({ T }: { T: Terrain | null }) {
+export function Hero({ T, learner }: { T: Terrain | null; learner?: ReactNode }) {
   const start = T ? T.meta.trueLoss[0] : null;
+  const { last } = useLog();
+  const resume = last > 0 && last < STATIONS.length ? STATIONS[last] : null;
+  const next = nextSession();
+  const nextSt = next ? STATION_BY_ID[next.station] : null;
   return (
     <section className="hero" id="surface" aria-labelledby="hero-t">
       <div className="wrap">
@@ -26,17 +30,26 @@ export function Hero({ T }: { T: Terrain | null }) {
             and the line across it is the path that network took to the bottom.
           </p>
           <div className="hero-cta">
-            <button type="button" className="btn btn-glow chamfer" onClick={() => enterDive(0)}>
-              Begin the descent <span className="arr" aria-hidden="true">→</span>
+            <button type="button" className="btn btn-glow chamfer" onClick={() => enterDive(resume ? resume.i : 0)}>
+              {resume ? `Resume at ${resume.code}` : "Begin the descent"} <span className="arr" aria-hidden="true">→</span>
             </button>
             <a className="btn btn-line" href="#kit">Sessions and downloads</a>
           </div>
+          {resume && <button type="button" className="linkish small hero-restart" onClick={() => enterDive(0)}>or start again at B00</button>}
+          {next && nextSt && (
+            <p className="next-session">
+              <span className="label label-s">Next session</span>
+              <button type="button" className="linkish" onClick={() => enterDive(nextSt.i)}><strong className="az">{nextSt.code}</strong> {nextSt.title}</button>
+              <span className="mono small">{whenText(next.date)}{next.place ? ` · ${next.place}` : ""}</span>
+            </p>
+          )}
           <div className="stats">
             <div className="stat"><div className="dot" /><div className="num">27</div><div className="label">sessions</div></div>
             <div className="stat"><div className="dot" /><div className="num">2</div><div className="label">routes</div></div>
             <div className="stat"><div className="dot" /><div className="num">{fileCount}</div><div className="label">files to download{KIT_BYTES ? ` · ${size(KIT_BYTES)}` : ""}</div></div>
           </div>
         </div>
+        {learner}
         <p className="hero-depth label">
           <Icon name="surface" size={16} /> 0 m · Surface{start ? ` · loss ${start.toFixed(3)}` : ""} · the dive is optional, everything is listed below
         </p>
@@ -99,76 +112,6 @@ export function Guides() {
             </li>
           ))}
         </ul>
-      </div>
-    </section>
-  );
-}
-
-export function Method({ T }: { T: Terrain | null }) {
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const chart = useRef<BathyChart | null>(null);
-  useEffect(() => {
-    if (!T || !canvas.current) return;
-    const c = new BathyChart(canvas.current, T, { labels: "all" });
-    c.set(STATIONS.length - 1);
-    chart.current = c;
-    return () => c.destroy();
-  }, [T]);
-  const m = T?.meta;
-  const pct = m ? (m.explained[0] + m.explained[1]) * 100 : null;
-  return (
-    <section className="sec solid" id="method" aria-labelledby="method-t">
-      <div className="wrap">
-        <div className="sec-head">
-          <span className="label"><Icon name="gauge" size={16} /> How this chart was made</span>
-          <h2 className="az h-1" id="method-t">The ground is real</h2>
-        </div>
-        <div className="method">
-          <figure className="chart">
-            <canvas
-              ref={canvas}
-              role="img"
-              aria-label="Bathymetric chart of the loss surface with the 27 stations along the training path; click a station to dive there"
-              onClick={(e) => { const i = chart.current?.hit(e.clientX, e.clientY) ?? -1; if (i >= 0) enterDive(i); }}
-            />
-            <figcaption>
-              <span>Session 6 · XOR network · {m ? m.params : 17} parameters</span>
-              <span>Isobaths every 0.25 in ln(loss)</span>
-            </figcaption>
-          </figure>
-          <div className="method-text">
-            <ol className="steps">
-              <li className="st" data-state="done"><span className="dot" /><span className="bar" /><div>
-                <span className="t">Train the real network</span>
-                <p className="s">Basic Session 6's XOR network: 2 inputs, 4 tanh units, a sigmoid output, Adam at 0.05 for 500 epochs, seed 42. The script reproduces the notebook's printed losses exactly (0.760, 0.025, 0.00229) and saves the weights after every step.</p>
-              </div></li>
-              <li className="st" data-state="done"><span className="dot" /><span className="bar" /><div>
-                <span className="t">Find the plane of the path</span>
-                <p className="s">Principal component analysis of the weights along the way (minus the final weights) gives the two directions the training moved in most. They hold {pct ? pct.toFixed(1) : "99.9"}% of the path's movement (Li et al., 2018).</p>
-              </div></li>
-              <li className="st" data-state="done"><span className="dot" /><span className="bar" /><div>
-                <span className="t">Measure the loss on a grid</span>
-                <p className="s">The true training loss at {m ? `${m.n} × ${m.n}` : "257 × 257"} points of that plane, centred on the final weights. Depth is the logarithm of the loss, so each isobath is the same ratio of loss.</p>
-              </div></li>
-              <li className="st" data-state="now"><span className="dot" /><span className="bar" /><div>
-                <span className="t">Place the stations</span>
-                <p className="s">The path is the training run projected onto the plane. The 27 stations are spaced evenly along it, so the basic course covers the steep fall and the advanced course the long floor.</p>
-              </div></li>
-            </ol>
-            <div className="panel panel-line honest">
-              <span className="label label-s">What the chart does not show</span>
-              <p className="small">
-                The plane is 2 of the network's 17 dimensions. The line is drawn on the surface at the projected point, while the depth gauge shows
-                the network's true loss at that step: at step 0 the surface reads {T ? T.meta.trailSurfaceLoss[0].toFixed(3) : "0.693"} and the true loss
-                is {T ? T.meta.trueLoss[0].toFixed(3) : "0.760"}. Stations mark sessions, not training steps: no session trains this network. The island's outline is a crop around the route, not data: the measured square goes on under the water. The plants and animals are decoration, placed by depth as in a real sea.
-              </p>
-              <p className="small fog">
-                Source: <a href={`${REPO_URL}/blob/${SITE.branch}/website/tools/make_landscape.py`} target="_blank" rel="noopener">make_landscape.py</a>
-                {m ? ` · Python ${m.provenance.python}, PyTorch ${m.provenance.torch}, NumPy ${m.provenance.numpy}` : ""}
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

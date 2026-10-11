@@ -6,6 +6,8 @@ For each course it writes, under public/kit/<course>/:
   <course>.zip          all notebooks + README, CHANGES, requirements (and the advanced
                         course's shared files and data/)
   requirements.txt
+  figures/<id>.png      the course's figures, when <course>/site/figures.json exists (the
+                        course enhancement plan); the dive shows a session's ★ figures
 and public/kit/manifest.json (sizes and SHA-256), copied to content/kit.json for the build.
 
 The advanced course's cache/ (348 MB) is left out: the notebooks rebuild it.
@@ -79,10 +81,26 @@ def main():
                 for f in files:
                     z.write(f, f"{c['zip']}/{f.relative_to(src).as_posix()}")
         shutil.copy2(src / "requirements.txt", out / "requirements.txt")
+        figures = []
+        fig_index = src / "site" / "figures.json"
+        if fig_index.exists():
+            (out / "figures").mkdir()
+            for f in json.loads(fig_index.read_text()):
+                png = src / "site" / f["file"]
+                if not png.is_file():
+                    sys.exit(f"{fig_index}: {f['id']} names {f['file']}, which does not exist")
+                dst = out / "figures" / png.name
+                shutil.copy2(png, dst)
+                figures.append({
+                    "id": f["id"], "session": f["session"], "star": f.get("priority") == "\u2605",
+                    "caption": f["caption"], "alt": f["alt"], "licence": f.get("licence"), "file": entry(dst),
+                })
+            print(f"{cid}: {len(figures)} figures")
         manifest["courses"][cid] = {
             "zip": entry(zpath),
             "requirements": entry(out / "requirements.txt"),
             "sessions": sessions,
+            "figures": figures,
         }
         print(f"{cid}: {len(sessions)} notebooks, zip {zpath.stat().st_size / 1e6:.1f} MB")
     (KIT / "manifest.json").write_text(json.dumps(manifest, indent=1))

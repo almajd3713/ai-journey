@@ -1,8 +1,10 @@
 // The dive: an optional fullscreen mode over the page (see lib/dive.ts). One step is one
 // station: a wheel notch, a swipe, an arrow key, or a click on the rail. Esc leaves.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BASIC_COUNT, STATIONS, SITE, assetUrl } from "../lib/content";
-import { END, stepBy, stepTo } from "../lib/dive";
+import { END, dive, onDive, stepBy, stepTo } from "../lib/dive";
+import { distOf } from "../lib/terrain";
+import { useLog } from "../lib/log";
 import type { Terrain } from "../lib/terrain";
 import type { Mode } from "../lib/theme";
 import { ModeToggle } from "./Header";
@@ -75,6 +77,32 @@ function useDiveInput(on: boolean, close: () => void) {
   }, [on, close]);
 }
 
+/** The echo sounder: the rail's trace is the true training loss along the route, on a
+ *  linear scale (lower is less loss): the steep shelf of the basic course, then the long
+ *  floor of the advanced one. The diver is the cursor. */
+function Sounder({ T }: { T: Terrain }) {
+  const cursor = useRef<SVGGElement>(null);
+  const N = STATIONS.length, W = N + 1, Hh = 30;
+  const { d, yAt } = useMemo(() => {
+    const L0 = T.meta.trueLoss[0];
+    const yAt = (p: number) => 2 + (1 - T.lossAt(T.at(distOf(T, p)).k) / L0) * (Hh - 4);
+    const pts: string[] = [];
+    for (let k = 0; k <= 260; k++) { const p = (k / 260) * (N - 1); pts.push(`${(p + 0.5).toFixed(3)},${yAt(p).toFixed(2)}`); }
+    return { d: `M0.5,${Hh} L${pts.join(" L")} L${N - 0.5},${Hh} Z`, yAt };
+  }, [T, N]);
+  useEffect(() => onDive(() => {
+    const p = Math.min(N - 1, dive.p);
+    cursor.current?.setAttribute("transform", `translate(${(p + 0.5).toFixed(3)} ${yAt(p).toFixed(2)})`);
+  }), [N, yAt]);
+  return (
+    <svg className="sounder" viewBox={`0 0 ${W} ${Hh}`} preserveAspectRatio="none" aria-hidden="true">
+      <path d={d} className="trace" vectorEffect="non-scaling-stroke" />
+      <line x1={BASIC_COUNT} x2={BASIC_COUNT} y1={0} y2={Hh} className="shelf" vectorEffect="non-scaling-stroke" />
+      <g ref={cursor}><line y1={-40} y2={40} className="cur" vectorEffect="non-scaling-stroke" /></g>
+    </svg>
+  );
+}
+
 function Legend({ onClose }: { onClose: () => void }) {
   return (
     <div className="dcard card legend-card" role="note" aria-labelledby="legend-t">
@@ -83,6 +111,7 @@ function Legend({ onClose }: { onClose: () => void }) {
         <li><span className="ramp" aria-hidden="true" /><span><strong>Loss is depth.</strong> Light water is a high loss, the abyss a low one.</span></li>
         <li><span className="route route-basic" aria-hidden="true" /><span><strong>Basic route</strong> across the steep shelf; the <strong className="t-adv">advanced route</strong> along the flat floor.</span></li>
         <li><Icon name="sounding" size={22} /><span><strong>Soundings</strong> are measured numbers from the notebooks. <strong>Pings</strong>: guess, then see.</span></li>
+        <li><Icon name="arrow-r" size={22} /><span><strong>The compass</strong> by the gauge: up is the way training went; the needle, the steepest way down.</span></li>
         <li><Icon name="trench" size={22} /><span>The sea life is decoration, placed by depth. None of it is data.</span></li>
       </ul>
       <p className="fog small">Scroll, swipe or use ← → to move one station. Esc leaves the dive.</p>
@@ -95,6 +124,7 @@ export function Dive({ T, mode, setMode, webgl, onClose, onKit }: {
   T: Terrain | null; mode: Mode; setMode: (m: Mode) => void; webgl: boolean; onClose: () => void; onKit: () => void;
 }) {
   const { on, step } = useDive();
+  const log = useLog();
   const root = useRef<HTMLDivElement>(null);
   const opener = useRef<Element | null>(null);
   const [legend, setLegend] = useState(false);
@@ -160,10 +190,13 @@ export function Dive({ T, mode, setMode, webgl, onClose, onKit }: {
 
       <nav className="dive-rail" aria-label="Stations">
         <button type="button" className="sq" onClick={() => stepBy(-1)} disabled={step === 0} aria-label="Previous station"><Icon name="arrow-l" size={18} /></button>
+        <div className="ticks-wrap">
+        {T && <Sounder T={T} />}
         <ol className="ticks">
           {STATIONS.map((s) => (
-            <li key={s.id} data-route={s.course} data-shelf={s.i === BASIC_COUNT ? "" : undefined}>
-              <button type="button" aria-label={`${s.code}: ${s.title}`} aria-current={s.i === step ? "step" : undefined} data-past={s.i < step ? "" : undefined} onClick={() => stepTo(s.i)}>
+            <li key={s.id} data-route={s.course}>
+              <button type="button" aria-label={`${s.code}: ${s.title}${log.visited.includes(s.id) ? " (visited)" : ""}`} aria-current={s.i === step ? "step" : undefined}
+                data-past={s.i < step ? "" : undefined} data-visited={log.visited.includes(s.id) ? "" : undefined} onClick={() => stepTo(s.i)}>
                 <span className="tick-code">{s.code}</span>
               </button>
             </li>
@@ -174,6 +207,7 @@ export function Dive({ T, mode, setMode, webgl, onClose, onKit }: {
             </button>
           </li>
         </ol>
+        </div>
         <button type="button" className="sq" onClick={() => stepBy(1)} disabled={step === END} aria-label="Next station"><Icon name="arrow-r" size={18} /></button>
       </nav>
     </div>

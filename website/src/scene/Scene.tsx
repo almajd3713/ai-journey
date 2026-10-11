@@ -2,7 +2,7 @@
 // World: the chart is S x S units, centred on the origin; height is (log-loss - max) * K,
 // so the surface is y = 0 at the highest loss and the floor goes down from there.
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 import * as THREE from "three";
 import { dive } from "../lib/dive";
 import { STATION_COUNT, distOf, type Terrain } from "../lib/terrain";
@@ -10,6 +10,10 @@ import { rgba, token } from "../lib/theme";
 import { STATION_BY_ID } from "../lib/content";
 import markers from "../../content/markers.json";
 import { islandOf } from "../lib/island";
+import { getLearners, learnerColor, learnersVersion, MAX_STEPS } from "../lib/learner";
+import { setPicker } from "../lib/pick";
+import { toponyms } from "../lib/toponyms";
+import { DriftField, STREAK, driftOn, glow, onDrift } from "../lib/drift";
 import { planktonFrag, planktonVert, terrainFrag, terrainVert, wallFrag, wallVert } from "./shaders";
 import { K, S, fogU, grid, islandTexture, rgb, v3, world, type V3 } from "./world";
 import { Life } from "./Life";
@@ -229,6 +233,111 @@ function Route({ T, P, dRef }: { T: Terrain; P: Palette; dRef: RefObject<number>
   );
 }
 
+/** The learners dropped on the chart (lib/learner.ts): a line per learner and a bead at its
+ *  head, drawn on the floor inside the relief group, so they lift with the chart. */
+const LEARNER_SLOTS = 5;
+function Learners({ T }: { T: Terrain }) {
+  const slots = useMemo(() => Array.from({ length: LEARNER_SLOTS }, () => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array((MAX_STEPS + 1) * 3), 3));
+    geo.setDrawRange(0, 0);
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ transparent: true, opacity: 0.7, toneMapped: false }));
+    // a dot per step, so the spacing shows the step size
+    const dots = new THREE.Points(geo, new THREE.PointsMaterial({ size: 3.5, sizeAttenuation: false, toneMapped: false }));
+    dots.frustumCulled = false;
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8), new THREE.MeshBasicMaterial({ toneMapped: false }));
+    line.frustumCulled = false;
+    head.visible = false;
+    return { line, dots, head, id: -1, drawn: 0 };
+  }), []);
+  const seen = useRef(-1);
+  const w = useMemo(() => v3(), []);
+  useFrame(() => {
+    if (seen.current === learnersVersion()) return;
+    seen.current = learnersVersion();
+    const list = getLearners();
+    slots.forEach((sl, k) => {
+      const L = list[k];
+      if (!L) { sl.line.geometry.setDrawRange(0, 0); sl.head.visible = false; sl.id = -1; return; }
+      if (sl.id !== L.id) {
+        sl.id = L.id; sl.drawn = 0;
+        const c = new THREE.Color(learnerColor(L.opt));
+        (sl.line.material as THREE.LineBasicMaterial).color = c;
+        (sl.dots.material as THREE.PointsMaterial).color = c;
+        (sl.head.material as THREE.MeshBasicMaterial).color = c;
+      }
+      const pos = sl.line.geometry.attributes.position as THREE.BufferAttribute;
+      for (let i = sl.drawn; i < L.pts.length; i++) {
+        world(T, L.pts[i][0], L.pts[i][1], 0.05, w);
+        pos.setXYZ(i, w.x, w.y, w.z);
+      }
+      if (L.pts.length !== sl.drawn) { pos.needsUpdate = true; sl.drawn = L.pts.length; }
+      sl.line.geometry.setDrawRange(0, L.pts.length);
+      sl.head.position.set(pos.getX(L.pts.length - 1), pos.getY(L.pts.length - 1) + 0.04, pos.getZ(L.pts.length - 1));
+      sl.head.visible = true;
+    });
+  });
+  return <group>{slots.map((sl, k) => <group key={k}><primitive object={sl.line} /><primitive object={sl.dots} /><primitive object={sl.head} /></group>)}</group>;
+}
+
+/** The drift (lib/drift.ts): streaks flowing down the surface, drawn on the floor. */
+function Drift({ T, P, count }: { T: Terrain; P: Palette; count: number }) {
+  const [shown, setShown] = useState(driftOn());
+  useEffect(() => onDrift(() => setShown(driftOn())), []);
+  const built = useMemo(() => {
+    const field = new DriftField(T, count);
+    const pos = new Float32Array(count * 6), col = new Float32Array(count * 6);
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+    const lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({
+      vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false,
+    }));
+    lines.frustumCulled = false;
+    lines.renderOrder = 5;
+    return { field, pos, col, geo, lines, c: new THREE.Color(P.plankton), w: v3() };
+  }, [T, P, count]);
+  useFrame((_, dt) => {
+    // a tool for the flat chart: hidden while diving
+    built.lines.visible = !dive.on;
+    if (!shown || dive.on) return;
+    const { field: f, pos, col, c, w } = built;
+    f.step(Math.min(dt, 0.05));
+    for (let i = 0; i < f.count; i++) {
+      const tail = f.speed[i] * STREAK;
+      world(T, f.x[i], f.y[i], 0.04, w);
+      pos[i * 6] = w.x; pos[i * 6 + 1] = w.y; pos[i * 6 + 2] = w.z;
+      world(T, f.x[i] - f.dx[i] * tail, f.y[i] - f.dy[i] * tail, 0.04, w);
+      pos[i * 6 + 3] = w.x; pos[i * 6 + 4] = w.y; pos[i * 6 + 5] = w.z;
+      const g = glow(f.life[i]) * 0.9;
+      col[i * 6] = c.r * g; col[i * 6 + 1] = c.g * g; col[i * 6 + 2] = c.b * g;
+      col[i * 6 + 3] = col[i * 6 + 4] = col[i * 6 + 5] = 0;
+    }
+    built.geo.attributes.position.needsUpdate = true;
+    built.geo.attributes.color.needsUpdate = true;
+  });
+  return shown ? <primitive object={built.lines} /> : null;
+}
+
+/** Answers "where on the chart is this screen point?" for the hero (lib/pick.ts): a ray
+ *  from the camera to the flat chart's plane. Only asked while the chart is flat. */
+function Picker({ T }: { T: Terrain }) {
+  const { camera, gl } = useThree();
+  useEffect(() => {
+    const ray = new THREE.Raycaster(), plane = new THREE.Plane(UP, 0), hit = v3(), ndc = new THREE.Vector2();
+    setPicker((x, y) => {
+      const r = gl.domElement.getBoundingClientRect();
+      ndc.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1);
+      ray.setFromCamera(ndc, camera);
+      if (!ray.ray.intersectPlane(plane, hit)) return null;
+      const [gx, gy] = grid(T, hit.x, hit.z);
+      return gx >= 0 && gy >= 0 && gx <= T.n - 1 && gy <= T.n - 1 ? [gx, gy] : null;
+    });
+    return () => setPicker(null);
+  }, [T, camera, gl]);
+  return null;
+}
+
 function glowTexture() {
   const c = document.createElement("canvas");
   c.width = c.height = 64;
@@ -297,7 +406,7 @@ function Plankton({ T, P, count }: { T: Terrain; P: Palette; count: number }) {
 }
 
 /** Scroll drives everything: lift, the diver's distance along the route, and the camera. */
-function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
+function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, namesRef, onSlow }: {
   T: Terrain;
   P: Palette;
   onSlow: () => void;
@@ -306,8 +415,11 @@ function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
   dRef: RefObject<number>;
   diverRef: RefObject<V3>;
   tagRef: RefObject<HTMLDivElement | null>;
+  namesRef: RefObject<HTMLDivElement | null>;
 }) {
   const { camera, size } = useThree();
+  const names = useMemo(() => toponyms(T).map((t) => world(T, t.gx, t.gy)), [T]);
+  const heroRight = useRef(0);
   const look = useRef(v3(0, 0, 0));
   const tmp = useMemo(() => ({ a: v3(), b: v3(), dir: v3(), side: v3(), pos: v3(), at: v3(), p: v3(), tag: v3() }), []);
   const wide = size.width >= 1000;
@@ -418,12 +530,37 @@ function Rig({ T, P, uniforms, relief, dRef, diverRef, tagRef, onSlow }: {
       const tx = Math.min(((tmp.tag.x + 1) / 2) * size.width, size.width - 430);
       el.style.transform = `translate(${tx}px, ${((1 - tmp.tag.y) / 2) * size.height}px)`;
     }
+
+    // place names (lib/toponyms.ts): on the flat chart they keep clear of the hero's text;
+    // in the dive they show near the camera and fade with distance
+    const box = namesRef.current;
+    if (box) {
+      if (!dive.on) {
+        const col = document.querySelector(".hero-col")?.getBoundingClientRect();
+        heroRight.current = col && col.bottom > 0 ? col.right + 16 : 0;
+      }
+      const kids = box.children as HTMLCollectionOf<HTMLElement>;
+      names.forEach((p, i) => {
+        const node = kids[i];
+        if (!node) return;
+        tmp.tag.set(p.x, p.y * Math.max(lift, 1e-4) + 0.25 * lift, p.z);
+        const dist = camera.position.distanceTo(tmp.tag);
+        tmp.tag.project(camera);
+        const sy = ((1 - tmp.tag.y) / 2) * size.height;
+        const raw = ((tmp.tag.x + 1) / 2) * size.width, sx = Math.min(size.width - 130, Math.max(130, raw));
+        let o = tmp.tag.z < 1 && raw > 0 && raw < size.width && sy > 70 && sy < size.height - 90 ? 1 : 0;
+        if (!dive.on) o *= wide && sx - 120 > heroRight.current ? 1 - lift : 0;
+        else o *= lift * (1 - end) * (1 - smooth(Math.min(1, Math.max(0, (dist - 6) / 8)))) * (wide && sx > size.width - 300 ? 0 : 1);   // clear of the gauge
+        node.style.opacity = o.toFixed(2);
+        if (o > 0) node.style.transform = `translate(${sx.toFixed(0)}px, ${sy.toFixed(0)}px)`;
+      });
+    }
   });
   return null;
 }
 
-export default function Scene({ T, active, tagRef, onSlow }: {
-  T: Terrain; active: boolean; tagRef: RefObject<HTMLDivElement | null>; onSlow: () => void;
+export default function Scene({ T, active, tagRef, namesRef, onSlow }: {
+  T: Terrain; active: boolean; tagRef: RefObject<HTMLDivElement | null>; namesRef: RefObject<HTMLDivElement | null>; onSlow: () => void;
 }) {
   const P = useMemo(palette, []);
   const relief = useRef<THREE.Group>(null);
@@ -479,12 +616,15 @@ export default function Scene({ T, active, tagRef, onSlow }: {
       <group ref={relief}>
         <Floor T={T} P={P} uniforms={uniforms} />
         <Wall T={T} uniforms={uniforms} />
+        <Learners T={T} />
+        <Drift T={T} P={P} count={mobile ? 500 : 1400} />
         <Route T={T} P={P} dRef={dRef} />
       </group>
       {!P.chart && <Life T={T} uniforms={uniforms} mobile={mobile} />}
       <Diver P={P} posRef={diverRef} />
       <Plankton T={T} P={P} count={mobile ? 420 : 900} />
-      <Rig T={T} P={P} uniforms={uniforms} relief={relief} dRef={dRef} diverRef={diverRef} tagRef={tagRef} onSlow={onSlow} />
+      <Picker T={T} />
+      <Rig T={T} P={P} uniforms={uniforms} relief={relief} dRef={dRef} diverRef={diverRef} tagRef={tagRef} namesRef={namesRef} onSlow={onSlow} />
     </Canvas>
   );
 }

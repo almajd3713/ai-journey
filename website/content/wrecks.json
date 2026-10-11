@@ -1,0 +1,13 @@
+{
+ "about": "Wrecks on the seabed: runs that went wrong and classic bugs, each with its measured number. Entries come from the course session; tools/check_markers.py checks every number against the named code cell's saved output. Fields: id, station (e.g. basic-02), title, claim, number, cell (0-based index among the notebook's code cells).",
+ "wrecks": [
+  {
+   "id": "leaked-certificate",
+   "station": "basic-02",
+   "title": "The perfect model",
+   "claim": "A column recorded after the result (certificate issued) slipped into the features. Test accuracy jumped from 0.832 to 1.000, and the model was useless: it read the answer.",
+   "number": "1.000",
+   "cell": 7
+  }
+ ]
+}

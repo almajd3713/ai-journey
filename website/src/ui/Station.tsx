@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { STATION_BY_ID, type Station } from "../lib/content";
+import { STATION_BY_ID, assetUrl, type Station } from "../lib/content";
 import { stepTo } from "../lib/dive";
+import { answerPing, getLog } from "../lib/log";
 import { md } from "../lib/md";
 import { Icon } from "./Icon";
 import { Downloads } from "./Kit";
@@ -12,9 +13,10 @@ export const Html = ({ s, as: Tag = "span", className }: { s: string; as?: "span
 /** One station in the dive: kept short. The title, its sounding and the downloads show at
  *  once; the outcomes and the ping open on request. */
 export function DiveCard({ st }: { st: Station }) {
-  const [open, setOpen] = useState<"" | "more" | "ping">("");
+  const [open, setOpen] = useState<"" | "more" | "ping" | "figs" | "wreck">("");
   useEffect(() => setOpen(""), [st.id]);
-  const toggle = (k: "more" | "ping") => setOpen((o) => (o === k ? "" : k));
+  const toggle = (k: "more" | "ping" | "figs" | "wreck") => setOpen((o) => (o === k ? "" : k));
+  const figs = st.figures.filter((f) => f.star);
   return (
     <article className="dcard card" data-route={st.course} aria-labelledby="dcard-t">
       <header className="dcard-head">
@@ -35,9 +37,43 @@ export function DiveCard({ st }: { st: Station }) {
         <button type="button" className="chip" aria-expanded={open === "more"} onClick={() => toggle("more")}>
           <Icon name={open === "more" ? "minus" : "plus"} size={14} /> What you learn
         </button>
+        {figs.length > 0 && (
+          <button type="button" className="chip" aria-expanded={open === "figs"} onClick={() => toggle("figs")}>
+            <Icon name="render" size={14} /> Figures · {figs.length}
+          </button>
+        )}
+        {st.wrecks.length > 0 && (
+          <button type="button" className="chip chip-wreck" aria-expanded={open === "wreck"} onClick={() => toggle("wreck")}>
+            <Icon name="trench" size={14} /> Wreck{st.wrecks.length > 1 ? `s · ${st.wrecks.length}` : ""}
+          </button>
+        )}
         <span className="chip chip-quiet">{st.minutes} min{st.hardware ? ` · ${st.hardware.device}` : ""}</span>
       </div>
       {open === "ping" && <PingCard st={st} />}
+      {open === "wreck" && <WreckList st={st} />}
+      {open === "figs" && (
+        <ul className="figs" aria-label="Figures from this session's notebook">
+          {figs.map((f) => (
+            <li key={f.id}>
+              <a href={assetUrl(f.file.path)} target="_blank" rel="noopener">
+                <img src={assetUrl(f.file.path)} alt={f.alt} loading="lazy" />
+              </a>
+              <Html as="p" className="cap" s={f.caption} />
+              {f.licence && (
+                <p className="credit">
+                  {(Array.isArray(f.licence) ? f.licence : [f.licence]).filter((c) => c.author).map((c, k) => (
+                    <span key={k}>
+                      {k ? " · " : "Images: "}
+                      <a href={c.url ?? c.source_url} target="_blank" rel="noopener">{c.author}</a>
+                      {c.licence ?? c.name ? `, ${c.licence ?? c.name}` : ""}{c.changes ? ` (${c.changes})` : ""}
+                    </span>
+                  ))}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
       {open === "more" && (
         <div className="dcard-more">
           <ol className="outcomes">{st.outcomes.map((o, k) => <Html key={k} as="li" s={o} />)}</ol>
@@ -62,8 +98,27 @@ export function DiveCard({ st }: { st: Station }) {
   );
 }
 
+/** the wrecks beside a station: what went wrong, and the number that shows it */
+export function WreckList({ st }: { st: Station }) {
+  return (
+    <ul className="wrecks">
+      {st.wrecks.map((w) => (
+        <li key={w.id} className="wreck">
+          <span className="label label-s">Wreck · {st.code}</span>
+          <strong className="wt">{w.title}</strong>
+          <span className="v">{w.number}</span>
+          <Html as="p" s={w.claim} />
+          <span className="src">{st.notebook} · code cell {w.cell + 1}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function PingCard({ st }: { st: Station }) {
-  const [pick, setPick] = useState<number | null>(null);
+  // a ping answered before (the dive log) opens already answered
+  const [pick, setPickState] = useState<number | null>(() => getLog().pings[st.id] ?? null);
+  const setPick = (k: number) => { setPickState(k); answerPing(st.id, k); };
   const p = st.ping;
   const right = pick === p.answer;
   return (
