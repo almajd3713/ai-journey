@@ -9,6 +9,7 @@ import { Gauge } from "./ui/Gauge";
 import { Header } from "./ui/Header";
 import { Sprite } from "./ui/Icon";
 import { Kit } from "./ui/Kit";
+import { SHOW_DOWNLOADS } from "./lib/features";
 import { LearnerPanel } from "./ui/Learner";
 import { Method } from "./ui/Method";
 import { Footer, Guides, Hero } from "./ui/Sections";
@@ -99,7 +100,7 @@ export default function App() {
   return (
     <>
       <Sprite />
-      <a className="skip" href="#kit">Skip to the sessions and downloads</a>
+      <a className="skip" href="#kit">{SHOW_DOWNLOADS ? "Skip to the sessions and downloads" : "Skip to the sessions"}</a>
       <Header mode={mode} setMode={setMode} webgl={webgl} />
       <Backdrop T={T} mode={mode} active={on || heroSeen} onFail={() => setMode("2d")} onSlow={() => { if (!choseThreeD()) setModeState("2d"); }} />
       <Gauge T={T} />

@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { SHOW_DOWNLOADS } from "../lib/features";
 import { STATION_BY_ID, COURSES, KIT_BYTES, nextSession, whenText, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, REPO_URL, SITE, STATIONS, assetUrl, size } from "../lib/content";
 import { enterDive, stepTo } from "../lib/dive";
 import { useLog } from "../lib/log";
@@ -33,7 +34,7 @@ export function Hero({ T, learner }: { T: Terrain | null; learner?: ReactNode })
             <button type="button" className="btn btn-glow chamfer" onClick={() => enterDive(resume ? resume.i : 0)}>
               {resume ? `Resume at ${resume.code}` : "Begin the descent"} <span className="arr" aria-hidden="true">→</span>
             </button>
-            <a className="btn btn-line" href="#kit">Sessions and downloads</a>
+            <a className="btn btn-line" href="#kit">{SHOW_DOWNLOADS ? "Sessions and downloads" : "The sessions"}</a>
           </div>
           {resume && <button type="button" className="linkish small hero-restart" onClick={() => enterDive(0)}>or start again at B00</button>}
           {next && nextSt && (
@@ -46,7 +47,7 @@ export function Hero({ T, learner }: { T: Terrain | null; learner?: ReactNode })
           <div className="stats">
             <div className="stat"><div className="dot" /><div className="num">27</div><div className="label">sessions</div></div>
             <div className="stat"><div className="dot" /><div className="num">2</div><div className="label">routes</div></div>
-            <div className="stat"><div className="dot" /><div className="num">{fileCount}</div><div className="label">files to download{KIT_BYTES ? ` · ${size(KIT_BYTES)}` : ""}</div></div>
+            {SHOW_DOWNLOADS && <div className="stat"><div className="dot" /><div className="num">{fileCount}</div><div className="label">files to download{KIT_BYTES ? ` · ${size(KIT_BYTES)}` : ""}</div></div>}
           </div>
         </div>
         {learner}
@@ -67,7 +68,7 @@ export function DiveEnd({ T, onKit }: { T: Terrain | null; onKit: () => void }) 
       <h2 className="az h-2 outline" id="dend-t">Converged?</h2>
       <p>Not quite: with more steps the loss would keep falling. A minimum is a checkpoint, not an ending.</p>
       <div className="hero-cta">
-        <button type="button" className="btn btn-glow btn-s chamfer" onClick={onKit}>Get the field kit <span className="arr" aria-hidden="true">→</span></button>
+        <button type="button" className="btn btn-glow btn-s chamfer" onClick={onKit}>{SHOW_DOWNLOADS ? "Get the field kit" : "See the sessions"} <span className="arr" aria-hidden="true">→</span></button>
         <button type="button" className="btn btn-line btn-s" onClick={() => stepTo(0)}>Back to B00</button>
       </div>
     </article>
@@ -131,7 +132,7 @@ export function Footer() {
         <ul className="foot-links">
           <li><a href={SITE.clubUrl} target="_blank" rel="noopener">etclub.online <Icon name="arrow-ne" size={14} /></a></li>
           <li><a href={REPO_URL} target="_blank" rel="noopener">Source on GitHub <Icon name="arrow-ne" size={14} /></a></li>
-          <li><a href="#kit">Field kit</a></li>
+          <li><a href="#kit">{SHOW_DOWNLOADS ? "Field kit" : "Sessions"}</a></li>
           <li><a href="#method">How the chart was made</a></li>
         </ul>
         <p className="fog small foot-note">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { COURSES, KIT_BUILT, KIT_BYTES, REPO_URL, assetUrl, nextSession, sessionOf, size, whenText, type Course, type Station } from "../lib/content";
 import { enterDive } from "../lib/dive";
+import { SHOW_DOWNLOADS } from "../lib/features";
 import { clearLog, useLog } from "../lib/log";
 import { Icon } from "./Icon";
 import { Html } from "./Station";
@@ -10,6 +11,7 @@ const Label = ({ long, short, compact }: { long: string; short: string; compact:
 
 /** The three ways into one session: download, read, run. Full labels shorten on a phone. */
 export function Downloads({ st, compact = false }: { st: Station; compact?: boolean }) {
+  if (!SHOW_DOWNLOADS) return null;
   return (
     <div className={`dl${compact ? " dl-compact" : ""}`}>
       <a className="dl-a dl-main" href={assetUrl(st.files.ipynb.path)} download={st.notebook} title={`SHA-256 ${st.files.ipynb.sha256}`}>
@@ -37,7 +39,7 @@ function SessionRow({ st, seen, pinged }: { st: Station; seen: boolean; pinged: 
   const id = `row-${st.id}`;
   const when = sessionOf(st.id), isNext = !!when && nextSession()?.station === st.id;
   return (
-    <li className="srow" data-route={st.course} data-open={open ? "" : undefined}>
+    <li className="srow" data-route={st.course} data-nodl={SHOW_DOWNLOADS ? undefined : ""} data-open={open ? "" : undefined}>
       <button type="button" className="srow-t" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
         <span className="code-link">{st.code}</span>
         <span className="nm">
@@ -76,13 +78,13 @@ function CourseBlock({ c }: { c: Course }) {
               : "After the basic course. Read from the saved outputs; re-running needs a GPU."}
           </p>
         </div>
-        <div className="course-files">
+        {SHOW_DOWNLOADS && <div className="course-files">
           <a className="btn btn-glow btn-s chamfer" href={assetUrl(c.zip.path)} download>
             <Icon name="zip" size={18} /> Whole course <span className="sz mono">{size(c.zip.bytes)}</span>
           </a>
           <a className="btn btn-line btn-s" href={assetUrl(c.requirements.path)} download>requirements.txt</a>
           <a className="btn btn-line btn-s" href={c.github} target="_blank" rel="noopener">GitHub <Icon name="arrow-ne" size={14} /></a>
-        </div>
+        </div>}
       </header>
       <ul className="srows" role="list">
         {c.stations.map((s) => <SessionRow key={s.id} st={s} seen={log.visited.includes(s.id)} pinged={s.id in log.pings} />)}
@@ -107,17 +109,27 @@ export function Kit() {
     <section className="sec solid kit-sec" id="kit" aria-labelledby="kit-t">
       <div className="wrap">
         <div className="sec-head">
-          <span className="label"><Icon name="kit" size={16} /> Field kit · {KIT_BYTES ? size(KIT_BYTES) : ""} · built {KIT_BUILT}</span>
-          <h2 className="az h-1" id="kit-t">Every session, ready to take</h2>
-          <p className="lead">Each session is one notebook with its outputs saved, so you can read it without running anything.</p>
+          {SHOW_DOWNLOADS ? (
+            <>
+              <span className="label"><Icon name="kit" size={16} /> Field kit · {KIT_BYTES ? size(KIT_BYTES) : ""} · built {KIT_BUILT}</span>
+              <h2 className="az h-1" id="kit-t">Every session, ready to take</h2>
+              <p className="lead">Each session is one notebook with its outputs saved, so you can read it without running anything.</p>
+            </>
+          ) : (
+            <>
+              <span className="label"><Icon name="kit" size={16} /> The journeys</span>
+              <h2 className="az h-1" id="kit-t">Every session on the way down</h2>
+              <p className="lead">Two routes, 27 sessions. Open any of them to see what you will be able to do by the end.</p>
+            </>
+          )}
         </div>
         {COURSES.map((c) => <CourseBlock key={c.id} c={c} />)}
         <LogNote />
-        <p className="fog small">
+        {SHOW_DOWNLOADS && <p className="fog small">
           Not included: the models and datasets the notebooks download on first run (each course's README lists them). Everything is also in
           the{" "}
           <a href={REPO_URL} target="_blank" rel="noopener">public repository</a>.
-        </p>
+        </p>}
       </div>
     </section>
   );

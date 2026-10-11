@@ -151,6 +151,7 @@ html.diving main, html.diving .footer, html.diving .header, html.diving .skip { 
 .course-files .sz { font-size: 11px; font-weight: 400; opacity: .8; }
 .srows { list-style: none; margin: 0; padding: 0; }
 .srow { display: grid; grid-template-columns: minmax(0, 1fr) 272px 40px; gap: 8px 14px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.srow[data-nodl] { grid-template-columns: minmax(0, 1fr) 40px; }
 .srow[data-route=advanced] { --rc: var(--route-advanced); }
 .srow-t { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto 16px; gap: 14px; align-items: center; min-height: 44px; padding: 4px 0;
   background: none; border: 0; color: var(--foam); font: inherit; text-align: left; cursor: pointer; }
