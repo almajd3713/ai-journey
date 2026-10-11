@@ -1,0 +1,1327 @@
+[
+ {
+  "id": "b00-words",
+  "session": "B00",
+  "anchor": "This notebook follows one complete experiment",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b00-words.png",
+  "caption": "Figure 0.1 — The words you will hear, as circles within circles. This course teaches the middle ring first, then moves to the inner ones.",
+  "alt": "Nested circles: artificial intelligence contains machine learning, which contains deep learning, which contains generative AI.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b00-iris-photos",
+  "session": "B00",
+  "anchor": "## 1. The data",
+  "position": "after",
+  "kind": "I",
+  "priority": "★",
+  "file": "figures/b00-iris-photos.jpg",
+  "caption": "Figure 0.2 — The three species in the dataset. In an iris the three drooping outer parts are the sepals and the three smaller upright inner parts are the petals; the four measurements in the table are the length and width of each. Photos from Wikimedia Commons: Radomil (CC BY-SA 3.0), Danielle Langlois (CC BY-SA 3.0) and Frank Mayfield (CC BY-SA 2.0), cropped and resized.",
+  "alt": "Three photographs of iris flowers side by side, labelled Iris setosa, Iris versicolor and Iris virginica.",
+  "numbers": [],
+  "licence": [
+   {
+    "file": "Kosaciec szczecinkowaty Iris setosa.jpg",
+    "author": "Radomil",
+    "licence": "CC BY-SA 3.0 (also GFDL)",
+    "url": "https://commons.wikimedia.org/wiki/File:Kosaciec_szczecinkowaty_Iris_setosa.jpg",
+    "changes": "cropped, resized"
+   },
+   {
+    "file": "Iris versicolor 3.jpg",
+    "author": "Danielle Langlois",
+    "licence": "CC BY-SA 3.0",
+    "url": "https://commons.wikimedia.org/wiki/File:Iris_versicolor_3.jpg",
+    "changes": "resized"
+   },
+   {
+    "file": "Iris virginica.jpg",
+    "author": "Frank Mayfield",
+    "licence": "CC BY-SA 2.0",
+    "url": "https://commons.wikimedia.org/wiki/File:Iris_virginica.jpg",
+    "changes": "resized"
+   }
+  ]
+ },
+ {
+  "id": "b00-split",
+  "session": "B00",
+  "anchor": "The split is random but fixed by a seed",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b00-split.png",
+  "caption": "Figure 0.3 — The 150 flowers split into 112 for training and 38 for testing. Filled squares are the test flowers. Because of `stratify=y`, each species appears in both sets in the same proportion: 12, 13 and 13 of each species are in the test set.",
+  "alt": "Three rows of 50 squares, one row per species, with the 38 test flowers filled in and the rest outlined.",
+  "numbers": [
+   {
+    "value": "112",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "38",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "12",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "13",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "13",
+    "source": {
+     "cell": 5
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b00-experiment-chain",
+  "session": "B00",
+  "anchor": "## The pattern to take away",
+  "position": "before",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b00-experiment-chain.png",
+  "caption": "Figure 0.4 — The five-step experiment chain that every later session follows: split, baseline, fit, evaluate, read the errors. A small version of this strip opens each session with that session's step highlighted.",
+  "alt": "Five boxes in a row, joined by arrows: split, baseline, fit, evaluate, read the errors.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b00-timeline",
+  "session": "B00",
+  "anchor": "## Where the ideas in this course came from",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b00-timeline.png",
+  "caption": "Figure 0.5 — The history table as a timeline. Most of the methods in the course are older than they look; the labels near the line give the session that builds on each.",
+  "alt": "A horizontal timeline from 1936 to 2022 with ten events marked, each labelled with the session that builds on it.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b01-row-anatomy",
+  "session": "B01",
+  "anchor": "## 1. What is one row?",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b01-row-anatomy.png",
+  "caption": "Figure 1.1 — One row of the table, the first student. Most columns are features the model may read; `student_id` only labels the row, and `passed` is the target the model will try to predict.",
+  "alt": "A table row split into seven labelled cells: student_id marked as not a feature, three numeric and two category features, and the passed column marked as the target.",
+  "numbers": [
+   {
+    "value": "S0000",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "7.914151",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "98.457933",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "66.229326",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "Business",
+    "source": {
+     "cell": 0
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b01-duplicate-leak",
+  "session": "B01",
+  "anchor": "One row appears twice",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b01-duplicate-leak.png",
+  "caption": "Figure 1.2 — Why a duplicate matters. Student S0025 sits at positions 25 and 500 with identical values. If a random split puts one copy in the training set and the other in the test set, the model is tested on a row it has already seen.",
+  "alt": "Two identical rows for student S0025, at positions 25 and 500; a random split sends one to the training set and one to the test set.",
+  "numbers": [
+   {
+    "value": "25",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "500",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "S0025",
+    "source": {
+     "cell": 2
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b01-pass-by-band",
+  "session": "B01",
+  "anchor": "## 5. Which features separate the outcomes?",
+  "position": "after",
+  "kind": "S",
+  "priority": "○",
+  "file": "figures/b01-pass-by-band.png",
+  "caption": "Figure 1.3 — The pass rate among students at the two ends of each feature. Many more of those who studied for a long time, or had a high previous grade, passed than of those at the other end; attendance separates the ends least.",
+  "alt": "Three pairs of bars, one pair per feature, showing the share who passed among students at the low end and the high end: study hours 32% and 93%, previous grade 28% and 92%, attendance 40% and 74%.",
+  "numbers": [
+   {
+    "value": "93",
+    "source": {
+     "cell": 10
+    }
+   },
+   {
+    "value": "32",
+    "source": {
+     "cell": 10
+    }
+   },
+   {
+    "value": "92",
+    "source": {
+     "cell": 10
+    }
+   },
+   {
+    "value": "28",
+    "source": {
+     "cell": 10
+    }
+   },
+   {
+    "value": "74",
+    "source": {
+     "cell": 10
+    }
+   },
+   {
+    "value": "40",
+    "source": {
+     "cell": 10
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b02-fit-transform",
+  "session": "B02",
+  "anchor": "## 3. Numbers: fill the gaps, then rescale",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b02-fit-transform.png",
+  "caption": "Figure 2.1 — `fit` and `transform`. The medians are learned from the 375 training rows only; the same numbers are then applied to the training rows and the 125 test rows.",
+  "alt": "Training rows feed a box of learned numbers (three medians) through an arrow labelled fit; transform arrows carry those numbers to both the training and the test rows.",
+  "numbers": [
+   {
+    "value": "375",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "125",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "7.20",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "76.89",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "67.50",
+    "source": {
+     "cell": 2
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b02-order",
+  "session": "B02",
+  "anchor": "## 3. Numbers: fill the gaps, then rescale",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b02-order.png",
+  "caption": "Figure 2.2 — The right order and the wrong order. Fitting before the split lets the test rows shape the numbers the model sees. In the right order the scaled test columns are not centred on zero (their means are -0.114, 0.264 and -0.092) because they use the training numbers.",
+  "alt": "Two columns of three steps. Right: split, fit on training rows, transform both sets. Wrong: fit on all rows, then split, with information leaking from the test rows into the fitted numbers.",
+  "numbers": [
+   {
+    "value": "-0.114",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "0.264",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "-0.092",
+    "source": {
+     "cell": 2
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b02-one-hot",
+  "session": "B02",
+  "anchor": "## 4. Categories: fill the gaps, then one-hot encode",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b02-one-hot.png",
+  "caption": "Figure 2.3 — One-hot encoding. Each department becomes its own 0/1 column, so no department is placed between two others. Numbering the departments 0, 1, 2 would put them on a line and make Engineering look like the middle of CS and Business.",
+  "alt": "Left, four rows of department names; right, the same rows as three columns of zeros and ones, one column per department. Below, a number line placing the departments at 0, 1 and 2, labelled as the wrong choice.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b02-pipeline",
+  "session": "B02",
+  "anchor": "## 5. One pipeline, one object",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b02-pipeline.png",
+  "caption": "Figure 2.4 — The structure of the pipeline. A ColumnTransformer sends the numeric columns through an imputer and a scaler and the category columns through an imputer and a one-hot encoder; the results are joined and passed to the classifier.",
+  "alt": "Two branches of boxes: numeric columns through impute and scale, category columns through impute and one-hot encode, joined into one table that feeds a logistic regression classifier.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b02-cross-validation",
+  "session": "B02",
+  "anchor": "## 6. How much should one split be trusted?",
+  "position": "after",
+  "kind": "S",
+  "priority": "★",
+  "file": "figures/b02-cross-validation.png",
+  "caption": "Figure 2.5 — Five-fold cross-validation. Each fold holds back a different fifth of the students and scores the model on it. The five accuracies spread from 0.72 to 0.85 around a mean of 0.792; the single test split (0.832) happens to fall on the easier side.",
+  "alt": "Left, a grid of five rows with one cell highlighted in each, showing which fifth is held out in each fold. Right, the five fold accuracies as dots with their mean and the single test-split accuracy marked.",
+  "numbers": [
+   {
+    "value": "0.72",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.81",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.78",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.8",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.85",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.792",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.832",
+    "source": {
+     "cell": 4
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b02-leak-timeline",
+  "session": "B02",
+  "anchor": "## 7. Leakage: the model that looks perfect",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b02-leak-timeline.png",
+  "caption": "Figure 2.6 — Leakage as a timeline. The features exist when the student enrols, before the prediction is needed. The certificate is issued after the outcome is known, so it matches the target exactly (312 Yes among those who passed, 188 No among those who failed) and cannot be used to predict it.",
+  "alt": "A timeline from enrolment to certificate with the moment the prediction is needed marked in the middle. Columns known before that moment are labelled safe; the certificate, issued afterwards, is labelled as leaking the answer.",
+  "numbers": [
+   {
+    "value": "312",
+    "source": {
+     "cell": 6
+    }
+   },
+   {
+    "value": "188",
+    "source": {
+     "cell": 6
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b04-fraud-grid",
+  "session": "B04",
+  "anchor": "Both look excellent by accuracy.",
+  "position": "before",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b04-fraud-grid.png",
+  "caption": "Figure 4.1 — The 5000 test transactions, 50 of them fraud. The rule that always answers \"no fraud\" finds none of the frauds and still scores 0.990; the logistic regression finds 5 of 50 and scores 0.991. Almost every dot is a legitimate transaction, which is why accuracy hides the failure.",
+  "alt": "Two grids of 5000 dots, mostly grey, with 50 frauds marked in red. In the first none is found; in the second 5 are found.",
+  "numbers": [
+   {
+    "value": "5000",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "50",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "5",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "0.990",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "0.991",
+    "source": {
+     "cell": 0
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b04-three-sets",
+  "session": "B04",
+  "anchor": "## 2. Three sets, three jobs",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b04-three-sets.png",
+  "caption": "Figure 4.2 — Three sets, three jobs. The training set (341 rows) is for fitting and tuning, the validation set (114 rows) is for decisions that need unseen data such as the threshold, and the test set (114 rows) is opened once at the end.",
+  "alt": "Three cards side by side: training set for fitting and tuning, validation set for choosing the threshold, test set for the final score, the last one marked as locked away until the end.",
+  "numbers": [
+   {
+    "value": "341",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "114",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "114",
+    "source": {
+     "cell": 1
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b04-four-boxes",
+  "session": "B04",
+  "anchor": "## 4. The confusion matrix and what to read from it",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b04-four-boxes.png",
+  "caption": "Figure 4.3 — The four boxes of the confusion matrix, with what each kind of error costs in the cancer problem. A missed malignant case is the costly mistake; a false alarm costs extra tests.",
+  "alt": "A two-by-two grid: true positive, false negative, false positive and true negative, each with a short note on what it means and costs.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b04-protocol",
+  "session": "B04",
+  "anchor": "## The protocol, in order",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b04-protocol.png",
+  "caption": "Figure 4.4 — The protocol as a one-way track: tune the hyperparameter (C = 1), choose the threshold (0.463), lock everything, then score the test set once. There is no arrow back; going back would turn the test set into a second validation set.",
+  "alt": "Four boxes in a row joined by forward arrows: tune, choose the threshold, lock, test once, with a note that nothing found at the last step sends you back.",
+  "numbers": [
+   {
+    "value": "1",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "0.463",
+    "source": {
+     "cell": 4
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b04-malignant-dots",
+  "session": "B04",
+  "anchor": "On the 114 test cases the model finds 38 of the 42",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b04-malignant-dots.png",
+  "caption": "Figure 4.5 — The 42 malignant test cases as dots. With so few, one case is worth about 2.4 points of recall, so missing four rather than two moves the number a long way.",
+  "alt": "42 dots in two rows; most are filled green for found cases and the last four are red rings for missed cases.",
+  "numbers": [
+   {
+    "value": "42",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.905",
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": "4",
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": "2.4",
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b05-silhouette",
+  "session": "B05",
+  "anchor": "## 3. The result",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b05-silhouette.png",
+  "caption": "Figure 5.1 — How one point's silhouette is built. It compares the average distance to its own group, a(i), with the average distance to the nearest other group, b(i). The score for the whole clustering in this session, 0.757, is the average over all points. The drawing is a diagram of the construction, not the notebook's data.",
+  "alt": "Two cluster regions with one orange point inside the left one; arrows run from it to points in its own cluster (labelled a) and to points in the other cluster (labelled b).",
+  "numbers": [
+   {
+    "value": "0.757",
+    "source": {
+     "cell": 2
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b06-neuron",
+  "session": "B06",
+  "anchor": "From this session on, the course builds its networks",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b06-neuron.png",
+  "caption": "Figure 6.1 — One unit. Each input is multiplied by its own weight, the products are added together with a bias, and an activation function turns the sum into the unit's output. Logistic regression is one such unit with a sigmoid activation.",
+  "alt": "Three input circles with arrows labelled by weights into an adding box that also receives a bias, followed by an activation box and an output.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b06-layers-collapse",
+  "session": "B06",
+  "anchor": "## 2. Why layers need a non-linear step",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b06-layers-collapse.png",
+  "caption": "Figure 6.2 — Two linear layers collapse into one. The chain W₁ then W₂ gives the same output (-4.61296337) as a single layer with weights W₂W₁ and bias W₂b₁ + b₂, so a straight boundary stays straight.",
+  "alt": "Two rows. Top: input through layer one and layer two to an output. Bottom: input through one merged layer to the same output value.",
+  "numbers": [
+   {
+    "value": "-4.61296337",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "-0.58",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "0.117",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "-4.595",
+    "source": {
+     "cell": 2
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b06-training-loop",
+  "session": "B06",
+  "anchor": "## 4. How a model learns: a loss, a gradient and a small step",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b06-training-loop.png",
+  "caption": "Figure 6.3 — The training loop that every fit hides. Compute predictions, measure the loss, compute the gradient of the loss with respect to each weight, take a small step against it, and go round again.",
+  "alt": "Four boxes arranged in a cycle: forward pass, loss, gradient, step, with arrows running clockwise and a note to repeat until the loss stops falling.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b06-backprop",
+  "session": "B06",
+  "anchor": "Backpropagation was popularised in 1986",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b06-backprop.png",
+  "caption": "Figure 6.4 — Backpropagation on the one-unit model. Forward, the loss is computed from the weights through the scores and the probabilities. Backward, the chain rule carries the gradient from the loss back to the weights: [-0.34001, -0.473045] for the weights and -0.002774 for the bias, the same numbers as the formula by hand.",
+  "alt": "A row of four boxes (weights, scores, probabilities, loss) with forward arrows above and red backward arrows below ending at the weights, labelled with the gradient values.",
+  "numbers": [
+   {
+    "value": "0.815",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "-0.34001",
+    "source": {
+     "cell": 7
+    }
+   },
+   {
+    "value": "-0.473045",
+    "source": {
+     "cell": 7
+    }
+   },
+   {
+    "value": "-0.002774",
+    "source": {
+     "cell": 7
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b06-network-17",
+  "session": "B06",
+  "anchor": "## 5. A network that learns XOR",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b06-network-17.png",
+  "caption": "Figure 6.5 — The network that learns XOR: two inputs, four tanh units and one sigmoid output. Counting the weights and biases layer by layer gives 17 numbers to learn.",
+  "alt": "A network diagram with two input circles, four hidden circles and one output circle, joined by lines, annotated with the parameter counts of each layer and a total of 17.",
+  "numbers": [
+   {
+    "value": "17",
+    "source": {
+     "cell": 8
+    }
+   },
+   {
+    "value": "8",
+    "source": {
+     "cell": 8
+    }
+   },
+   {
+    "value": "4",
+    "source": {
+     "cell": 8
+    }
+   },
+   {
+    "value": "4",
+    "source": {
+     "cell": 8
+    }
+   },
+   {
+    "value": "1",
+    "source": {
+     "cell": 8
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b07-lookup-card",
+  "session": "B07",
+  "anchor": "### The same three runs as pictures",
+  "position": "before",
+  "kind": "S",
+  "priority": "★",
+  "file": "figures/b07-lookup-card.png",
+  "caption": "Figure 7.1 — A lookup card for reading training curves. Each row shows the real curves from this session's three runs, what to notice in them, what it means, and what to try first. The same order doubles as a debugging checklist.",
+  "alt": "A table of three rows. Each row has a thumbnail of one run's loss curves, a description of the pattern, the diagnosis (too simple, too flexible, steps too big) and the first fix to try.",
+  "numbers": [
+   {
+    "value": "0.28",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "13",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "1.99",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "2.50",
+    "source": {
+     "cell": 2
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b07-dropout",
+  "session": "B07",
+  "anchor": "## 3. Fixing overfitting, one change at a time",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b07-dropout.png",
+  "caption": "Figure 7.2 — Dropout. At each training step about half of the hidden units are switched off, a different set each time, so the network cannot rely on any single one. At prediction time all units are on.",
+  "alt": "Two copies of the same small network. In each, two of the four hidden units are crossed out; the crossed-out units differ between the two steps.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b07-softmax-bug",
+  "session": "B07",
+  "anchor": "## 4. When the curves look fine but the model is broken",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b07-softmax-bug.png",
+  "caption": "Figure 7.3 — The softmax bug on ten training points. With a sigmoid on each row, every prediction is its own probability and they match the labels (accuracy 100%). With softmax taken down the batch, the ten predictions share one unit of probability, so every one is below 0.5 and the model says 0 for all of them (accuracy 50%).",
+  "alt": "Two bar charts of ten predictions. Left, the sigmoid output: bars at 1 or 0 matching the true labels. Right, the softmax-over-the-batch output: all bars at 0.2 or below, all under the 0.5 line.",
+  "numbers": [
+   {
+    "value": "100%",
+    "source": {
+     "cell": 7
+    }
+   },
+   {
+    "value": "50%",
+    "source": {
+     "cell": 7
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b08-cnn-shapes",
+  "session": "B08",
+  "anchor": "## 3. Counting parameters",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b08-cnn-shapes.png",
+  "caption": "Figure 8.1 — The CNN as a stack of blocks, with the shape of what comes out of each. The same small filters are reused at every position, so the whole network has 12,810 parameters; the dense network on the same image has 101,770.",
+  "alt": "A row of boxes from the 1 by 28 by 28 image through two convolution and two max-pooling blocks to a linear layer of 10 scores, with parameter counts, above a smaller diagram of the dense network with 101,770 parameters.",
+  "numbers": [
+   {
+    "value": "12,810",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "101,770",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "4,640",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "8,010",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "160",
+    "source": {
+     "cell": 2
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b09-split-by-file",
+  "session": "B09",
+  "anchor": "## 2. One split, made by file",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b09-split-by-file.png",
+  "caption": "Figure 9.1 — Two ways to build the sets. Splitting the list of file names once gives each photo one job (1400 training, 300 validation, 300 test, none shared). Reshuffling the stream on every pass can hand the same photo to validation on one pass and to test on another, so the test score stops being a fair measure.",
+  "alt": "Left, a list of photo files split once into training, validation and test boxes. Right, a stream reshuffled on each pass, where coloured validation and test squares land on different photos each pass and can overlap.",
+  "numbers": [
+   {
+    "value": "1400",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "300",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "300",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "0",
+    "source": {
+     "cell": 1
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b09-three-versions",
+  "session": "B09",
+  "anchor": "## 4. Backbone and head",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b09-three-versions.png",
+  "caption": "Figure 9.2 — The same backbone and head in three versions. From scratch trains everything (2,230,277 parameters); frozen features locks the pretrained backbone and trains only the head (6,405); fine-tuning unlocks the last 4 of the 19 blocks as well (1,532,485).",
+  "alt": "Three rows of 19 blocks followed by a head. In the first row every block is coloured as trained; in the second all backbone blocks are grey and locked; in the third the first 15 are grey and the last 4 coloured.",
+  "numbers": [
+   {
+    "value": "2,230,277",
+    "source": {
+     "cell": 8
+    }
+   },
+   {
+    "value": "6,405",
+    "source": {
+     "cell": 8
+    }
+   },
+   {
+    "value": "1,532,485",
+    "source": {
+     "cell": 8
+    }
+   },
+   {
+    "value": "4",
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": "19",
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b10-text-to-vectors",
+  "session": "B10",
+  "anchor": "## 2. Tokens and ids",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b10-text-to-vectors.png",
+  "caption": "Figure 10.1 — From text to numbers in three steps: split into tokens, give each token an id, and let each id pick a row of learned numbers. The ids 5, 3, 6, 4, 2, 1, 0 are labels, not quantities.",
+  "alt": "The sentence 'The movie was not good at all' split into seven word tokens, each with its id, and each id pointing to one row of an embedding table.",
+  "numbers": [
+   {
+    "value": "5",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "3",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "6",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "4",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "2",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "1",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "0",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "20000",
+    "source": {
+     "cell": 4
+    }
+   },
+   {
+    "value": "32",
+    "source": {
+     "cell": 4
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b10-bag-of-words",
+  "session": "B10",
+  "anchor": "## 3. Counting words: TF-IDF",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b10-bag-of-words.png",
+  "caption": "Figure 10.2 — A bag of words records which words appear and how often, not their order, so \"not good\" and \"good not\" give identical counts. A word pair is a feature of its own, which is what the bigram model adds.",
+  "alt": "Two orderings of the words 'not' and 'good' both point to the same bag of words with a count of one for each word.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b10-lstm-unrolled",
+  "session": "B10",
+  "anchor": "## 4. Reading in order: an LSTM",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b10-lstm-unrolled.png",
+  "caption": "Figure 10.3 — An LSTM reads a review one token at a time, passing its memory from step to step; the last memory feeds the output score. In a batch, short reviews are padded to a common length, and packing lets the LSTM skip the padding.",
+  "alt": "Five LSTM boxes in a row, one per token of 'the movie was not good', with the memory passed from each to the next and ending in a score. Below, a batch of three reviews of different lengths with padding shown as empty cells.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b10-probes",
+  "session": "B10",
+  "anchor": "## 5. Probing with sentences",
+  "position": "after",
+  "kind": "S",
+  "priority": "○",
+  "file": "figures/b10-probes.png",
+  "caption": "Figure 10.4 — Six hand-written sentences scored by the three models. \"Not good\" pulls the word-pair model down the most; none of the models handles \"not bad\"; the LSTM barely reacts to \"not\".",
+  "alt": "Dot chart with six sentences as rows and three dots per row, one per model, showing the probability of a positive review from 0 to 1.",
+  "numbers": [
+   {
+    "value": "0.49",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.51",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.47",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.32",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.25",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "0.45",
+    "source": {
+     "cell": 5
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b11-qkv-it",
+  "session": "B11",
+  "anchor": "The picture shows the same table as a heatmap.",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b11-qkv-it.png",
+  "caption": "Figure 11.1 — Attention for the word \"it\". Its query is matched against every token's key; the match scores become weights (0.59 to battery, 0.22 to empty, much less to the rest) that are drawn as line widths; the new vector for \"it\" is the weighted mix of the values, [0.12, 0.81].",
+  "alt": "The word 'it' on the left sends lines of different thickness to five key boxes (robot, battery, because, it, empty); each key has a value vector, and the values are mixed into a new vector for 'it' on the right.",
+  "numbers": [
+   {
+    "value": "0.59",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "0.22",
+    "source": {
+     "cell": 0
+    }
+   },
+   {
+    "value": "0.12",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "0.81",
+    "source": {
+     "cell": 1
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b11-shapes",
+  "session": "B11",
+  "anchor": "The picture shows the same table as a heatmap.",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b11-shapes.png",
+  "caption": "Figure 11.2 — The same computation as matrix shapes. Queries times transposed keys give a 5 × 5 table of scores; a softmax along each row turns it into weights; the weights times the values give one new vector per token.",
+  "alt": "Matrix multiplication diagram: Q (5 by 3) times K transposed (3 by 5) gives scores (5 by 5); softmax gives weights (5 by 5); weights times V (5 by 2) gives the output (5 by 2).",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b11-causal-mask",
+  "session": "B11",
+  "anchor": "In the table, *robot* attends only to itself",
+  "position": "after",
+  "kind": "S",
+  "priority": "★",
+  "file": "figures/b11-causal-mask.png",
+  "caption": "Figure 11.3 — The attention weights without and with the causal mask. With the mask, every token reads only itself and the tokens before it, so the cells above the diagonal become zero and each row is shared among fewer tokens: \"it\" now gives 0.76 to battery, against 0.59 before.",
+  "alt": "Two five-by-five tables of attention weights over the tokens robot, battery, because, it, empty. The left one is full; the right one has dots above the diagonal and larger weights in the remaining cells.",
+  "numbers": [
+   {
+    "value": "0.76",
+    "source": {
+     "cell": 2
+    }
+   },
+   {
+    "value": "0.59",
+    "source": {
+     "cell": 0
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b11-subwords",
+  "session": "B11",
+  "anchor": "## 4. Tokens are not always words",
+  "position": "after",
+  "kind": "S",
+  "priority": "★",
+  "file": "figures/b11-subwords.png",
+  "caption": "Figure 11.4 — Four words as BERT's subword tokens. A common word is one token; \"tokenization\" is two (ids 19204 and 3989); rare or invented words are cut into several pieces from a vocabulary of 30,522, so nothing is ever unknown.",
+  "alt": "Four rows of coloured chips: 'battery' as one chip, 'unbelievably' as five, 'tokenization' as two and 'Zorblatt-9000' as seven.",
+  "numbers": [
+   {
+    "value": "30,522",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "19204",
+    "source": {
+     "cell": 5
+    }
+   },
+   {
+    "value": "3989",
+    "source": {
+     "cell": 5
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b12-generation-loop",
+  "session": "B12",
+  "anchor": "The prompt is 35 tokens. The chat template wraps",
+  "position": "before",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b12-generation-loop.png",
+  "caption": "Figure 12.1 — The loop a language model runs to write an answer. Each pass produces probabilities for every token in the vocabulary, one token is picked and appended, and the loop repeats until the end-of-turn token is picked.",
+  "alt": "Flow diagram: tokens so far go into the model, which outputs a probability for every token; one token is picked and appended to the tokens so far, and the loop repeats until the end-of-turn token is picked.",
+  "numbers": [
+   {
+    "value": "35",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "151,665",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "0.339",
+    "source": {
+     "cell": 1
+    }
+   },
+   {
+    "value": "0.655",
+    "source": {
+     "cell": 1
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b12-system",
+  "session": "B12",
+  "anchor": "Now the same question with a defence we might expect to help.",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b12-system.png",
+  "caption": "Figure 12.2 — The whole system, with the injection path in red. A document that carries hidden instructions is retrieved with the real one, lands inside the prompt, and the model follows it; only the check outside the model stops it.",
+  "alt": "System diagram: question, retriever, score gate with an abstain branch, prompt, model, output check, answer. A red dashed path shows a forum post with hidden instructions entering through the retriever into the prompt, the model obeying it, and the output check blocking the result.",
+  "numbers": [
+   {
+    "value": "0.28",
+    "source": {
+     "cell": 5
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b12-score-gap",
+  "session": "B12",
+  "anchor": "## 3. Measuring the retriever by itself",
+  "position": "after",
+  "kind": "S",
+  "priority": "★",
+  "file": "figures/b12-score-gap.png",
+  "caption": "Figure 12.3 — The best retrieval score for each of the twelve questions. Every question with an answer scores 0.301 or more; every question without one scores 0.26 or less. The threshold of 0.28 sits in the gap.",
+  "alt": "Strip chart of twelve dots. The eight answerable questions sit between 0.301 and 0.694, the four unanswerable ones between 0.0 and 0.26, with a vertical line at the 0.28 threshold in the gap between them.",
+  "numbers": [
+   {
+    "value": "0.301",
+    "source": {
+     "cell": 3
+    }
+   },
+   {
+    "value": "0.26",
+    "source": {
+     "cell": 3
+    }
+   },
+   {
+    "value": "0.694",
+    "source": {
+     "cell": 3
+    }
+   },
+   {
+    "value": "0.28",
+    "source": {
+     "cell": 5
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b12-prompt-layers",
+  "session": "B12",
+  "anchor": "With a warning in the prompt (the context is untrusted data",
+  "position": "after",
+  "kind": "D",
+  "priority": "★",
+  "file": "figures/b12-prompt-layers.png",
+  "caption": "Figure 12.4 — What the model receives, and where each defence sits. The trusted instruction, the untrusted documents and the question arrive as one stream of tokens, so a defence written inside the prompt is only a request. Checks outside the model do not depend on its behaviour.",
+  "alt": "Diagram of the prompt as three stacked layers: a trusted system instruction, an untrusted context containing a forum post with hidden instructions, and the user's question. A list on the right separates defences inside the prompt from defences outside the model.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b12-cosine-angle",
+  "session": "B12",
+  "anchor": "## 2. A retriever over eight short documents",
+  "position": "after",
+  "kind": "D",
+  "priority": "○",
+  "file": "figures/b12-cosine-angle.png",
+  "caption": "Figure 12.5 — Cosine similarity compares directions, not lengths. The smaller the angle between the question's vector and a document's vector, the higher the score; at a right angle the two share no words and the score is 0.",
+  "alt": "Three pairs of arrows from a common origin: two arrows pointing the same way (score 1), two with a moderate angle between them (a score between 0 and 1), and two at right angles (score 0).",
+  "numbers": [],
+  "licence": null
+ }
+]
