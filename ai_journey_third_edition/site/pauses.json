@@ -1,0 +1,1096 @@
+[
+ {
+  "id": "b00-p2",
+  "session": "B00",
+  "notebook": "session_00_teaching_a_machine.ipynb",
+  "cell": 13,
+  "q": "the model makes three mistakes on the test set",
+  "question": "the model makes three mistakes on the test set. Which species do you expect it to mix up? The petal ranges in section 4 are a clue.",
+  "choices": [
+   {
+    "text": "Setosa and versicolor.",
+    "correct": false
+   },
+   {
+    "text": "Setosa and virginica.",
+    "correct": false
+   },
+   {
+    "text": "Versicolor and virginica.",
+    "correct": true
+   },
+   {
+    "text": "A mix: one mistake in each pair of species.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** All three mistakes are between versicolor and virginica: two virginica flowers are called versicolor and one versicolor is called virginica. All 12 setosa flowers are right, which the petal ranges in section 4 predict.",
+   "numbers": [
+    {
+     "value": "12",
+     "source": {
+      "cell": 5
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b01-p2",
+  "session": "B01",
+  "notebook": "session_01_reading_a_dataset.ipynb",
+  "cell": 23,
+  "q": "the next table gives the pass rate per department",
+  "question": "the next table gives the pass rate per department. Which department do you expect to pass most often, and if it does, would the table tell you why?",
+  "choices": [
+   {
+    "text": "CS.",
+    "correct": true
+   },
+   {
+    "text": "Engineering.",
+    "correct": false
+   },
+   {
+    "text": "Business.",
+    "correct": false
+   },
+   {
+    "text": "All three within two points of each other.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**A.** CS passes most often (0.687), then Engineering (0.593) and Business (0.525). The table shows that the rates differ. It can't say why: difficulty, preparation and grading are all possible, and only 101 students are in Business.",
+   "numbers": [
+    {
+     "value": "0.687",
+     "source": {
+      "cell": 11
+     }
+    },
+    {
+     "value": "0.593",
+     "source": {
+      "cell": 11
+     }
+    },
+    {
+     "value": "0.525",
+     "source": {
+      "cell": 11
+     }
+    },
+    {
+     "value": "101",
+     "source": {
+      "cell": 11
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b02-p1",
+  "session": "B02",
+  "notebook": "session_02_preprocessing_and_leakage.ipynb",
+  "cell": 13,
+  "q": "the test score is higher than the training score",
+  "question": "the test score is higher than the training score. Is the model better on unseen students? Decide before moving on.",
+  "choices": [
+   {
+    "text": "Yes: the test score is the honest one, so it shows the model generalises.",
+    "correct": false
+   },
+   {
+    "text": "Probably not: one split of 125 students is noisy, and this one may have been easy.",
+    "correct": true
+   },
+   {
+    "text": "No: a test score above the training score always means the data leaked.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Five-fold cross-validation gives accuracies from 0.72 to 0.85 (mean 0.792, standard deviation 0.043). The single test score of 0.832 sits inside that range, so this test set was a little easier.",
+   "numbers": [
+    {
+     "value": "0.72",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.85",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.792",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.043",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.832",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b02-p2",
+  "session": "B02",
+  "notebook": "session_02_preprocessing_and_leakage.ipynb",
+  "cell": 19,
+  "q": "we add this column and train the same pipeline",
+  "question": "we add this column and train the same pipeline. What accuracy do you expect?",
+  "choices": [
+   {
+    "text": "A little higher.",
+    "correct": false
+   },
+   {
+    "text": "A lot higher, but short of perfect.",
+    "correct": false
+   },
+   {
+    "text": "Perfect: 1.000.",
+    "correct": true
+   },
+   {
+    "text": "About the same as before.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** Without the certificate column the test accuracy is 0.832. With it, the same pipeline scores 1.000, because the certificate is issued after the outcome is known.",
+   "numbers": [
+    {
+     "value": "0.832",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "1.000",
+     "source": {
+      "cell": 7
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b03-p1",
+  "session": "B03",
+  "notebook": "session_03_classical_models.ipynb",
+  "cell": 6,
+  "q": "the moons are curved",
+  "question": "the moons are curved. Before looking at the boundaries, which models do you expect to follow the curve and which to struggle?",
+  "choices": [
+   {
+    "text": "All four follow the curve about equally.",
+    "correct": false
+   },
+   {
+    "text": "k-NN follows the curve best, and logistic regression struggles most.",
+    "correct": true
+   },
+   {
+    "text": "The tree and the forest follow it best, because they are the most flexible.",
+    "correct": false
+   },
+   {
+    "text": "Logistic regression does best, because it is the simplest.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Logistic regression is lowest (0.852 on the test set), and k-NN bends its boundary around the local points. The tree and the forest use rectangles, so their boundaries can't follow the curve smoothly; the other three are within a point of each other (0.910 to 0.919).",
+   "numbers": [
+    {
+     "value": "0.852",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.910",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.919",
+     "source": {
+      "cell": 2
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b03-p2",
+  "session": "B03",
+  "notebook": "session_03_classical_models.ipynb",
+  "cell": 10,
+  "q": "as the tree gets deeper, training accuracy will rise",
+  "question": "as the tree gets deeper, training accuracy will rise. What do you expect test accuracy to do?",
+  "choices": [
+   {
+    "text": "It rises too, only more slowly.",
+    "correct": false
+   },
+   {
+    "text": "It peaks early, then stays a little lower.",
+    "correct": true
+   },
+   {
+    "text": "It falls sharply once the tree starts memorising the training points.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Test accuracy peaks at 0.905 at depth 2 and then stays between 0.881 and 0.895, while training accuracy reaches 1.000 at depth 13. The 11-point gap is overfitting, but the fall in test accuracy is small.",
+   "numbers": [
+    {
+     "value": "0.905",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.881",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.895",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "1.000",
+     "source": {
+      "cell": 5
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b04-p1",
+  "session": "B04",
+  "notebook": "session_04_evaluation_and_generalization.ipynb",
+  "cell": 3,
+  "q": "a model scores 99.1% on this test set",
+  "question": "a model scores 99.1% on this test set. Would you put it into use?",
+  "choices": [
+   {
+    "text": "Yes: 99.1% is excellent.",
+    "correct": false
+   },
+   {
+    "text": "Not yet: first compare it with a rule that always says no.",
+    "correct": true
+   },
+   {
+    "text": "No: accuracy is never a useful measure.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** A rule that always answers \"no fraud\" scores 0.990 and finds none of the 50 frauds. The logistic regression scores 0.991 and finds only 5 of them, so it is no use either.",
+   "numbers": [
+    {
+     "value": "0.990",
+     "source": {
+      "cell": 0
+     }
+    },
+    {
+     "value": "0.991",
+     "source": {
+      "cell": 0
+     }
+    },
+    {
+     "value": "50",
+     "source": {
+      "cell": 0
+     }
+    },
+    {
+     "value": "5",
+     "source": {
+      "cell": 0
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b05-p1",
+  "session": "B05",
+  "notebook": "session_05_unsupervised_learning.ipynb",
+  "cell": 2,
+  "q": "how many groups can you see",
+  "question": "how many groups can you see? Do the groups look the same size and shape?",
+  "choices": [
+   {
+    "text": "Three groups of the same size.",
+    "correct": false
+   },
+   {
+    "text": "Four groups with different spreads.",
+    "correct": true
+   },
+   {
+    "text": "Five or more groups.",
+    "correct": false
+   },
+   {
+    "text": "Two groups.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** There are four, with different spreads: the bottom-left group is tight and the right-hand one is much wider. k-means is later told K = 4.",
+   "numbers": [
+    {
+     "value": "4",
+     "source": {
+      "cell": 1
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b05-p2",
+  "session": "B05",
+  "notebook": "session_05_unsupervised_learning.ipynb",
+  "cell": 11,
+  "q": "nothing about the points' arrangement has changed",
+  "question": "nothing about the points' arrangement has changed, only the units. Will the clusters change?",
+  "choices": [
+   {
+    "text": "No: only the units changed.",
+    "correct": false
+   },
+   {
+    "text": "Yes, but only slightly.",
+    "correct": false
+   },
+   {
+    "text": "Yes, a lot: the feature with the larger numbers decides what \"close\" means.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** On raw numbers the agreement with the hidden labels drops from 0.996 to 0.793, because one feature spans about 2,000 units and the other about 20. After standardising it is 0.996 again.",
+   "numbers": [
+    {
+     "value": "0.996",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.793",
+     "source": {
+      "markdown": true
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b06-p1",
+  "session": "B06",
+  "notebook": "session_06_neural_networks.ipynb",
+  "cell": 3,
+  "q": "look at the four corners of the square",
+  "question": "look at the four corners of the square. Can you draw one straight line with both 1s on one side and both 0s on the other?",
+  "choices": [
+   {
+    "text": "Yes, with a tilted line.",
+    "correct": false
+   },
+   {
+    "text": "No: no straight line separates them.",
+    "correct": true
+   },
+   {
+    "text": "Yes, once the model gets a bias term.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** No straight line works (this is XOR). Logistic regression predicts 0.5 at all four corners and scores an accuracy of 0.5.",
+   "numbers": [
+    {
+     "value": "0.5",
+     "source": {
+      "cell": 1
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b06-p2",
+  "session": "B06",
+  "notebook": "session_06_neural_networks.ipynb",
+  "cell": 7,
+  "q": "does the chain of two linear layers have more power than one",
+  "question": "does the chain of two linear layers have more power than one?",
+  "choices": [
+   {
+    "text": "Yes: two layers can bend the boundary.",
+    "correct": false
+   },
+   {
+    "text": "Yes, but only if each layer is wide.",
+    "correct": false
+   },
+   {
+    "text": "No: two linear layers collapse into one linear layer.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** The two layers and one merged layer give the same output, -4.61296337. The merged weights are W₂W₁ and the bias is W₂b₁ + b₂, so a straight boundary stays straight.",
+   "numbers": [
+    {
+     "value": "-4.61296337",
+     "source": {
+      "cell": 2
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b07-p2",
+  "session": "B07",
+  "notebook": "session_07_training_neural_networks.ipynb",
+  "cell": 12,
+  "q": "which line do you expect to be the slowest",
+  "question": "which line do you expect to be the slowest?",
+  "choices": [
+   {
+    "text": "Learning rate 0.0001, the smallest steps.",
+    "correct": true
+   },
+   {
+    "text": "Learning rate 0.3, the largest steps.",
+    "correct": false
+   },
+   {
+    "text": "Learning rate 0.01.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**A.** At 0.0001 the training loss is still 0.240 at epoch 200 and never gets below 0.05. Rate 0.3 fails differently: it jumps around and stalls at 2.500, and rate 0.01 is below 0.05 by epoch 36.",
+   "numbers": [
+    {
+     "value": "0.240",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "2.500",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "36",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b07-p3",
+  "session": "B07",
+  "notebook": "session_07_training_neural_networks.ipynb",
+  "cell": 15,
+  "q": "which of these do you expect to help the most",
+  "question": "which of these do you expect to help the most?",
+  "choices": [
+   {
+    "text": "Early stopping.",
+    "correct": true
+   },
+   {
+    "text": "Dropout.",
+    "correct": false
+   },
+   {
+    "text": "L2 at 0.01.",
+    "correct": false
+   },
+   {
+    "text": "L2 at 0.3, the strongest penalty.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**A.** Early stopping gives the lowest validation loss (0.280, against 1.992 for run A), with L2 at 0.01 close behind (0.286). Dropout ends at 1.014, and L2 at 0.3 is so strong that the network is too simple again.",
+   "numbers": [
+    {
+     "value": "0.280",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "1.992",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.286",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "1.014",
+     "source": {
+      "cell": 5
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b08-p1",
+  "session": "B08",
+  "notebook": "session_08_computer_vision.ipynb",
+  "cell": 4,
+  "q": "Which one needs more parameters, and by roughly how much",
+  "question": "the next cell builds a CNN with two convolution layers (16 filters, then 32, each 3×3) and a dense network that connects all 784 pixels to 128 units. Which one needs more parameters, and by roughly how much?",
+  "choices": [
+   {
+    "text": "The CNN needs more.",
+    "correct": false
+   },
+   {
+    "text": "The dense network, about twice as many.",
+    "correct": false
+   },
+   {
+    "text": "The dense network, about eight times as many.",
+    "correct": true
+   },
+   {
+    "text": "The dense network, about a hundred times as many.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** The dense network has 101,770 parameters and the CNN 12,810, about eight times fewer, because a filter's weights are reused at every position.",
+   "numbers": [
+    {
+     "value": "101,770",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "12,810",
+     "source": {
+      "cell": 2
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b08-p2",
+  "session": "B08",
+  "notebook": "session_08_computer_vision.ipynb",
+  "cell": 11,
+  "q": "which network will lose more accuracy when the digits move 3 pixels",
+  "question": "which network will lose more accuracy when the digits move 3 pixels, and why?",
+  "choices": [
+   {
+    "text": "The CNN, because its filters are fitted to particular positions.",
+    "correct": false
+   },
+   {
+    "text": "The dense network, because every pixel position has its own weights.",
+    "correct": true
+   },
+   {
+    "text": "Both about the same.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** At a shift of 3 pixels the dense network falls from 0.931 to 0.445, below half, while the CNN falls from 0.973 to 0.746.",
+   "numbers": [
+    {
+     "value": "0.931",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.445",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.973",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.746",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b09-p1",
+  "session": "B09",
+  "notebook": "session_09_transfer_learning.ipynb",
+  "cell": 4,
+  "q": "Which of these changes would be wrong for a dataset of handwritten digits",
+  "question": "the next cell makes random changes to a training photo: flips it left to right, rotates it a little, zooms in or out. Which of these changes would be wrong for a dataset of handwritten digits like Session 8's?",
+  "choices": [
+   {
+    "text": "Flipping left to right.",
+    "correct": true
+   },
+   {
+    "text": "Rotating a little.",
+    "correct": false
+   },
+   {
+    "text": "Zooming in or out.",
+    "correct": false
+   },
+   {
+    "text": "All three are fine for digits.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**A.** A flipped digit is not a digit, and rotating a 6 far enough makes it look like a 9. Small rotations and zooms keep the label. Augmentation is a claim about which changes don't matter for the task.",
+   "numbers": []
+  }
+ },
+ {
+  "id": "b09-p2",
+  "session": "B09",
+  "notebook": "session_09_transfer_learning.ipynb",
+  "cell": 18,
+  "q": "order the three strategies by test accuracy",
+  "question": "before looking at the table, order the three strategies by test accuracy. How big do you expect the gaps to be?",
+  "choices": [
+   {
+    "text": "Scratch, then frozen, then fine-tuned, with a large first gap and a small second gap.",
+    "correct": true
+   },
+   {
+    "text": "Scratch, then frozen, then fine-tuned, with all gaps about a point.",
+    "correct": false
+   },
+   {
+    "text": "Fine-tuned, then frozen, then scratch, because it has more trainable parameters.",
+    "correct": false
+   },
+   {
+    "text": "All three within a point of each other.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**A.** Test accuracy is 0.710 from scratch, 0.850 with frozen features and 0.883 fine-tuned: pretraining gives 14 points, fine-tuning a few more. The frozen model trains 6,405 parameters against 2,230,277 from scratch.",
+   "numbers": [
+    {
+     "value": "0.710",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "0.850",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "0.883",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "6,405",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "2,230,277",
+     "source": {
+      "cell": 8
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b10-p1",
+  "session": "B10",
+  "notebook": "session_10_nlp_foundations.ipynb",
+  "cell": 7,
+  "q": "What weight do you expect it to learn for that pair",
+  "question": "the single-word model can only add up a weight for \"not\" and a weight for \"good\". The word-pair model also has a feature for \"not good\". What weight do you expect it to learn for that pair: positive, negative, or close to zero?",
+  "choices": [
+   {
+    "text": "Positive.",
+    "correct": false
+   },
+   {
+    "text": "Negative.",
+    "correct": true
+   },
+   {
+    "text": "Close to zero.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** The pair \"not good\" gets -0.94, and the weight on \"good\" itself falls from 1.49 to 0.86.",
+   "numbers": [
+    {
+     "value": "-0.94",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "1.49",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.86",
+     "source": {
+      "cell": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b10-p2",
+  "session": "B10",
+  "notebook": "session_10_nlp_foundations.ipynb",
+  "cell": 10,
+  "q": "will it beat the word-pair model's 0.884",
+  "question": "the next model reads each review in order, word by word, so it could in principle learn what \"not\" does to the words after it. On these 10,000 reviews, will it beat the word-pair model's 0.884?",
+  "choices": [
+   {
+    "text": "Yes, clearly: reading in order must help.",
+    "correct": false
+   },
+   {
+    "text": "About the same.",
+    "correct": false
+   },
+   {
+    "text": "No: it scores lower.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** The LSTM scores 0.825 on the test set (0.843 on validation), below the word-pair model's 0.884. With only 10,000 reviews, the extra power overfits: its training loss falls to 0.09 while the validation loss climbs from 0.37 to 0.45.",
+   "numbers": [
+    {
+     "value": "0.825",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.843",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.884",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.09",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.37",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.45",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b11-p1",
+  "session": "B11",
+  "notebook": "session_11_attention_and_transformers.ipynb",
+  "cell": 2,
+  "q": "which token should \"it\" pay most attention to",
+  "question": "which token should \"it\" pay most attention to? Look at the \"it\" row.",
+  "choices": [
+   {
+    "text": "Robot.",
+    "correct": false
+   },
+   {
+    "text": "Battery.",
+    "correct": true
+   },
+   {
+    "text": "Empty.",
+    "correct": false
+   },
+   {
+    "text": "Itself.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** The \"it\" row gives 0.59 to battery, 0.22 to empty and 0.08 to itself.",
+   "numbers": [
+    {
+     "value": "0.59",
+     "source": {
+      "cell": 0
+     }
+    },
+    {
+     "value": "0.22",
+     "source": {
+      "cell": 0
+     }
+    },
+    {
+     "value": "0.08",
+     "source": {
+      "cell": 0
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b11-p2",
+  "session": "B11",
+  "notebook": "session_11_attention_and_transformers.ipynb",
+  "cell": 8,
+  "q": "Will one head point from \"it\" to the right object in both sentences",
+  "question": "BERT, next, has 144 attention heads. We give it the sentence twice, once ending in \"empty\" (so \"it\" is the battery) and once in \"broken\" (so \"it\" is more likely the device). Will one head point from \"it\" to the right object in both sentences?",
+  "choices": [
+   {
+    "text": "Yes: one head tracks the referent in both.",
+    "correct": false
+   },
+   {
+    "text": "No: the strongest head for battery differs between the sentences, and on average a head gives it only about 0.04.",
+    "correct": true
+   },
+   {
+    "text": "Yes: all 144 heads agree.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** The strongest head for battery is layer 5, head 4 (0.33) in the \"empty\" sentence but layer 11, head 7 (0.50) in the \"broken\" one, and averaged over all heads \"it\" gives each candidate only about 0.04.",
+   "numbers": [
+    {
+     "value": "0.33",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.50",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.04",
+     "source": {
+      "markdown": true
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b12-p1",
+  "session": "B12",
+  "notebook": "session_12_llm_systems.ipynb",
+  "cell": 2,
+  "q": "How sure do you expect the model to be of the first token",
+  "question": "the request is \"Suggest a name for a robot that sorts batteries.\" How sure do you expect the model to be of the first token of its answer?",
+  "choices": [
+   {
+    "text": "Very sure: above 0.9.",
+    "correct": false
+   },
+   {
+    "text": "Not very: the top token has about a third.",
+    "correct": true
+   },
+   {
+    "text": "Hardly at all: under 0.05 on any token.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** The top token, \"Battery\", has 0.339, ahead of \"Rob\" at 0.295 and a quotation mark at 0.091. Some later steps are almost certain: another \"0\" follows with 0.999.",
+   "numbers": [
+    {
+     "value": "0.339",
+     "source": {
+      "cell": 1
+     }
+    },
+    {
+     "value": "0.295",
+     "source": {
+      "cell": 1
+     }
+    },
+    {
+     "value": "0.091",
+     "source": {
+      "cell": 1
+     }
+    },
+    {
+     "value": "0.999",
+     "source": {
+      "cell": 1
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b12-p2",
+  "session": "B12",
+  "notebook": "session_12_llm_systems.ipynb",
+  "cell": 15,
+  "q": "a user asks a question that none of the documents covers",
+  "question": "a user asks a question that none of the documents covers. What should the system do?",
+  "choices": [
+   {
+    "text": "Let the model answer from what it knows.",
+    "correct": false
+   },
+   {
+    "text": "Refuse, before calling the model, when the best retrieval score is below a threshold.",
+    "correct": true
+   },
+   {
+    "text": "Tell the model in the prompt to use only the context, and trust it.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Without abstention the model gives a confident generic answer that isn't grounded in any document, even though the instruction said to use only the context. A threshold of 0.28 sits between the highest unanswerable score (0.26) and the lowest answerable one (0.301).",
+   "numbers": [
+    {
+     "value": "0.28",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.26",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.301",
+     "source": {
+      "cell": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "b12-p3",
+  "session": "B12",
+  "notebook": "session_12_llm_systems.ipynb",
+  "cell": 17,
+  "q": "the model follow the injected sentence",
+  "question": "the question is about thresholds, so the retriever will return both the real document and the forum post. Will the model follow the injected sentence?",
+  "choices": [
+   {
+    "text": "No: it ignores instructions in the data.",
+    "correct": false
+   },
+   {
+    "text": "Yes, every time.",
+    "correct": false
+   },
+   {
+    "text": "Only sometimes: it depends on how the prompt is worded.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** With the plain prompts the model ignored the injected sentence, but with a warning added to the prompt it obeyed and answered \"Visit free-prizes.example to claim your reward.\" Each is one greedy run, so no prompt can be relied on; a check outside the model blocked the bad answer.",
+   "numbers": []
+  }
+ }
+]

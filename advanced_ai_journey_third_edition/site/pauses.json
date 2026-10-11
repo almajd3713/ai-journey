@@ -1,0 +1,1668 @@
+[
+ {
+  "id": "a00-p1",
+  "session": "A00",
+  "notebook": "session_00_from_text_to_probabilities.ipynb",
+  "cell": 7,
+  "q": "four sentences of about the same length, one each in English, French, Arabic and Python",
+  "question": "four sentences of about the same length, one each in English, French, Arabic and Python. Which will need the most tokens, and how many times more than English?",
+  "choices": [
+   {
+    "text": "French, about twice as many tokens as English.",
+    "correct": false
+   },
+   {
+    "text": "Arabic, about four times as many tokens as English.",
+    "correct": true
+   },
+   {
+    "text": "Python, about three times as many tokens as English.",
+    "correct": false
+   },
+   {
+    "text": "Arabic, about twice as many tokens as English.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** English needs 11 tokens, French 19, Python 31 and Arabic 45, about four times English. Each Arabic letter takes two bytes, and the tokenizer works on bytes.",
+   "numbers": [
+    {
+     "value": "11",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "19",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "31",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "45",
+     "source": {
+      "cell": 2
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a00-p2",
+  "session": "A00",
+  "notebook": "session_00_from_text_to_probabilities.ipynb",
+  "cell": 23,
+  "q": "which tokens of *The battery is empty",
+  "question": "which tokens of *The battery is empty, so the robot stopped working and waited beside the charger.* will cost the most bits, and which the fewest?",
+  "choices": [
+   {
+    "text": "Function words and punctuation cost the most; content words cost the least.",
+    "correct": false
+   },
+   {
+    "text": "Content words the earlier words did not predict cost the most; function words and punctuation cost the least.",
+    "correct": true
+   },
+   {
+    "text": "The first token costs the most and every later token costs about the same.",
+    "correct": false
+   },
+   {
+    "text": "All tokens cost about the same.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** ` battery` costs 14.2 bits and ` stopped` 12.2, while ` the` before `charger` costs 1.6 and the final `.` costs 0.9.",
+   "numbers": [
+    {
+     "value": "14.2",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "12.2",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "1.6",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "0.9",
+     "source": {
+      "cell": 8
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a00-p3",
+  "session": "A00",
+  "notebook": "session_00_from_text_to_probabilities.ipynb",
+  "cell": 26,
+  "q": "GPT-2 was trained mostly on English. Which language will have the lowest perplexity per token",
+  "question": "GPT-2 was trained mostly on English. Which language will have the lowest perplexity per token?",
+  "choices": [
+   {
+    "text": "English, the language it was trained on.",
+    "correct": false
+   },
+   {
+    "text": "French.",
+    "correct": false
+   },
+   {
+    "text": "Arabic.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** Arabic looks best per token (19.5, against 71.9 for English), but only because its 129 tokens each carry little. Per character it is the most expensive (4.22 bits, against 1.34 for English).",
+   "numbers": [
+    {
+     "value": "19.5",
+     "source": {
+      "cell": 9
+     }
+    },
+    {
+     "value": "71.9",
+     "source": {
+      "cell": 9
+     }
+    },
+    {
+     "value": "129",
+     "source": {
+      "cell": 9
+     }
+    },
+    {
+     "value": "4.22",
+     "source": {
+      "cell": 9
+     }
+    },
+    {
+     "value": "1.34",
+     "source": {
+      "cell": 9
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a01-p1",
+  "session": "A01",
+  "notebook": "session_01_attention_inside_a_real_model.ipynb",
+  "cell": 9,
+  "q": "without the division, what happens to the largest weight",
+  "question": "without the division, what happens to the largest weight as $d_k$ grows from 4 to 4096, and what happens to the gradient?",
+  "choices": [
+   {
+    "text": "The largest weight stays the same and the gradient grows.",
+    "correct": false
+   },
+   {
+    "text": "The largest weight climbs towards 1 and the gradient shrinks.",
+    "correct": true
+   },
+   {
+    "text": "Both stay the same.",
+    "correct": false
+   },
+   {
+    "text": "The largest weight falls towards an even spread and the gradient grows.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Without the division the largest of the 32 weights goes from 0.347 at d_k = 4 to 0.977 at d_k = 4096, and the gradient falls from 0.293 to 0.033.",
+   "numbers": [
+    {
+     "value": "0.347",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.977",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.293",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.033",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a01-p2",
+  "session": "A01",
+  "notebook": "session_01_attention_inside_a_real_model.ipynb",
+  "cell": 15,
+  "q": "a token in the second copy wants to predict what comes next",
+  "question": "a token in the second copy wants to predict what comes next. Which earlier position should its attention head read from?",
+  "choices": [
+   {
+    "text": "The earlier position of the same token.",
+    "correct": false
+   },
+   {
+    "text": "The token that followed the earlier copy of the current token.",
+    "correct": true
+   },
+   {
+    "text": "The token before the earlier copy.",
+    "correct": false
+   },
+   {
+    "text": "The first position.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** The right key is the token that followed the earlier copy. Five heads score 0.85 or more on this induction pattern, the strongest being layer 5, head 5 at 0.94.",
+   "numbers": [
+    {
+     "value": "0.85",
+     "source": {
+      "cell": 6
+     }
+    },
+    {
+     "value": "0.94",
+     "source": {
+      "cell": 6
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a01-p3",
+  "session": "A01",
+  "notebook": "session_01_attention_inside_a_real_model.ipynb",
+  "cell": 22,
+  "q": "if you remove the five heads with the strongest induction pattern",
+  "question": "if you remove the five heads with the strongest induction pattern, how many bits per token does the second copy cost? Compare: 0.65 with nothing removed, and 15.6 for pure guessing.",
+  "choices": [
+   {
+    "text": "No change: other heads cover for them.",
+    "correct": false
+   },
+   {
+    "text": "A small rise, to a bit or two.",
+    "correct": false
+   },
+   {
+    "text": "About halfway to guessing.",
+    "correct": true
+   },
+   {
+    "text": "As bad as guessing.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** The second copy rises from 0.65 to 7.62 bits per token, about halfway to the 15.6 of guessing. Removing five random heads costs only 0.76 bits on average.",
+   "numbers": [
+    {
+     "value": "0.65",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "7.62",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "15.6",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.76",
+     "source": {
+      "cell": 8
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a02-p1",
+  "session": "A02",
+  "notebook": "session_02_the_transformer_block.ipynb",
+  "cell": 9,
+  "q": "What share of a block's parameters do you expect to sit in the attention",
+  "question": "attention mixes information between tokens, and the MLP has the bigger hidden layer. What share of a block's parameters do you expect to sit in the attention?",
+  "choices": [
+   {
+    "text": "About two thirds.",
+    "correct": false
+   },
+   {
+    "text": "About a third.",
+    "correct": true
+   },
+   {
+    "text": "About a half.",
+    "correct": false
+   },
+   {
+    "text": "About a tenth.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Attention holds 2,362,368 parameters (33%) and the MLP 4,722,432 (67%).",
+   "numbers": [
+    {
+     "value": "2362368",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "4722432",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "33%",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a02-p2",
+  "session": "A02",
+  "notebook": "session_02_the_transformer_block.ipynb",
+  "cell": 13,
+  "q": "after which block do you expect the model's best guess to become the right city",
+  "question": "after which block do you expect the model's best guess to become the right city?",
+  "choices": [
+   {
+    "text": "Early: by block 3.",
+    "correct": false
+   },
+   {
+    "text": "About halfway: around block 6.",
+    "correct": false
+   },
+   {
+    "text": "Late: after block 11 of 12.",
+    "correct": true
+   },
+   {
+    "text": "Only at the very end of the model.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** The best guess is `Paris` after block 11. The rank of the answer improves steadily, from 22680 after the embedding to 10 after block 9 and 2 after block 10, where the best guess is ` London`.",
+   "numbers": [
+    {
+     "value": "22680",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "10",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "2",
+     "source": {
+      "cell": 0
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a02-p3",
+  "session": "A02",
+  "notebook": "session_02_the_transformer_block.ipynb",
+  "cell": 21,
+  "q": "with no position information at all, are the two results the same",
+  "question": "with no position information at all, are the two results the same? And does the causal mask change the answer?",
+  "choices": [
+   {
+    "text": "Without the mask the results are the same, and with the causal mask they differ.",
+    "correct": true
+   },
+   {
+    "text": "They differ in both cases.",
+    "correct": false
+   },
+   {
+    "text": "They are the same in both cases.",
+    "correct": false
+   },
+   {
+    "text": "They are the same with the causal mask and differ without it.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**A.** Without a mask the two results agree to 2.4e-07, so the block treats tokens as an unordered set. With the causal mask they differ by 9.9e-01, because the mask lets later tokens see more.",
+   "numbers": [
+    {
+     "value": "2.4e-07",
+     "source": {
+      "cell": 7
+     }
+    },
+    {
+     "value": "9.9e-01",
+     "source": {
+      "cell": 7
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a03-p1",
+  "session": "A03",
+  "notebook": "session_03_training_a_small_gpt.ipynb",
+  "cell": 7,
+  "q": "with 6 blocks of width 384, how many parameters do you expect",
+  "question": "with 6 blocks of width 384, how many parameters do you expect, and where will most of them be?",
+  "choices": [
+   {
+    "text": "About 1 million, mostly in the embedding table.",
+    "correct": false
+   },
+   {
+    "text": "About 11 million, mostly in the blocks.",
+    "correct": true
+   },
+   {
+    "text": "About 100 million, mostly in the blocks.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** The model has 11.5 million parameters: 10.6M in the six blocks, 0.79M in the token table and 0.10M in positions.",
+   "numbers": [
+    {
+     "value": "11.5",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "10.6",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.79",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.10",
+     "source": {
+      "cell": 5
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a03-p2",
+  "session": "A03",
+  "notebook": "session_03_training_a_small_gpt.ipynb",
+  "cell": 15,
+  "q": "the bigram model costs 5.05 bits per token",
+  "question": "the bigram model costs 5.05 bits per token, which is 3.5 nats. After 3,000 steps, will the transformer's validation loss be above or below that, and by how much?",
+  "choices": [
+   {
+    "text": "Above it: 3,000 steps are too few.",
+    "correct": false
+   },
+   {
+    "text": "Slightly below it, by well under a bit.",
+    "correct": false
+   },
+   {
+    "text": "Far below it, at less than half the bits.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** The validation loss after 3,000 steps is 1.593 nats, which is 2.30 bits per token, against the bigram's 5.05.",
+   "numbers": [
+    {
+     "value": "1.593",
+     "source": {
+      "cell": 7
+     }
+    },
+    {
+     "value": "2.30",
+     "source": {
+      "cell": 7
+     }
+    },
+    {
+     "value": "5.05",
+     "source": {
+      "cell": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a03-p3",
+  "session": "A03",
+  "notebook": "session_03_training_a_small_gpt.ipynb",
+  "cell": 21,
+  "q": "which hurts most: no warm-up at a high learning rate",
+  "question": "which hurts most: no warm-up at a high learning rate, post-norm at a high learning rate, or a low learning rate?",
+  "choices": [
+   {
+    "text": "No warm-up at a high learning rate.",
+    "correct": false
+   },
+   {
+    "text": "Post-norm at a high learning rate.",
+    "correct": true
+   },
+   {
+    "text": "A low learning rate.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Post-norm at the highest rate is stuck at 5.91, which is the unigram loss. With no warm-up the loss after 400 steps is 4.20, and the low learning rate gives 2.88 for pre-norm.",
+   "numbers": [
+    {
+     "value": "5.91",
+     "source": {
+      "cell": 10
+     }
+    },
+    {
+     "value": "4.20",
+     "source": {
+      "markdown": true
+     }
+    },
+    {
+     "value": "2.88",
+     "source": {
+      "cell": 10
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a03-p4",
+  "session": "A03",
+  "notebook": "session_03_training_a_small_gpt.ipynb",
+  "cell": 33,
+  "q": "will GPT-2 (124 million parameters",
+  "question": "will GPT-2 (124 million parameters, trained on 40 GB of web text) beat our 11.5-million-parameter model on children's stories?",
+  "choices": [
+   {
+    "text": "Yes: it is eleven times larger and saw far more text.",
+    "correct": false
+   },
+   {
+    "text": "No: the small model trained on stories beats it.",
+    "correct": true
+   },
+   {
+    "text": "About the same.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Our model costs 0.54 bits per character and GPT-2 0.82. A model that only has to do one thing needs far fewer parameters.",
+   "numbers": [
+    {
+     "value": "0.54",
+     "source": {
+      "cell": 14
+     }
+    },
+    {
+     "value": "0.82",
+     "source": {
+      "cell": 12
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a04-p1",
+  "session": "A04",
+  "notebook": "session_04_three_transformer_layouts.ipynb",
+  "cell": 9,
+  "q": "with the second half of the sentence available, which word will BERT put in the blank",
+  "question": "with the second half of the sentence available, which word will BERT put in the blank? Will its answer be the same without the second half?",
+  "choices": [
+   {
+    "text": "`empty`, both times.",
+    "correct": false
+   },
+   {
+    "text": "`dead` with the second half, and a different word without it.",
+    "correct": true
+   },
+   {
+    "text": "`dead`, both times.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** With the whole sentence BERT puts 0.419 on `dead`. With the sentence cut off after the blank, `dead` falls to 0.041 and `charged` leads with 0.055.",
+   "numbers": [
+    {
+     "value": "0.419",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.041",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "0.055",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a04-p2",
+  "session": "A04",
+  "notebook": "session_04_three_transformer_layouts.ipynb",
+  "cell": 14,
+  "q": "BERT's top guess is judged against the original token",
+  "question": "BERT's top guess is judged against the original token. Which of the three treatments will it get right most often?",
+  "choices": [
+   {
+    "text": "The masked tokens.",
+    "correct": false
+   },
+   {
+    "text": "The tokens left unchanged.",
+    "correct": true
+   },
+   {
+    "text": "The tokens replaced by a random word.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Tokens left unchanged are recovered 0.993 of the time, masked tokens 0.704 and randomised tokens 0.549.",
+   "numbers": [
+    {
+     "value": "0.993",
+     "source": {
+      "cell": 6
+     }
+    },
+    {
+     "value": "0.704",
+     "source": {
+      "cell": 6
+     }
+    },
+    {
+     "value": "0.549",
+     "source": {
+      "cell": 6
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a04-p3",
+  "session": "A04",
+  "notebook": "session_04_three_transformer_layouts.ipynb",
+  "cell": 16,
+  "q": "*vide* is the French word for *empty*",
+  "question": "*vide* is the French word for *empty*. Which English token should its cross-attention point at?",
+  "choices": [
+   {
+    "text": "`The`.",
+    "correct": false
+   },
+   {
+    "text": "`battery`.",
+    "correct": false
+   },
+   {
+    "text": "`empty`.",
+    "correct": true
+   },
+   {
+    "text": "`stopped`.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** The hand-written alignment pairs `vide` with `empty`. In the second decoder layer all 12 French tokens put their strongest cross-attention on the English word we paired them with.",
+   "numbers": [
+    {
+     "value": "12",
+     "source": {
+      "cell": 8
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a05-p1",
+  "session": "A05",
+  "notebook": "session_05_scaling_and_data.ipynb",
+  "cell": 9,
+  "q": "at 36 million tokens, how far apart do you expect the smallest model",
+  "question": "at 36 million tokens, how far apart do you expect the smallest model (0.2M) and the largest (10.6M) to end up?",
+  "choices": [
+   {
+    "text": "Almost no difference: tokens matter and size does not.",
+    "correct": false
+   },
+   {
+    "text": "About three quarters of a nat.",
+    "correct": true
+   },
+   {
+    "text": "More than two nats.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** At 36 million tokens the validation loss is 2.428 for the smallest model and 1.665 for the largest.",
+   "numbers": [
+    {
+     "value": "2.428",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "1.665",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a05-p2",
+  "session": "A05",
+  "notebook": "session_05_scaling_and_data.ipynb",
+  "cell": 16,
+  "q": "for a fixed compute budget, is the loss lowest for the smallest model",
+  "question": "for a fixed compute budget, is the loss lowest for the smallest model, the largest, or something in between?",
+  "choices": [
+   {
+    "text": "The smallest model.",
+    "correct": false
+   },
+   {
+    "text": "The largest model.",
+    "correct": false
+   },
+   {
+    "text": "Something in between, with a broad minimum.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** For a compute budget of 10^14 the best size is 0.47M parameters on 35.6 million tokens, and near each minimum the curve is flat, so a model twice or half that size loses very little.",
+   "numbers": [
+    {
+     "value": "0.47",
+     "source": {
+      "markdown": true
+     }
+    },
+    {
+     "value": "35.6",
+     "source": {
+      "markdown": true
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a05-p3",
+  "session": "A05",
+  "notebook": "session_05_scaling_and_data.ipynb",
+  "cell": 21,
+  "q": "which of the three has the lowest validation loss, and which has the lowest training loss",
+  "question": "which of the three has the lowest validation loss, and which has the lowest training loss?",
+  "choices": [
+   {
+    "text": "All new data has both the lowest validation loss and the lowest training loss.",
+    "correct": false
+   },
+   {
+    "text": "All new data has the lowest validation loss, and the data repeated 16 times has the lowest training loss.",
+    "correct": true
+   },
+   {
+    "text": "The data repeated 4 times has the lowest validation loss.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** New data has the lowest validation loss (1.903) and the 16-times-repeated data the lowest training loss (1.057), with a validation loss of 2.692: it has memorised its tokens.",
+   "numbers": [
+    {
+     "value": "1.903",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "1.057",
+     "source": {
+      "cell": 9
+     }
+    },
+    {
+     "value": "2.692",
+     "source": {
+      "cell": 9
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a06-p1",
+  "session": "A06",
+  "notebook": "session_06_from_base_model_to_assistant.ipynb",
+  "cell": 5,
+  "q": "the base model has read far more text than any assistant",
+  "question": "the base model has read far more text than any assistant has seen conversations. What will it do with \"Write a haiku about a flat battery.\"?",
+  "choices": [
+   {
+    "text": "Write a three-line haiku, like the instruct model.",
+    "correct": false
+   },
+   {
+    "text": "Continue the text the way web text continues, repeating itself.",
+    "correct": true
+   },
+   {
+    "text": "Refuse because it is not an assistant.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** The base model writes a line and then repeats \"A battery that can't be touched\" three times. The instruct model writes a three-line haiku.",
+   "numbers": []
+  }
+ },
+ {
+  "id": "a06-p2",
+  "session": "A06",
+  "notebook": "session_06_from_base_model_to_assistant.ipynb",
+  "cell": 20,
+  "q": "as N grows the proxy score of the pick has to rise",
+  "question": "as N grows the proxy score of the pick has to rise. Will the gold score rise with it, level off, or fall?",
+  "choices": [
+   {
+    "text": "It rises with it.",
+    "correct": true
+   },
+   {
+    "text": "It levels off.",
+    "correct": false
+   },
+   {
+    "text": "It falls.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**A.** The gold score of the pick rises from -0.01 at N = 1 to 0.54 at N = 8 and 0.82 at N = 64. It stays below the 1.25 reached by picking with gold itself.",
+   "numbers": [
+    {
+     "value": "-0.01",
+     "source": {
+      "cell": 7
+     }
+    },
+    {
+     "value": "0.54",
+     "source": {
+      "cell": 7
+     }
+    },
+    {
+     "value": "0.82",
+     "source": {
+      "cell": 7
+     }
+    },
+    {
+     "value": "1.25",
+     "source": {
+      "cell": 7
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a06-p3",
+  "session": "A06",
+  "notebook": "session_06_from_base_model_to_assistant.ipynb",
+  "cell": 36,
+  "q": "which style will have the higher pass@1, and which the higher pass@8",
+  "question": "which style will have the higher pass@1, and which the higher pass@8?",
+  "choices": [
+   {
+    "text": "Step by step is higher on both.",
+    "correct": false
+   },
+   {
+    "text": "The bare number is higher at pass@1, and step by step is higher at pass@8.",
+    "correct": true
+   },
+   {
+    "text": "The bare number is higher on both.",
+    "correct": false
+   },
+   {
+    "text": "They are equal.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** The bare number has pass@1 of 0.305 against 0.259, but with 8 samples and a checker step by step reaches 0.82 against 0.48.",
+   "numbers": [
+    {
+     "value": "0.305",
+     "source": {
+      "cell": 13
+     }
+    },
+    {
+     "value": "0.259",
+     "source": {
+      "cell": 13
+     }
+    },
+    {
+     "value": "0.82",
+     "source": {
+      "cell": 7
+     }
+    },
+    {
+     "value": "0.48",
+     "source": {
+      "cell": 13
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a07-p1",
+  "session": "A07",
+  "notebook": "session_07_fine_tuning_in_practice.ipynb",
+  "cell": 6,
+  "q": "with one worked example in the prompt, how many of the 200 test lines",
+  "question": "with one worked example in the prompt, how many of the 200 test lines in the training layouts will the model get fully right?",
+  "choices": [
+   {
+    "text": "None.",
+    "correct": false
+   },
+   {
+    "text": "About half.",
+    "correct": false
+   },
+   {
+    "text": "More than nine in ten.",
+    "correct": true
+   },
+   {
+    "text": "All 200.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** With one example, 0.925 of the lines in the training layouts are fully right, and only 0.210 on the unseen layouts.",
+   "numbers": [
+    {
+     "value": "0.925",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.210",
+     "source": {
+      "cell": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a07-p2",
+  "session": "A07",
+  "notebook": "session_07_fine_tuning_in_practice.ipynb",
+  "cell": 19,
+  "q": "rank 32 trains 32 times as many numbers as rank 1",
+  "question": "rank 32 trains 32 times as many numbers as rank 1. Which of them, if either, will read layout 5?",
+  "choices": [
+   {
+    "text": "Rank 32 only.",
+    "correct": false
+   },
+   {
+    "text": "Rank 1 only.",
+    "correct": false
+   },
+   {
+    "text": "Both.",
+    "correct": false
+   },
+   {
+    "text": "Neither.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**D.** On layout 5 every LoRA rank fails: rank 1 gets 0.052, rank 8 0.010 and rank 32 0.010. Only fine-tuning the last four blocks reads some of it, at 0.268.",
+   "numbers": [
+    {
+     "value": "0.052",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "0.010",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "0.268",
+     "source": {
+      "cell": 8
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a08-p1",
+  "session": "A08",
+  "notebook": "session_08_retrieval_tools_and_agents.ipynb",
+  "cell": 6,
+  "q": "the questions are mostly paraphrases",
+  "question": "the questions are mostly paraphrases. Which retriever do you expect to do better?",
+  "choices": [
+   {
+    "text": "TF-IDF, because it matches words exactly.",
+    "correct": false
+   },
+   {
+    "text": "MiniLM, because it matches meaning.",
+    "correct": false
+   },
+   {
+    "text": "Neither wins everywhere.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** At 60 words MiniLM is ahead (Recall@3 0.583 against 0.528), but at 250 words TF-IDF is well ahead (0.917 against 0.750), partly because MiniLM cuts off long passages.",
+   "numbers": [
+    {
+     "value": "0.583",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.528",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.917",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.750",
+     "source": {
+      "cell": 2
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a08-p2",
+  "session": "A08",
+  "notebook": "session_08_retrieval_tools_and_agents.ipynb",
+  "cell": 14,
+  "q": "closed book, how many of the 36 questions",
+  "question": "closed book, how many of the 36 questions about a course written this year will the model get right?",
+  "choices": [
+   {
+    "text": "None.",
+    "correct": true
+   },
+   {
+    "text": "About 10.",
+    "correct": false
+   },
+   {
+    "text": "About 20.",
+    "correct": false
+   },
+   {
+    "text": "All of them.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**A.** Closed book it gets 0 of 36 right: it either says it has no information or gives a general answer. With the top 3 passages it gets 23 of 36.",
+   "numbers": [
+    {
+     "value": "23",
+     "source": {
+      "cell": 5
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a08-p3",
+  "session": "A08",
+  "notebook": "session_08_retrieval_tools_and_agents.ipynb",
+  "cell": 30,
+  "q": "of the tasks that search and read this passage, how many will obey it",
+  "question": "of the tasks that search and read this passage, how many will obey it?",
+  "choices": [
+   {
+    "text": "None: the model ignores instructions in search results.",
+    "correct": false
+   },
+   {
+    "text": "About half of them.",
+    "correct": true
+   },
+   {
+    "text": "All of them.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** 16 of 20 tasks read the planted passage and 8 of them answered 0 as instructed. None called the tool it named, so the allowlist was never tested.",
+   "numbers": [
+    {
+     "value": "16",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "8",
+     "source": {
+      "cell": 2
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a09-p1",
+  "session": "A09",
+  "notebook": "session_09_inference_and_serving.ipynb",
+  "cell": 13,
+  "q": "reading a 1,000-token prompt and writing one token both take one pass",
+  "question": "reading a 1,000-token prompt and writing one token both take one pass through the model. Which takes longer?",
+  "choices": [
+   {
+    "text": "Reading the prompt, by a factor of about a thousand.",
+    "correct": false
+   },
+   {
+    "text": "Writing one token, by a little.",
+    "correct": true
+   },
+   {
+    "text": "They take about the same time.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Prefilling 1,000 tokens takes 64.0 ms and decoding one token takes 81.2 ms. Per token, prefill is more than a thousand times faster.",
+   "numbers": [
+    {
+     "value": "64.0",
+     "source": {
+      "cell": 4
+     }
+    },
+    {
+     "value": "81.2",
+     "source": {
+      "cell": 4
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a09-p2",
+  "session": "A09",
+  "notebook": "session_09_inference_and_serving.ipynb",
+  "cell": 28,
+  "q": "int4 with one scale for a whole matrix uses the same 4 bits",
+  "question": "int4 with one scale for a whole matrix uses the same 4 bits per weight as int4 with one scale per row. How different can they be?",
+  "choices": [
+   {
+    "text": "About the same.",
+    "correct": false
+   },
+   {
+    "text": "A few percent worse.",
+    "correct": false
+   },
+   {
+    "text": "The per-matrix version destroys the model.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** One scale per row gives a perplexity of 30.08, against 15.47 for the original. One scale per matrix gives 150,177,071.15, worse than guessing.",
+   "numbers": [
+    {
+     "value": "30.08",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "15.47",
+     "source": {
+      "cell": 8
+     }
+    },
+    {
+     "value": "150,177,071.15",
+     "source": {
+      "cell": 8
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a10-p1",
+  "session": "A10",
+  "notebook": "session_10_evaluating_llms.ipynb",
+  "cell": 5,
+  "q": "the base model has never been trained on chat conversations",
+  "question": "the base model has never been trained on chat conversations. What will happen to its score in the chat format?",
+  "choices": [
+   {
+    "text": "It stays about the same.",
+    "correct": false
+   },
+   {
+    "text": "It drops a little.",
+    "correct": false
+   },
+   {
+    "text": "It drops below a random guess.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** The base model scores 0.460 zero-shot and 0.229 in the chat format, below the 0.25 of a random guess. It puts only 12% of its probability on the four letters.",
+   "numbers": [
+    {
+     "value": "0.460",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.229",
+     "source": {
+      "cell": 2
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a10-p2",
+  "session": "A10",
+  "notebook": "session_10_evaluating_llms.ipynb",
+  "cell": 16,
+  "q": "how often will the 0.5B judge pick whichever answer is shown first",
+  "question": "how often will the 0.5B judge pick whichever answer is shown first?",
+  "choices": [
+   {
+    "text": "About half the time.",
+    "correct": false
+   },
+   {
+    "text": "About three quarters of the time.",
+    "correct": false
+   },
+   {
+    "text": "Almost every time.",
+    "correct": true
+   }
+  ],
+  "answer": {
+   "text": "**C.** It picks the first answer 0.979 of the time, so it agrees with the label only when the preferred answer happens to be shown first.",
+   "numbers": [
+    {
+     "value": "0.979",
+     "source": {
+      "cell": 5
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a11-p1",
+  "session": "A11",
+  "notebook": "session_11_experiments_you_can_believe.ipynb",
+  "cell": 4,
+  "q": "you train A once and B once, with unrelated seeds",
+  "question": "you train A once and B once, with unrelated seeds. How often will A come out ahead?",
+  "choices": [
+   {
+    "text": "Never: B is better.",
+    "correct": false
+   },
+   {
+    "text": "About one time in twelve.",
+    "correct": true
+   },
+   {
+    "text": "About a third of the time.",
+    "correct": false
+   },
+   {
+    "text": "Half the time.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** In 8% of the 144 possible pairs, one run of A beats one run of B, even though B is better by 0.0200 on average.",
+   "numbers": [
+    {
+     "value": "8%",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "144",
+     "source": {
+      "cell": 2
+     }
+    },
+    {
+     "value": "0.0200",
+     "source": {
+      "cell": 2
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a11-p2",
+  "session": "A11",
+  "notebook": "session_11_experiments_you_can_believe.ipynb",
+  "cell": 18,
+  "q": "the chosen setting is 0.0454 better than the average setting",
+  "question": "the chosen setting is 0.0454 better than the average setting on the large test set. Train the same setting again with 5 new seeds: how much of that gain will remain?",
+  "choices": [
+   {
+    "text": "All of it.",
+    "correct": false
+   },
+   {
+    "text": "About half.",
+    "correct": false
+   },
+   {
+    "text": "About a fifth.",
+    "correct": true
+   },
+   {
+    "text": "None.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** Retrained with 5 new seeds, the setting is only 0.0101 better than the average setting, and all five reruns score worse than the original.",
+   "numbers": [
+    {
+     "value": "0.0101",
+     "source": {
+      "cell": 6
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a12-p1",
+  "session": "A12",
+  "notebook": "session_12_read_a_paper_reproduce_a_claim.ipynb",
+  "cell": 2,
+  "q": "in Table 6, which rank is best for $W_q, W_v$ on WikiSQL",
+  "question": "in Table 6, which rank is best for $W_q, W_v$ on WikiSQL? Is the evidence strong enough to recommend it?",
+  "choices": [
+   {
+    "text": "r = 8 is best, and the evidence is strong.",
+    "correct": false
+   },
+   {
+    "text": "r = 8 scores highest, but the others are within the paper's noise, so the table can't recommend it.",
+    "correct": true
+   },
+   {
+    "text": "r = 64, the biggest.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** r = 8 scores 73.8, and the worst rank is only 0.5 below it, the size of one seed's standard deviation. What the table supports is that a very small rank is enough: rank 1 is within 0.4 of the best.",
+   "numbers": [
+    {
+     "value": "73.8",
+     "source": {
+      "cell": 0
+     }
+    },
+    {
+     "value": "0.5",
+     "source": {
+      "cell": 0
+     }
+    },
+    {
+     "value": "0.4",
+     "source": {
+      "cell": 1
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a12-p2",
+  "session": "A12",
+  "notebook": "session_12_read_a_paper_reproduce_a_claim.ipynb",
+  "cell": 15,
+  "q": "$A$ starts as a random matrix and $B$ at zero",
+  "question": "$A$ starts as a random matrix and $B$ at zero. Which of the two will carry what the adapter learned?",
+  "choices": [
+   {
+    "text": "A, the random matrix.",
+    "correct": false
+   },
+   {
+    "text": "B: A barely moves from its random start.",
+    "correct": true
+   },
+   {
+    "text": "Both change about equally.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**B.** Training moved A by only about 16% of its starting size (15.9% for r = 8 on Wq). A is still mostly its random start, so the learned part sits in B and the product BA.",
+   "numbers": [
+    {
+     "value": "15.9%",
+     "source": {
+      "cell": 5
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a13-p1",
+  "session": "A13",
+  "notebook": "session_13_transformers_beyond_text.ipynb",
+  "cell": 8,
+  "q": "which will work best: the bare class name",
+  "question": "which will work best: the bare class name (\"tulip\"), \"a photo of a tulip.\", or \"a photo of a tulip, a type of flower.\"?",
+  "choices": [
+   {
+    "text": "The bare class name, \"tulip\": nothing else to confuse the encoder.",
+    "correct": false
+   },
+   {
+    "text": "\"a photo of a tulip.\": it looks like a caption.",
+    "correct": false
+   },
+   {
+    "text": "\"a photo of a tulip, a type of flower.\": it also names the domain.",
+    "correct": true
+   },
+   {
+    "text": "All three within a point of each other: the word \"tulip\" is what matters.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** The class name alone scores 0.920, \"a photo of a ...\" 0.940 and the version that names the domain 0.973: a five-point spread, all from wording.",
+   "numbers": [
+    {
+     "value": "0.920",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.940",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.973",
+     "source": {
+      "cell": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "a13-p2",
+  "session": "A13",
+  "notebook": "session_13_transformers_beyond_text.ipynb",
+  "cell": 15,
+  "q": "how many labelled photos per class will the probe need to match zero-shot",
+  "question": "how many labelled photos per class will the probe need to match zero-shot?",
+  "choices": [
+   {
+    "text": "One or two: CLIP's vectors already separate the flowers.",
+    "correct": false
+   },
+   {
+    "text": "About 10.",
+    "correct": false
+   },
+   {
+    "text": "About 50.",
+    "correct": true
+   },
+   {
+    "text": "It never matches it, however many photos it gets.",
+    "correct": false
+   }
+  ],
+  "answer": {
+   "text": "**C.** With 1 photo per class the probe scores 0.651 and with 10 it scores 0.945. From 50 per class it reaches 0.970, and zero-shot scores 0.973: a difference of one photo out of 300.",
+   "numbers": [
+    {
+     "value": "0.651",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.945",
+     "source": {
+      "cell": 5
+     }
+    },
+    {
+     "value": "0.970",
+     "source": {
+      "cell": 3
+     }
+    },
+    {
+     "value": "0.973",
+     "source": {
+      "cell": 3
+     }
+    }
+   ]
+  }
+ }
+]
