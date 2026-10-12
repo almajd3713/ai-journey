@@ -132,7 +132,6 @@ export function Footer() {
         </div>
         <ul className="foot-links">
           <li><a href={SITE.clubUrl} target="_blank" rel="noopener">etclub.online <Icon name="arrow-ne" size={14} /></a></li>
-          <li><a href={REPO_URL} target="_blank" rel="noopener">Source on GitHub <Icon name="arrow-ne" size={14} /></a></li>
           <li><a href="#kit">{SHOW_DOWNLOADS ? "Field kit" : "Sessions"}</a></li>
           <li><a href="#glossary">Glossary</a></li>
           <li><a href="#method">How the chart was made</a></li>
