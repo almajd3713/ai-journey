@@ -10,6 +10,10 @@ For each course it writes, under public/kit/<course>/:
                         course enhancement plan); the dive shows a session's ★ figures
 and public/kit/manifest.json (sizes and SHA-256), copied to content/kit.json for the build.
 
+What is built is decided by content/downloads.json: a session set to false has no notebook or
+render in the site at all, and the course zip is built only when its toggle is true, from the
+released sessions only. Figures are always built (they are part of the dive, not a download).
+
 The advanced course's cache/ (348 MB) is left out: the notebooks rebuild it.
 
     python -I tools/build_downloads.py
@@ -42,12 +46,57 @@ COURSES = {
 }
 
 
+PRACTICE_PDF = {"basic": "experiment_checklist.pdf", "advanced": "transformer_at_a_glance.pdf"}
+
+
+def build_practice(cid, c, t, src, out):
+    """The 'Your turn' practice files that are switched on in downloads.json (exercises, solutions, bug hunt, capstone, cheat sheet)."""
+    prefix, ex = cid[0], src / "exercises"
+    got = {"exercises": {}, "solutions": {}, "bug_hunt": None, "bug_hunt_answers": None, "capstone": None, "cheat_sheet": None, "aij_check": None}
+    for kind, folder, pattern in (("exercises", "", "{p}{n:02d}_your_turn.ipynb"), ("solutions", "solutions", "{p}{n:02d}_your_turn_solutions.ipynb")):
+        for sid, on in t.get(kind, {}).items():
+            if on is not True:
+                continue
+            f = ex / folder / pattern.format(p=prefix, n=int(sid.split("-")[1]))
+            if not f.is_file():
+                sys.exit(f"downloads.json releases {kind} {sid}, but {f} does not exist")
+            dst = out / "practice" / folder / f.name
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(f, dst)
+            got[kind][sid] = entry(dst)
+    for key, rel in (("bug_hunt", "bug_hunt.ipynb"), ("bug_hunt_answers", "solutions/bug_hunt_answers.ipynb")):
+        if t.get(key) is True:
+            dst = out / "practice" / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(ex / rel, dst)
+            got[key] = entry(dst)
+    if t.get("capstone") is True:
+        dst = out / "practice" / f"{c['zip']}-capstone.zip"
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as z:
+            for f in sorted((ex / "capstone").rglob("*")):
+                if f.is_file() and ".ipynb_checkpoints" not in f.parts:
+                    z.write(f, f"{c['zip']}-capstone/{f.relative_to(ex / 'capstone').as_posix()}")
+        got["capstone"] = entry(dst)
+    if t.get("cheat_sheet") is True:
+        dst = out / "practice" / PRACTICE_PDF[cid]
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src / "site" / PRACTICE_PDF[cid], dst)
+        got["cheat_sheet"] = entry(dst)
+    if got["exercises"] or got["solutions"] or got["bug_hunt"] or got["bug_hunt_answers"]:
+        dst = out / "practice" / "aij_check.py"
+        shutil.copy2(ex / "aij_check.py", dst)
+        got["aij_check"] = entry(dst)
+    return got
+
+
 def entry(path):
     data = path.read_bytes()
     return {"path": path.relative_to(SITE / "public").as_posix(), "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
 
 
 def main():
+    toggles = json.loads((SITE / "content" / "downloads.json").read_text())
     if KIT.exists():
         shutil.rmtree(KIT)
     exporter = HTMLExporter(template_name="lab")
@@ -59,7 +108,12 @@ def main():
         out = KIT / cid
         (out / "read").mkdir(parents=True)
         sessions = {}
+        t = toggles[cid]
         notebooks = sorted(src.glob("session_*.ipynb"))
+        unknown = set(t["sessions"]) - {f"{cid}-{int(p.name.split('_')[1]):02d}" for p in notebooks}
+        if unknown:
+            sys.exit(f"downloads.json names sessions that do not exist: {sorted(unknown)}")
+        notebooks = [p for p in notebooks if t["sessions"].get(f"{cid}-{int(p.name.split('_')[1]):02d}") is True]
         for nb_path in notebooks:
             n = int(nb_path.name.split("_")[1])
             dst = out / nb_path.name
@@ -72,15 +126,19 @@ def main():
             sessions[f"{cid}-{n:02d}"] = {"ipynb": entry(dst), "html": entry(html)}
             print(f"  {cid}-{n:02d}  {dst.stat().st_size / 1e3:7.0f} KB  html {html.stat().st_size / 1e3:7.0f} KB")
         zpath = out / f"{c['zip']}.zip"
-        with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-            for nb_path in notebooks:
-                z.write(nb_path, f"{c['zip']}/{nb_path.name}")
-            for name in c["extra"]:
-                p = src / name
-                files = [p] if p.is_file() else sorted(x for x in p.rglob("*") if x.is_file())
-                for f in files:
-                    z.write(f, f"{c['zip']}/{f.relative_to(src).as_posix()}")
-        shutil.copy2(src / "requirements.txt", out / "requirements.txt")
+        if t["zip"] and not notebooks:
+            sys.exit(f"{cid}: the zip is on but no session is released")
+        if t["zip"]:
+            with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+                for nb_path in notebooks:
+                    z.write(nb_path, f"{c['zip']}/{nb_path.name}")
+                for name in c["extra"]:
+                    p = src / name
+                    files = [p] if p.is_file() else sorted(x for x in p.rglob("*") if x.is_file())
+                    for f in files:
+                        z.write(f, f"{c['zip']}/{f.relative_to(src).as_posix()}")
+        if notebooks:
+            shutil.copy2(src / "requirements.txt", out / "requirements.txt")
         figures = []
         fig_index = src / "site" / "figures.json"
         if fig_index.exists():
@@ -96,13 +154,15 @@ def main():
                     "caption": f["caption"], "alt": f["alt"], "licence": f.get("licence"), "file": entry(dst),
                 })
             print(f"{cid}: {len(figures)} figures")
+        practice = build_practice(cid, c, t, src, out)
         manifest["courses"][cid] = {
-            "zip": entry(zpath),
-            "requirements": entry(out / "requirements.txt"),
+            "practice": practice,
+            "zip": entry(zpath) if t["zip"] else None,
+            "requirements": entry(out / "requirements.txt") if notebooks else None,
             "sessions": sessions,
             "figures": figures,
         }
-        print(f"{cid}: {len(sessions)} notebooks, zip {zpath.stat().st_size / 1e6:.1f} MB")
+        print(f"{cid}: {len(sessions)} notebooks released, zip {'on' if t['zip'] else 'off'}")
     (KIT / "manifest.json").write_text(json.dumps(manifest, indent=1))
     (SITE / "content" / "kit.json").write_text(json.dumps(manifest, indent=1))
     total = sum(f.stat().st_size for f in KIT.rglob("*") if f.is_file())

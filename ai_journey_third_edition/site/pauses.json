@@ -3,7 +3,7 @@
   "id": "b00-p2",
   "session": "B00",
   "notebook": "session_00_teaching_a_machine.ipynb",
-  "cell": 13,
+  "cell": 15,
   "q": "the model makes three mistakes on the test set",
   "question": "the model makes three mistakes on the test set. Which species do you expect it to mix up? The petal ranges in section 4 are a clue.",
   "choices": [
@@ -30,7 +30,7 @@
     {
      "value": "12",
      "source": {
-      "cell": 5
+      "cell": 7
      }
     }
    ]
@@ -40,7 +40,7 @@
   "id": "b01-p2",
   "session": "B01",
   "notebook": "session_01_reading_a_dataset.ipynb",
-  "cell": 23,
+  "cell": 25,
   "q": "the next table gives the pass rate per department",
   "question": "the next table gives the pass rate per department. Which department do you expect to pass most often, and if it does, would the table tell you why?",
   "choices": [
@@ -67,25 +67,25 @@
     {
      "value": "0.687",
      "source": {
-      "cell": 11
+      "cell": 13
      }
     },
     {
      "value": "0.593",
      "source": {
-      "cell": 11
+      "cell": 13
      }
     },
     {
      "value": "0.525",
      "source": {
-      "cell": 11
+      "cell": 13
      }
     },
     {
      "value": "101",
      "source": {
-      "cell": 11
+      "cell": 13
      }
     }
    ]
@@ -244,7 +244,7 @@
   "id": "b03-p2",
   "session": "B03",
   "notebook": "session_03_classical_models.ipynb",
-  "cell": 10,
+  "cell": 12,
   "q": "as the tree gets deeper, training accuracy will rise",
   "question": "as the tree gets deeper, training accuracy will rise. What do you expect test accuracy to do?",
   "choices": [
@@ -267,25 +267,25 @@
     {
      "value": "0.905",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
      "value": "0.881",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
      "value": "0.895",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
      "value": "1.000",
      "source": {
-      "cell": 5
+      "cell": 6
      }
     }
    ]
@@ -488,7 +488,7 @@
   "id": "b07-p2",
   "session": "B07",
   "notebook": "session_07_training_neural_networks.ipynb",
-  "cell": 12,
+  "cell": 14,
   "q": "which line do you expect to be the slowest",
   "question": "which line do you expect to be the slowest?",
   "choices": [
@@ -511,19 +511,19 @@
     {
      "value": "0.240",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
      "value": "2.500",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
      "value": "36",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     }
    ]
@@ -533,7 +533,7 @@
   "id": "b07-p3",
   "session": "B07",
   "notebook": "session_07_training_neural_networks.ipynb",
-  "cell": 15,
+  "cell": 19,
   "q": "which of these do you expect to help the most",
   "question": "which of these do you expect to help the most?",
   "choices": [
@@ -560,25 +560,25 @@
     {
      "value": "0.280",
      "source": {
-      "cell": 5
+      "cell": 7
      }
     },
     {
      "value": "1.992",
      "source": {
-      "cell": 5
+      "cell": 7
      }
     },
     {
      "value": "0.286",
      "source": {
-      "cell": 5
+      "cell": 7
      }
     },
     {
      "value": "1.014",
      "source": {
-      "cell": 5
+      "cell": 7
      }
     }
    ]
@@ -588,7 +588,7 @@
   "id": "b08-p1",
   "session": "B08",
   "notebook": "session_08_computer_vision.ipynb",
-  "cell": 4,
+  "cell": 6,
   "q": "Which one needs more parameters, and by roughly how much",
   "question": "the next cell builds a CNN with two convolution layers (16 filters, then 32, each 3×3) and a dense network that connects all 784 pixels to 128 units. Which one needs more parameters, and by roughly how much?",
   "choices": [
@@ -615,13 +615,13 @@
     {
      "value": "101,770",
      "source": {
-      "cell": 2
+      "cell": 3
      }
     },
     {
      "value": "12,810",
      "source": {
-      "cell": 2
+      "cell": 3
      }
     }
    ]
@@ -631,7 +631,7 @@
   "id": "b08-p2",
   "session": "B08",
   "notebook": "session_08_computer_vision.ipynb",
-  "cell": 11,
+  "cell": 17,
   "q": "which network will lose more accuracy when the digits move 3 pixels",
   "question": "which network will lose more accuracy when the digits move 3 pixels, and why?",
   "choices": [
@@ -654,25 +654,25 @@
     {
      "value": "0.931",
      "source": {
-      "cell": 3
+      "cell": 4
      }
     },
     {
      "value": "0.445",
      "source": {
-      "cell": 4
+      "cell": 7
      }
     },
     {
      "value": "0.973",
      "source": {
-      "cell": 3
+      "cell": 4
      }
     },
     {
      "value": "0.746",
      "source": {
-      "cell": 4
+      "cell": 7
      }
     }
    ]
@@ -712,7 +712,7 @@
   "id": "b09-p2",
   "session": "B09",
   "notebook": "session_09_transfer_learning.ipynb",
-  "cell": 18,
+  "cell": 20,
   "q": "order the three strategies by test accuracy",
   "question": "before looking at the table, order the three strategies by test accuracy. How big do you expect the gaps to be?",
   "choices": [
@@ -739,31 +739,31 @@
     {
      "value": "0.710",
      "source": {
-      "cell": 8
+      "cell": 9
      }
     },
     {
      "value": "0.850",
      "source": {
-      "cell": 8
+      "cell": 9
      }
     },
     {
      "value": "0.883",
      "source": {
-      "cell": 8
+      "cell": 9
      }
     },
     {
      "value": "6,405",
      "source": {
-      "cell": 8
+      "cell": 9
      }
     },
     {
      "value": "2,230,277",
      "source": {
-      "cell": 8
+      "cell": 9
      }
     }
    ]
@@ -841,13 +841,13 @@
     {
      "value": "0.825",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
      "value": "0.843",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
@@ -859,19 +859,19 @@
     {
      "value": "0.09",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
      "value": "0.37",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     },
     {
      "value": "0.45",
      "source": {
-      "cell": 4
+      "cell": 5
      }
     }
    ]
@@ -1026,7 +1026,7 @@
   "id": "b12-p2",
   "session": "B12",
   "notebook": "session_12_llm_systems.ipynb",
-  "cell": 15,
+  "cell": 21,
   "q": "a user asks a question that none of the documents covers",
   "question": "a user asks a question that none of the documents covers. What should the system do?",
   "choices": [
@@ -1049,19 +1049,19 @@
     {
      "value": "0.28",
      "source": {
-      "cell": 5
+      "cell": 8
      }
     },
     {
      "value": "0.26",
      "source": {
-      "cell": 3
+      "cell": 6
      }
     },
     {
      "value": "0.301",
      "source": {
-      "cell": 3
+      "cell": 6
      }
     }
    ]
@@ -1071,7 +1071,7 @@
   "id": "b12-p3",
   "session": "B12",
   "notebook": "session_12_llm_systems.ipynb",
-  "cell": 17,
+  "cell": 23,
   "q": "the model follow the injected sentence",
   "question": "the question is about thresholds, so the retriever will return both the real document and the forum post. Will the model follow the injected sentence?",
   "choices": [

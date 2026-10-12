@@ -1,12 +1,13 @@
 import { type ReactNode } from "react";
-import { SHOW_DOWNLOADS } from "../lib/features";
-import { STATION_BY_ID, COURSES, KIT_BYTES, nextSession, whenText, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, REPO_URL, SITE, STATIONS, assetUrl, size } from "../lib/content";
+import { STATION_BY_ID, COURSES, KIT_BYTES, SHOW_DOWNLOADS, nextSession, whenText, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, REPO_URL, SITE, STATIONS, assetUrl, size } from "../lib/content";
 import { enterDive, stepTo } from "../lib/dive";
 import { useLog } from "../lib/log";
 import type { Terrain } from "../lib/terrain";
 import { Icon } from "./Icon";
 
-const fileCount = STATIONS.length * 2 + COURSES.length * 2;
+const fileCount =
+  STATIONS.reduce((n, s) => n + (s.files ? 2 : 0) + (s.practice.exercise ? 1 : 0) + (s.practice.solutions ? 1 : 0), 0) +
+  COURSES.reduce((n, c) => n + (c.zip ? 1 : 0) + (c.requirements ? 1 : 0) + Object.values(c.extras).filter(Boolean).length, 0);
 
 export function Hero({ T, learner }: { T: Terrain | null; learner?: ReactNode }) {
   const start = T ? T.meta.trueLoss[0] : null;
@@ -133,6 +134,7 @@ export function Footer() {
           <li><a href={SITE.clubUrl} target="_blank" rel="noopener">etclub.online <Icon name="arrow-ne" size={14} /></a></li>
           <li><a href={REPO_URL} target="_blank" rel="noopener">Source on GitHub <Icon name="arrow-ne" size={14} /></a></li>
           <li><a href="#kit">{SHOW_DOWNLOADS ? "Field kit" : "Sessions"}</a></li>
+          <li><a href="#glossary">Glossary</a></li>
           <li><a href="#method">How the chart was made</a></li>
         </ul>
         <p className="fog small foot-note">

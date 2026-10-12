@@ -365,3 +365,42 @@ button.chip:hover, button.chip[aria-expanded=true] { box-shadow: inset 0 0 0 1px
 .next-session .linkish { text-align: left; text-decoration: none; font-weight: 600; }
 .next-session .az { color: var(--signal); margin-right: 6px; }
 .when.is-next { color: var(--signal); }
+
+/* explorables, pauses, warm-ups, practice, glossary */
+.explore { display: grid; gap: 10px; padding: 16px; background: var(--abyss); box-shadow: inset 0 0 0 1px var(--line); }
+.explore h3 { margin: 0; }
+.explore .slider { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; }
+.explore input[type=range] { width: 100%; accent-color: var(--signal); min-height: 32px; }
+.explore .mark-note { margin: 0; color: var(--fog); font-family: var(--font-mono); }
+.explore .mark-note[data-on] { color: var(--signal); }
+.explore-body { display: grid; gap: 12px; justify-items: start; }
+.explore-body .two { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); width: 100%; }
+.chart { width: 100%; max-width: 460px; height: auto; background: color-mix(in srgb, var(--deep) 70%, transparent); }
+.chart.map { max-width: 300px; }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .tick, .chart .axis { fill: var(--fog); font-family: var(--font-mono); font-size: 9px; }
+.chart .tick.strong { fill: var(--foam); }
+.chart .mark { stroke: var(--foam); stroke-width: 1; stroke-dasharray: 3 3; }
+.chart .cell-0 { fill: #1d3a5a; } .chart .cell-1 { fill: #5a3028; }
+.chart .pt-0 { fill: #7eb2ff; stroke: #05121a; stroke-width: .6; } .chart .pt-1 { fill: #ff8a73; stroke: #05121a; stroke-width: .6; }
+.chart .boundary { stroke: var(--foam); stroke-width: 2; } .chart .frame { fill: none; stroke: var(--line); }
+.readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px 16px; margin: 0; width: 100%; }
+.readout dt { color: var(--fog); font-size: 12px; } .readout dd { margin: 0; font-size: 15px; color: var(--foam); }
+.cm { border-collapse: collapse; font-size: 14px; } .cm th { font-weight: 400; color: var(--fog); padding: 4px 10px; text-align: left; }
+.cm td { text-align: center; font-family: var(--font-mono); font-size: 20px; padding: 8px 18px; box-shadow: inset 0 0 0 1px var(--line); } .cm .good { color: var(--echo-right); }
+.cm .bad { color: #ff8a73; }
+.samples { margin: 0; padding-left: 20px; color: var(--fog); font-size: 14px; } .samples li { margin: 4px 0; }
+.pauses { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.pauses .ping { padding: 16px; display: grid; gap: 12px; } .pauses .echo-text { margin: 0; color: var(--foam); }
+.warmups ol { margin: 0; padding-left: 22px; display: grid; gap: 12px; } .warmups .q { margin: 0 0 4px; }
+.warmups summary { cursor: pointer; color: var(--signal); } .warmups details p { margin: 6px 0 2px; } .warmups .src { color: var(--fog); font-family: var(--font-mono); font-size: 11px; }
+.course-practice { display: grid; gap: 8px; margin: 10px 0; } .dl-practice { margin-top: 4px; }
+.glossary .gloss-tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 18px; }
+.glossary input[type=search] { flex: 1 1 260px; min-height: 44px; padding: 0 14px; background: var(--abyss); color: var(--foam); border: 0; box-shadow: inset 0 0 0 1px var(--line); font: inherit; }
+.glossary .seg { display: flex; gap: 6px; } .glossary .chip[aria-pressed=true] { box-shadow: inset 0 0 0 1px var(--foam); }
+.gloss { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.gloss li { padding: 16px 18px; background: var(--abyss); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--route-basic); display: grid; gap: 8px; align-content: start; }
+.gloss li[data-route=advanced] { box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--route-advanced); }
+.gloss h3 { margin: 0; } .gloss p { margin: 0; } .gloss-where { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip-s { padding: 2px 8px; font-size: 12px; min-height: 26px; background: none; border: 0; color: var(--foam); box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; font-family: var(--font-mono); }
+.chip-s:hover { box-shadow: inset 0 0 0 1px var(--foam); }

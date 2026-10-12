@@ -99,7 +99,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b00-experiment-chain.png",
-  "caption": "Figure 0.4 — The five-step experiment chain that every later session follows: split, baseline, fit, evaluate, read the errors. A small version of this strip opens each session with that session's step highlighted.",
+  "caption": "Figure 0.6 — The five-step experiment chain that every later session follows: split, baseline, fit, evaluate, read the errors. A small version of this strip opens each session with that session's step highlighted.",
   "alt": "Five boxes in a row, joined by arrows: split, baseline, fit, evaluate, read the errors.",
   "numbers": [],
   "licence": null
@@ -112,8 +112,41 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/b00-timeline.png",
-  "caption": "Figure 0.5 — The history table as a timeline. Most of the methods in the course are older than they look; the labels near the line give the session that builds on each.",
+  "caption": "Figure 0.7 — The history table as a timeline. Most of the methods in the course are older than they look; the labels near the line give the session that builds on each.",
   "alt": "A horizontal timeline from 1936 to 2022 with ten events marked, each labelled with the session that builds on it.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b00-rule-thresholds",
+  "session": "B00",
+  "anchor": "The rule scores 0.964 on the training flowers",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b00-rule-thresholds.png",
+  "caption": "Figure 0.4 — The hand-written rule. Left: the two questions, with how many of the 112 training flowers reach each answer. Right: the same two thresholds drawn on the training flowers' petals; circled flowers are the ones the rule gets wrong.",
+  "alt": "A two-question flowchart (petal length under 2.5 cm, then petal width under 1.75 cm) beside a scatter of the training flowers with a vertical line at 2.5 cm and a horizontal line at 1.75 cm.",
+  "numbers": [
+   {
+    "value": 112,
+    "source": {
+     "cell": 1
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b00-logreg-one-flower",
+  "session": "B00",
+  "anchor": "The test accuracy is 0.921, against 0.316 for the baseline",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b00-logreg-one-flower.png",
+  "caption": "Figure 0.5 — What the model computes for one test flower (the first one it gets wrong). The four rescaled measurements are multiplied by each species' weights and added to its intercept, giving three scores; softmax turns the scores into probabilities.",
+  "alt": "Four rescaled measurements, a three-by-four grid of fitted weights, three scores and three probabilities for one test flower, with the largest probability on the wrong species.",
   "numbers": [],
   "licence": null
  },
@@ -201,7 +234,7 @@
   "kind": "S",
   "priority": "○",
   "file": "figures/b01-pass-by-band.png",
-  "caption": "Figure 1.3 — The pass rate among students at the two ends of each feature. Many more of those who studied for a long time, or had a high previous grade, passed than of those at the other end; attendance separates the ends least.",
+  "caption": "Figure 1.5 — The pass rate among students at the two ends of each feature. Many more of those who studied for a long time, or had a high previous grade, passed than of those at the other end; attendance separates the ends least.",
   "alt": "Three pairs of bars, one pair per feature, showing the share who passed among students at the low end and the high end: study hours 32% and 93%, previous grade 28% and 92%, attendance 40% and 74%.",
   "numbers": [
    {
@@ -241,6 +274,91 @@
     }
    }
   ],
+  "licence": null
+ },
+ {
+  "id": "b01-missing-map",
+  "session": "B01",
+  "anchor": "Two columns have gaps: 22 students have no",
+  "position": "before",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b01-missing-map.png",
+  "caption": "Figure 1.3 — Where the gaps are: one column per row of the picture, one tick per student, dark where the value is missing. The 22 missing grades and the 15 missing departments fall on different students and show no pattern.",
+  "alt": "A strip chart with one line per column and 500 positions along it; dark ticks mark the 22 missing previous grades and the 15 missing departments, scattered with no visible pattern.",
+  "numbers": [
+   {
+    "value": 22,
+    "source": {
+     "cell": 4
+    }
+   },
+   {
+    "value": 15,
+    "source": {
+     "cell": 4
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b01-department-interval",
+  "session": "B01",
+  "anchor": "The sample of 101 Business students is small",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b01-department-interval.png",
+  "caption": "Figure 1.6 — The pass rate per department with a 95% interval (the rate plus or minus two standard errors). Business has the fewest students, so its interval is the widest: the true Business rate could plausibly sit several points either side of 52.5%.",
+  "alt": "Three dots with vertical interval bars: CS 68.7%, Engineering 59.3% and Business 52.5% pass rate, the Business bar the longest.",
+  "numbers": [
+   {
+    "value": 101,
+    "source": {
+     "cell": 11
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b01-pass-by-five-bands",
+  "session": "B01",
+  "anchor": "Each plot compares the students who passed",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/b01-pass-by-five-bands.png",
+  "caption": "Figure 1.4 — The same question in finer steps: the pass rate in five equal-count bands of study hours and of previous grade (about 100 students in each band). The rate climbs steadily, not in a jump at one threshold.",
+  "alt": "Two small bar charts of pass rate in five bands: study hours rises from about a third to over 90 percent, previous grade likewise.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b01-correlation-blind-spot",
+  "session": "B01",
+  "anchor": "If $Y=X^2$ and $X$ is spread evenly around zero",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/b01-correlation-blind-spot.png",
+  "caption": "Figure 1.8 — A relationship the correlation cannot see. Y is exactly X squared, so X determines Y completely, yet Pearson's r is close to zero: the points go up on one side and down on the other. (Constructed example, 200 points.)",
+  "alt": "A U-shaped curve of points, Y equal to X squared, with the printed correlation near zero.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b01-missing-kinds",
+  "session": "B01",
+  "anchor": "Each case calls for a different treatment",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/b01-missing-kinds.png",
+  "caption": "Figure 1.7 — The three kinds of missing value on one constructed set of 400 students. Dark points are kept, pale ones are hidden. When the gap depends on the hidden value itself (right), the kept students are no longer a fair sample: their average is too high.",
+  "alt": "Three scatter plots of study hours against previous grade, hiding grades completely at random, depending on a visible column, and depending on the grade itself; the last shows a higher average among the kept students.",
+  "numbers": [],
   "licence": null
  },
  {
@@ -428,6 +546,52 @@
   "licence": null
  },
  {
+  "id": "b03-how-each-decides",
+  "session": "B03",
+  "anchor": "The line cuts through both moons",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b03-how-each-decides.png",
+  "caption": "Figure 3.1 — How each model reaches an answer for one test point (the star, the one where the k-NN vote is closest). Logistic regression: which side of a line. k-NN: the vote of the 17 circled nearest training points. Tree: which of the first rectangles. Forest: how many of its 200 trees vote for each class.",
+  "alt": "Four panels of the two half-moons: a straight dividing line; a star with its 17 nearest training points circled; the tree's first three splits drawn as lines; and a bar chart of how the 200 trees of the forest voted for the star point.",
+  "numbers": [
+   {
+    "value": 17,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b03-knn-neighbourhood-scaling",
+  "session": "B03",
+  "anchor": "Without scaling the test accuracy drops from 0.919 to 0.705",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b03-knn-neighbourhood-scaling.png",
+  "caption": "Figure 3.2 — The same test point (the star) and its 17 nearest training points, in three versions of the data. Left: the original features. Middle: feature 1 multiplied by 1,000, so the neighbours are simply the points with the closest feature 1, a thin slab that ignores feature 2. Right: after StandardScaler, the neighbourhood is local again.",
+  "alt": "Three scatter plots with a star and 17 circled neighbours: a compact round neighbourhood on the original data, a tall thin vertical slab of neighbours on the stretched data, and a compact neighbourhood again after scaling.",
+  "numbers": [
+   {
+    "value": 1000,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 17,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
   "id": "b04-fraud-grid",
   "session": "B04",
   "anchor": "Both look excellent by accuracy.",
@@ -524,7 +688,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b04-protocol.png",
-  "caption": "Figure 4.4 — The protocol as a one-way track: tune the hyperparameter (C = 1), choose the threshold (0.463), lock everything, then score the test set once. There is no arrow back; going back would turn the test set into a second validation set.",
+  "caption": "Figure 4.6 — The protocol as a one-way track: tune the hyperparameter (C = 1), choose the threshold (0.463), lock everything, then score the test set once. There is no arrow back; going back would turn the test set into a second validation set.",
   "alt": "Four boxes in a row joined by forward arrows: tune, choose the threshold, lock, test once, with a note that nothing found at the last step sends you back.",
   "numbers": [
    {
@@ -581,6 +745,44 @@
   "licence": null
  },
  {
+  "id": "b04-validation-score-histograms",
+  "session": "B04",
+  "anchor": "A stated target (95% of malignant cases found) says what we want",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b04-validation-score-histograms.png",
+  "caption": "Figure 4.4 — The model's validation scores for the 71 benign and the 43 malignant cases, with the default threshold 0.5 and the chosen 0.463. Almost every case sits at one end or the other; the two malignant cases that fall below 0.463 are the ones the chosen threshold still misses.",
+  "alt": "Two overlapping histograms of validation scores from zero to one: benign cases piled near zero, malignant cases piled near one, with vertical lines at 0.5 and 0.463 and a few malignant cases left of the lines.",
+  "numbers": [
+   {
+    "value": 0.463,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 43,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 71,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.5,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
   "id": "b05-silhouette",
   "session": "B05",
   "anchor": "## 3. The result",
@@ -595,6 +797,39 @@
     "value": "0.757",
     "source": {
      "cell": 2
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b05-pca-shadow",
+  "session": "B05",
+  "anchor": "A tangle in the 2D map doesn't prove that the digits",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b05-pca-shadow.png",
+  "caption": "Figure 5.2 — PCA as a shadow, on a case small enough to see: Session 0's 150 iris flowers, two measurements each (petal length and petal width). The first principal direction is the line along which the flowers vary most; each flower's shadow on it is its first component, and the shadows keep most of the spread.",
+  "alt": "A scatter of iris petal length against petal width with a long diagonal line through the cloud and short segments from each point to its nearest point on the line.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b05-digits-and-centres",
+  "session": "B05",
+  "anchor": "The clusters group digits that *look alike in pixel space*",
+  "position": "before",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b05-digits-and-centres.png",
+  "caption": "Figure 5.3 — Top: one real 8×8 digit of each kind from the data. Bottom: the 10 k-means cluster centres drawn as 8×8 images, each with the digits that make up most of its cluster. A centre is an average image, so a cluster that mixes digits has a blurred centre.",
+  "alt": "A row of ten real 8 by 8 digit images and below it ten blurred cluster-centre images with the digits that dominate each cluster.",
+  "numbers": [
+   {
+    "value": 10,
+    "source": {
+     "markdown": true
     }
    }
   ],
@@ -659,7 +894,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b06-training-loop.png",
-  "caption": "Figure 6.3 — The training loop that every fit hides. Compute predictions, measure the loss, compute the gradient of the loss with respect to each weight, take a small step against it, and go round again.",
+  "caption": "Figure 6.4 — The training loop that every fit hides. Compute predictions, measure the loss, compute the gradient of the loss with respect to each weight, take a small step against it, and go round again.",
   "alt": "Four boxes arranged in a cycle: forward pass, loss, gradient, step, with arrows running clockwise and a note to repeat until the loss stops falling.",
   "numbers": [],
   "licence": null
@@ -672,7 +907,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b06-backprop.png",
-  "caption": "Figure 6.4 — Backpropagation on the one-unit model. Forward, the loss is computed from the weights through the scores and the probabilities. Backward, the chain rule carries the gradient from the loss back to the weights: [-0.34001, -0.473045] for the weights and -0.002774 for the bias, the same numbers as the formula by hand.",
+  "caption": "Figure 6.6 — Backpropagation on the one-unit model. Forward, the loss is computed from the weights through the scores and the probabilities. Backward, the chain rule carries the gradient from the loss back to the weights: [-0.34001, -0.473045] for the weights and -0.002774 for the bias, the same numbers as the formula by hand.",
   "alt": "A row of four boxes (weights, scores, probabilities, loss) with forward arrows above and red backward arrows below ending at the weights, labelled with the gradient values.",
   "numbers": [
    {
@@ -710,7 +945,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/b06-network-17.png",
-  "caption": "Figure 6.5 — The network that learns XOR: two inputs, four tanh units and one sigmoid output. Counting the weights and biases layer by layer gives 17 numbers to learn.",
+  "caption": "Figure 6.7 — The network that learns XOR: two inputs, four tanh units and one sigmoid output. Counting the weights and biases layer by layer gives 17 numbers to learn.",
   "alt": "A network diagram with two input circles, four hidden circles and one output circle, joined by lines, annotated with the parameter counts of each layer and a total of 17.",
   "numbers": [
    {
@@ -741,6 +976,45 @@
     "value": "1",
     "source": {
      "cell": 8
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b06-xor-hidden-space",
+  "session": "B06",
+  "anchor": "This is what hidden layers do: they turn the inputs into new features",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b06-xor-hidden-space.png",
+  "caption": "Figure 6.3 — The hand-built XOR network, drawn two ways. Left: each hidden unit is one straight line across the square of inputs (solid: at least one input on; dashed: both on). Right: the same four points described by the two hidden units' answers. In these new coordinates one straight line separates the two classes, which no line could do on the left.",
+  "alt": "Left: the unit square with the four XOR points and two parallel diagonal lines. Right: the four points redrawn with the two hidden answers as axes, and one diagonal line with the two class-one points on one side and the two class-zero points on the other.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b06-loss-contours-path",
+  "session": "B06",
+  "anchor": "Nothing in the loop knows about flowers",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b06-loss-contours-path.png",
+  "caption": "Figure 6.5 — The loss as a landscape over the two weights (the bias held at 0 for the contours), with the real path of the 100 gradient steps from the starting guess [1.5, −1.5]. The path crosses the contours toward lower loss; the dots, one every 10 steps, bunch up as the slope flattens.",
+  "alt": "Contour lines of the loss over the first and second weight, with a dotted path of 100 points that starts at the upper-left start and curves down to the minimum on the right.",
+  "numbers": [
+   {
+    "value": 100,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 1.5,
+    "source": {
+     "markdown": true
     }
    }
   ],
@@ -792,7 +1066,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/b07-dropout.png",
-  "caption": "Figure 7.2 — Dropout. At each training step about half of the hidden units are switched off, a different set each time, so the network cannot rely on any single one. At prediction time all units are on.",
+  "caption": "Figure 7.4 — Dropout. At each training step about half of the hidden units are switched off, a different set each time, so the network cannot rely on any single one. At prediction time all units are on.",
   "alt": "Two copies of the same small network. In each, two of the four hidden units are crossed out; the crossed-out units differ between the two steps.",
   "numbers": [],
   "licence": null
@@ -805,7 +1079,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b07-softmax-bug.png",
-  "caption": "Figure 7.3 — The softmax bug on ten training points. With a sigmoid on each row, every prediction is its own probability and they match the labels (accuracy 100%). With softmax taken down the batch, the ten predictions share one unit of probability, so every one is below 0.5 and the model says 0 for all of them (accuracy 50%).",
+  "caption": "Figure 7.5 — The softmax bug on ten training points. With a sigmoid on each row, every prediction is its own probability and they match the labels (accuracy 100%). With softmax taken down the batch, the ten predictions share one unit of probability, so every one is below 0.5 and the model says 0 for all of them (accuracy 50%).",
   "alt": "Two bar charts of ten predictions. Left, the sigmoid output: bars at 1 or 0 matching the true labels. Right, the softmax-over-the-batch output: all bars at 0.2 or below, all under the 0.5 line.",
   "numbers": [
    {
@@ -824,6 +1098,39 @@
   "licence": null
  },
  {
+  "id": "b07-run-b-certainty",
+  "session": "B07",
+  "anchor": "Run C can only draw a straight line, so it cuts through both moons",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b07-run-b-certainty.png",
+  "caption": "Figure 7.2 — Why run B's loss is so large. Left: its validation predictions are almost all at 0 or 1, so when one is wrong it is wrong with total confidence. Right: the loss for a single example whose true label is 1, against the probability the model gave it. The curve rises without limit as the probability falls, until PyTorch's `BCELoss` caps it at 100.",
+  "alt": "Left, a histogram of run B's validation predictions with almost all of them at zero or one. Right, a curve of loss against predicted probability on a log axis rising steeply to a flat cap at 100.",
+  "numbers": [
+   {
+    "value": 93,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b07-learning-rate-real-loss",
+  "session": "B07",
+  "anchor": "- **0.0001** is safe but slow.",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b07-learning-rate-real-loss.png",
+  "caption": "Figure 7.3 — Learning rate on a real loss, the single sigmoid unit of Session 6 on versicolor and virginica, from its starting guess. Left: the loss at the point reached by one step of each size along the first downhill direction, with the three rates marked. Right: the loss after each step for the same three rates. A tiny rate barely moves; a good one descends; a huge one jumps past the valley, lands higher than it started, and descends again from the far side.",
+  "alt": "Left, a curve of loss along a line with a low valley and three markers: one near the start, one near the valley, one far beyond it. Right, three loss curves over steps: slow descent, fast descent, and a curve that jumps up first and descends slowly.",
+  "numbers": [],
+  "licence": null
+ },
+ {
   "id": "b08-cnn-shapes",
   "session": "B08",
   "anchor": "## 3. Counting parameters",
@@ -831,7 +1138,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b08-cnn-shapes.png",
-  "caption": "Figure 8.1 — The CNN as a stack of blocks, with the shape of what comes out of each. The same small filters are reused at every position, so the whole network has 12,810 parameters; the dense network on the same image has 101,770.",
+  "caption": "Figure 8.2 — The CNN as a stack of blocks, with the shape of what comes out of each. The same small filters are reused at every position, so the whole network has 12,810 parameters; the dense network on the same image has 101,770.",
   "alt": "A row of boxes from the 1 by 28 by 28 image through two convolution and two max-pooling blocks to a linear layer of 10 scores, with parameter counts, above a smaller diagram of the dense network with 101,770 parameters.",
   "numbers": [
    {
@@ -865,6 +1172,58 @@
     }
    }
   ],
+  "licence": null
+ },
+ {
+  "id": "b08-one-convolution-step",
+  "session": "B08",
+  "anchor": "## 2. A convolution, computed by hand",
+  "position": "before",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b08-one-convolution-step.png",
+  "caption": "Figure 8.1 — One convolution step with real numbers. A 3×3 patch of the first training digit (boxed, left) is multiplied cell by cell with the vertical-edge filter, and the nine products are added into one number: one pixel of the feature map.",
+  "alt": "The digit with a small box on its edge, then three 3 by 3 grids of numbers: the patch of pixel values, the filter, and their cell-by-cell products with the sum of the products.",
+  "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b08-weight-sharing-filters",
+  "session": "B08",
+  "anchor": "a gap of 4 points on a dataset where both do well doesn't tell us much",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b08-weight-sharing-filters.png",
+  "caption": "Figure 8.3 — What each network learned to look at. Top: four of the dense network's 128 hidden units, each drawn as its 784 weights arranged as the 28×28 image they connect to; every unit has its own weight for every pixel. Bottom: the CNN's 16 learned filters, each only nine weights, used at every position.",
+  "alt": "Top, four noisy 28 by 28 weight images from the dense network. Bottom, sixteen small 3 by 3 filters from the convolutional network.",
+  "numbers": [
+   {
+    "value": 784,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 128,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b08-filters-feature-maps",
+  "session": "B08",
+  "anchor": "a gap of 4 points on a dataset where both do well doesn't tell us much",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b08-filters-feature-maps.png",
+  "caption": "Figure 8.4 — The CNN's first layer on one digit. Top: the 16 filters it learned. Bottom: the 16 feature maps they produce for the first training digit, after the ReLU. Each map lights up where its own filter's pattern occurs, a stroke direction or an edge.",
+  "alt": "A row of 16 small learned filters and below it 16 feature maps of one digit, each highlighting different strokes.",
+  "numbers": [],
   "licence": null
  },
  {
@@ -942,6 +1301,52 @@
    },
    {
     "value": "19",
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b09-frozen-features-pca",
+  "session": "B09",
+  "anchor": "**Run 2: frozen features.**",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b09-frozen-features-pca.png",
+  "caption": "Figure 9.3 — What the frozen backbone sees. Each dot is one of the 300 test photos, coloured by flower and flattened to two dimensions by PCA. Left: from the raw pixels, the colours are mixed together. Right: from the 1,280 numbers the frozen ImageNet backbone computes per photo, the kinds start to separate, with tulips and roses mostly on the left and daisies and dandelions mostly on the right, although two dimensions still leave a lot of overlap. No flower label was used to build either map.",
+  "alt": "Two scatter plots of 300 test photos coloured by flower type: a tangled cloud from raw pixels, and clearly separated groups from the frozen backbone's features.",
+  "numbers": [
+   {
+    "value": 1280,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 300,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b09-fine-tuned-mistakes",
+  "session": "B09",
+  "anchor": "The confusion matrix for the fine-tuned model shows 265 of 300 test photos correct",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b09-fine-tuned-mistakes.png",
+  "caption": "Figure 9.4 — Every test photo the fine-tuned model got wrong, with its true flower and what the model said. The 35 mistakes include the rose and tulip photos the text discusses; several are photos where the flower is small, partly hidden or not the main subject.",
+  "alt": "A grid of 35 small flower photos, each titled with the true flower and the model's wrong answer.",
+  "numbers": [
+   {
+    "value": 265,
     "source": {
      "markdown": true
     }
@@ -1038,7 +1443,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b10-lstm-unrolled.png",
-  "caption": "Figure 10.3 — An LSTM reads a review one token at a time, passing its memory from step to step; the last memory feeds the output score. In a batch, short reviews are padded to a common length, and packing lets the LSTM skip the padding.",
+  "caption": "Figure 10.4 — An LSTM reads a review one token at a time, passing its memory from step to step; the last memory feeds the output score. In a batch, short reviews are padded to a common length, and packing lets the LSTM skip the padding.",
   "alt": "Five LSTM boxes in a row, one per token of 'the movie was not good', with the memory passed from each to the next and ending in a score. Below, a batch of three reviews of different lengths with padding shown as empty cells.",
   "numbers": [],
   "licence": null
@@ -1051,7 +1456,7 @@
   "kind": "S",
   "priority": "○",
   "file": "figures/b10-probes.png",
-  "caption": "Figure 10.4 — Six hand-written sentences scored by the three models. \"Not good\" pulls the word-pair model down the most; none of the models handles \"not bad\"; the LSTM barely reacts to \"not\".",
+  "caption": "Figure 10.5 — Six hand-written sentences scored by the three models. \"Not good\" pulls the word-pair model down the most; none of the models handles \"not bad\"; the LSTM barely reacts to \"not\".",
   "alt": "Dot chart with six sentences as rows and three dots per row, one per model, showing the probability of a positive review from 0 to 1.",
   "numbers": [
    {
@@ -1088,6 +1493,46 @@
     "value": "0.45",
     "source": {
      "cell": 5
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b10-largest-weights",
+  "session": "B10",
+  "anchor": "A single-word model gives \"good\" a positive weight (1.49)",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b10-largest-weights.png",
+  "caption": "Figure 10.3 — The 12 most positive and 12 most negative weights of the word-pair model. Single words are blue and word pairs are orange; the weights read as evidence for a positive review (right) or a negative one (left). Single words dominate the extremes; the only two pairs that make the list are \"the best\" and \"the worst\".",
+  "alt": "A horizontal bar chart of the 12 most negative and 12 most positive features of the word-pair logistic regression, coloured by whether each is a single word or a pair.",
+  "numbers": [
+   {
+    "value": 0.94,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b10-embedding-map",
+  "session": "B10",
+  "anchor": "The embedding layer's 32-number vectors were learned from the reviews alone",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/b10-embedding-map.png",
+  "caption": "Figure 10.6 — A flat map of some learned 32-number word vectors: four words from the text (large, bold) and their six nearest neighbours each, flattened to two dimensions by PCA. Words the LSTM treats alike sit near each other; the map is an approximation, because 32 dimensions cannot be drawn exactly in 2.",
+  "alt": "A scatter of word labels in four colours, one colour per focus word, with the focus words in bold and their nearest neighbours around them.",
+  "numbers": [
+   {
+    "value": 32,
+    "source": {
+     "markdown": true
     }
    }
   ],
@@ -1178,7 +1623,7 @@
   "kind": "S",
   "priority": "★",
   "file": "figures/b11-subwords.png",
-  "caption": "Figure 11.4 — Four words as BERT's subword tokens. A common word is one token; \"tokenization\" is two (ids 19204 and 3989); rare or invented words are cut into several pieces from a vocabulary of 30,522, so nothing is ever unknown.",
+  "caption": "Figure 11.5 — Four words as BERT's subword tokens. A common word is one token; \"tokenization\" is two (ids 19204 and 3989); rare or invented words are cut into several pieces from a vocabulary of 30,522, so nothing is ever unknown.",
   "alt": "Four rows of coloured chips: 'battery' as one chip, 'unbelievably' as five, 'tokenization' as two and 'Zorblatt-9000' as seven.",
   "numbers": [
    {
@@ -1197,6 +1642,38 @@
     "value": "3989",
     "source": {
      "cell": 5
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b11-144-heads-battery",
+  "session": "B11",
+  "anchor": "The table summarises it. Averaged over all 144 heads",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b11-144-heads-battery.png",
+  "caption": "Figure 11.4 — All 144 attention heads of BERT, 12 layers by 12 heads, each cell showing how much \"it\" attends to \"battery\", for the sentence ending in \"empty\" (left) and in \"broken\" (right). Most heads give it little: only 14 (left) and 20 (right) of the 144 give it more than 0.1, and the red squares mark the strongest head in each sentence. Picking the strongest of 144 is searching for a best case.",
+  "alt": "Two 12 by 12 heatmaps of attention weight from the word it to the word battery across 12 layers and 12 heads: mostly pale, with a few dark cells and a red square on the darkest one in each.",
+  "numbers": [
+   {
+    "value": 144,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.33,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.5,
+    "source": {
+     "markdown": true
     }
    }
   ],
@@ -1248,7 +1725,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b12-system.png",
-  "caption": "Figure 12.2 — The whole system, with the injection path in red. A document that carries hidden instructions is retrieved with the real one, lands inside the prompt, and the model follows it; only the check outside the model stops it.",
+  "caption": "Figure 12.7 — The whole system, with the injection path in red. A document that carries hidden instructions is retrieved with the real one, lands inside the prompt, and the model follows it; only the check outside the model stops it.",
   "alt": "System diagram: question, retriever, score gate with an abstain branch, prompt, model, output check, answer. A red dashed path shows a forum post with hidden instructions entering through the retriever into the prompt, the model obeying it, and the output check blocking the result.",
   "numbers": [
    {
@@ -1268,7 +1745,7 @@
   "kind": "S",
   "priority": "★",
   "file": "figures/b12-score-gap.png",
-  "caption": "Figure 12.3 — The best retrieval score for each of the twelve questions. Every question with an answer scores 0.301 or more; every question without one scores 0.26 or less. The threshold of 0.28 sits in the gap.",
+  "caption": "Figure 12.6 — The best retrieval score for each of the twelve questions. Every question with an answer scores 0.301 or more; every question without one scores 0.26 or less. The threshold of 0.28 sits in the gap.",
   "alt": "Strip chart of twelve dots. The eight answerable questions sit between 0.301 and 0.694, the four unanswerable ones between 0.0 and 0.26, with a vertical line at the 0.28 threshold in the gap between them.",
   "numbers": [
    {
@@ -1306,7 +1783,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b12-prompt-layers.png",
-  "caption": "Figure 12.4 — What the model receives, and where each defence sits. The trusted instruction, the untrusted documents and the question arrive as one stream of tokens, so a defence written inside the prompt is only a request. Checks outside the model do not depend on its behaviour.",
+  "caption": "Figure 12.8 — What the model receives, and where each defence sits. The trusted instruction, the untrusted documents and the question arrive as one stream of tokens, so a defence written inside the prompt is only a request. Checks outside the model do not depend on its behaviour.",
   "alt": "Diagram of the prompt as three stacked layers: a trusted system instruction, an untrusted context containing a forum post with hidden instructions, and the user's question. A list on the right separates defences inside the prompt from defences outside the model.",
   "numbers": [],
   "licence": null
@@ -1322,6 +1799,84 @@
   "caption": "Figure 12.5 — Cosine similarity compares directions, not lengths. The smaller the angle between the question's vector and a document's vector, the higher the score; at a right angle the two share no words and the score is 0.",
   "alt": "Three pairs of arrows from a common origin: two arrows pointing the same way (score 1), two with a moderate angle between them (a score between 0 and 1), and two at right angles (score 0).",
   "numbers": [],
+  "licence": null
+ },
+ {
+  "id": "b12-chat-template-tokens",
+  "session": "B12",
+  "anchor": "The prompt is 35 tokens. The chat template wraps",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/b12-chat-template-tokens.png",
+  "caption": "Figure 12.2 — The 35 tokens the model actually receives for the battery-robot question. Grey: the special markers of the chat template. Violet: the system instruction. Orange: the user's request. Green: the opening of the answer, after which the model writes.",
+  "alt": "A wrapped row of 35 token chips coloured by role: grey markers, violet system instruction, orange user request and green assistant opening.",
+  "numbers": [
+   {
+    "value": 35,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b12-next-token-top5",
+  "session": "B12",
+  "anchor": "The prompt is 35 tokens. The chat template wraps",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b12-next-token-top5.png",
+  "caption": "Figure 12.3 — The five most likely next tokens at each of the 8 greedy steps that wrote \"BatteryBot 2000\". Each column is one step; the darker the cell, the higher the probability, and the boxed token is the one chosen. Step 1 is open (\"Battery\" 0.339, \"Rob\" 0.295); by step 7 the next token is almost certain; step 8 ends the turn.",
+  "alt": "A grid of eight columns and five rows of token labels and probabilities, shaded by probability, with the top token of each column boxed.",
+  "numbers": [
+   {
+    "value": 0.339,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.655,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.999,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "b12-temperature-step1",
+  "session": "B12",
+  "anchor": "The prompt is 35 tokens. The chat template wraps",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/b12-temperature-step1.png",
+  "caption": "Figure 12.4 — The same step-1 scores at two temperatures. Temperature 1.0 is the model's own distribution; at 1.6 the scores are divided by 1.6 before the softmax, so the likely tokens lose probability and the unlikely ones gain it. Bars show the 10 most likely tokens at temperature 1.0; the text gives the share of probability that falls on all the other tokens.",
+  "alt": "Two bar charts of the ten most likely first tokens: at temperature 1.0 Battery and Rob dominate, and at temperature 1.6 the bars are flatter with a larger share on all other tokens.",
+  "numbers": [
+   {
+    "value": 1.6,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 1.0,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
   "licence": null
  }
 ]

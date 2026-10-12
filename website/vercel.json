@@ -2,6 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
   "installCommand": "npm ci && python3 -m venv /tmp/kit-venv && /tmp/kit-venv/bin/pip install -q nbconvert==7.17.1 nbformat==5.11.1",
-  "buildCommand": "/tmp/kit-venv/bin/python -I tools/build_downloads.py && npm run build",
+  "buildCommand": "python3 -I tools/check_markers.py && /tmp/kit-venv/bin/python -I tools/build_downloads.py && npm run build",
   "outputDirectory": "dist"
 }

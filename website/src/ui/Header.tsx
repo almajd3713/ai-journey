@@ -29,6 +29,7 @@ export function Header({ mode, setMode, webgl }: { mode: Mode; setMode: (m: Mode
         </a>
         <nav className="nav" aria-label="Sections">
           <a className="navlink" href="#kit">Sessions</a>
+          <a className="navlink" href="#glossary">Glossary</a>
           <a className="navlink" href="#guides">Guides</a>
           <a className="navlink" href="#method">The chart</a>
         </nav>

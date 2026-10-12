@@ -8,6 +8,7 @@ import advanced from "../../content/courses/advanced.json";
 import markers from "../../content/markers.json";
 import kit from "../../content/kit.json";
 import wrecksFile from "../../content/wrecks.json";
+import extras from "../../content/extras.json";
 
 export type CourseId = "basic" | "advanced";
 
@@ -25,6 +26,16 @@ export interface Figure {
   /** image credits for photos (kind I); the course files give a list of these */
   licence: Credit | Credit[] | null;
 }
+
+/** a pause from the notebook (site/pauses.json): a question with choices, and the measured answer */
+export interface Pause { id: string; question: string; choices: { text: string; correct: boolean }[]; answer: string }
+/** a warm-up question about the session two before (site/warmups.json) */
+export interface Warmup { from: string; q: string; a: string; src: string }
+export interface GlossaryTerm { term: string; defined: string; used: string[]; definition: string; related: string[]; course: CourseId }
+export const GLOSSARY: GlossaryTerm[] = extras.glossary as GlossaryTerm[];
+
+/** the practice files released for one session or one course (the keys in content/downloads.json) */
+export interface Practice { exercise: FileEntry | null; solutions: FileEntry | null }
 
 export interface Ping {
   q: string;
@@ -53,7 +64,12 @@ export interface Station {
   sounding: { value: string; label: string; src: string };
   ping: Ping;
   currents: { to: string; label: string }[];
-  files: { ipynb: FileEntry; html: FileEntry };
+  /** present only while the session is released in content/downloads.json */
+  files: { ipynb: FileEntry; html: FileEntry } | null;
+  practice: Practice;
+  pauses: Pause[];
+  warmups: Warmup[];
+  explorables: { id: string; title: string }[];
   colab: string;
   github: string;
   guides: Person[];
@@ -79,8 +95,10 @@ export interface Course {
   code: string;
   dir: string;
   stations: Station[];
-  zip: FileEntry;
-  requirements: FileEntry;
+  zip: FileEntry | null;
+  requirements: FileEntry | null;
+  /** course-wide practice files released in content/downloads.json */
+  extras: { bugHunt: FileEntry | null; bugHuntAnswers: FileEntry | null; capstone: FileEntry | null; cheatSheet: FileEntry | null; check: FileEntry | null };
   github: string;
 }
 
@@ -125,17 +143,23 @@ function guidesFor(course: CourseId, id: string): Person[] {
   return PEOPLE.filter((p) => !p.sessions && (!p.courses || p.courses.includes(course)));
 }
 
+interface PracticeManifest {
+  exercises?: Record<string, FileEntry>; solutions?: Record<string, FileEntry>;
+  bug_hunt?: FileEntry | null; bug_hunt_answers?: FileEntry | null; capstone?: FileEntry | null; cheat_sheet?: FileEntry | null; aij_check?: FileEntry | null;
+}
+
 let index = 0;
 export const COURSES: Course[] = (["basic", "advanced"] as CourseId[]).map((cid) => {
   const c = raw[cid];
   const k = kit.courses[cid];
+  const kp = (k as unknown as { practice?: PracticeManifest }).practice ?? {};
   const stations = c.sessions.map((s): Station => {
     const m = (markers.stations as Record<string, RawMarker>)[s.id];
     const pause = s.pauses[m.ping.pause];
     const currents = markers.currents
       .filter((x) => x.from === s.id || x.to === s.id)
       .map((x) => ({ to: x.from === s.id ? x.to : x.from, label: x.label }));
-    const files = (k.sessions as Record<string, { ipynb: FileEntry; html: FileEntry }>)[s.id];
+    const files = (k.sessions as Record<string, { ipynb: FileEntry; html: FileEntry }>)[s.id] ?? null;
     return {
       i: index++,
       id: s.id,
@@ -155,6 +179,10 @@ export const COURSES: Course[] = (["basic", "advanced"] as CourseId[]).map((cid)
       ping: { q: m.ping.q ?? pause.q, choices: m.ping.choices, answer: m.ping.answer, echo: m.ping.echo, src: m.ping.src, section: pause?.section ?? null },
       currents,
       files,
+      practice: { exercise: kp.exercises?.[s.id] ?? null, solutions: kp.solutions?.[s.id] ?? null },
+      pauses: (extras.pauses as Record<string, Pause[]>)[s.code] ?? [],
+      warmups: (extras.warmups as Record<string, Warmup[]>)[s.code] ?? [],
+      explorables: (extras.explorables as Record<string, { id: string; title: string }[]>)[s.code] ?? [],
       colab: colab(c.dir, s.notebook),
       github: blob(c.dir, s.notebook),
       guides: guidesFor(cid, s.id),
@@ -169,8 +197,9 @@ export const COURSES: Course[] = (["basic", "advanced"] as CourseId[]).map((cid)
     code: c.code,
     dir: c.dir,
     stations,
-    zip: k.zip,
-    requirements: k.requirements,
+    zip: (k.zip ?? null) as FileEntry | null,
+    requirements: (k.requirements ?? null) as FileEntry | null,
+    extras: { bugHunt: kp.bug_hunt ?? null, bugHuntAnswers: kp.bug_hunt_answers ?? null, capstone: kp.capstone ?? null, cheatSheet: kp.cheat_sheet ?? null, check: kp.aij_check ?? null },
     github: `${REPO_URL}/tree/${site.branch}/${c.dir}`,
   };
 });
@@ -180,9 +209,15 @@ export const BASIC_COUNT = COURSES[0].stations.length;
 export const STATION_BY_ID = Object.fromEntries(STATIONS.map((s) => [s.id, s]));
 export const KIT_BUILT: string = kit.built;
 export const KIT_BYTES = COURSES.reduce(
-  (t, c) => t + c.zip.bytes + c.requirements.bytes + c.stations.reduce((u, s) => u + s.files.ipynb.bytes + s.files.html.bytes, 0),
+  (t, c) =>
+    t + (c.zip?.bytes ?? 0) + (c.requirements?.bytes ?? 0) + Object.values(c.extras).reduce((u, f) => u + (f?.bytes ?? 0), 0) +
+    c.stations.reduce((u, s) => u + (s.files ? s.files.ipynb.bytes + s.files.html.bytes : 0) + (s.practice.exercise?.bytes ?? 0) + (s.practice.solutions?.bytes ?? 0), 0),
   0,
 );
+/** how many sessions are released for download; the site shows download wording only when this is above zero */
+export const RELEASED = STATIONS.filter((s) => s.files).length;
+export const PRACTICE_RELEASED = COURSES.some((c) => Object.values(c.extras).some(Boolean)) || STATIONS.some((s) => s.practice.exercise || s.practice.solutions);
+export const SHOW_DOWNLOADS = RELEASED > 0 || PRACTICE_RELEASED;
 
 /** Depth zones on the gauge, by station: the club rail's "Surface ..." idea, applied to the dive. */
 export const ZONES = [

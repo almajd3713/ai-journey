@@ -2,7 +2,7 @@
 
 The course site of the AI & Data Science Cell (ENSIA Tech Community). The two courses are a dive down a real loss landscape: the seafloor is the measured loss surface of basic Session 6's XOR network, the route is that network's training path, and the 27 sessions are stations along it. Every session can be downloaded, read in the browser, or (basic course) opened in Colab.
 
-Live: <https://almajd3713.github.io/ai-journey/> (planned domain: `journey.etclub.online`).
+Live: <https://journey.etclub.online> (planned domain: `journey.etclub.online`).
 
 ## Layout
 

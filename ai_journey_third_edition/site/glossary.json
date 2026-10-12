@@ -1,0 +1,659 @@
+[
+ {
+  "term": "baseline",
+  "defined": "B00",
+  "used": [
+   "B01",
+   "B02",
+   "B04",
+   "B10"
+  ],
+  "definition": "The score of the simplest thing that could work, such as always answering the most common class. A model is worth keeping only if it beats it.",
+  "related": []
+ },
+ {
+  "term": "classification",
+  "defined": "B00",
+  "used": [
+   "B02",
+   "B03",
+   "B09"
+  ],
+  "definition": "Predicting a category, such as a species or pass/fail.",
+  "related": []
+ },
+ {
+  "term": "regression",
+  "defined": "B00",
+  "used": [],
+  "definition": "Predicting a number, such as a price. (The name logistic regression is misleading: that model classifies.)",
+  "related": [
+   "logistic regression"
+  ]
+ },
+ {
+  "term": "features",
+  "defined": "B00",
+  "used": [
+   "B01",
+   "B02",
+   "B03",
+   "B05",
+   "B06",
+   "B07",
+   "B08",
+   "B09",
+   "B10",
+   "B11",
+   "B12"
+  ],
+  "definition": "The columns used as inputs to a model.",
+  "related": []
+ },
+ {
+  "term": "target",
+  "defined": "B00",
+  "used": [
+   "B01",
+   "B02",
+   "B04",
+   "B05"
+  ],
+  "definition": "The column holding the answer we want to predict.",
+  "related": []
+ },
+ {
+  "term": "training set",
+  "defined": "B00",
+  "used": [
+   "B01",
+   "B02",
+   "B03",
+   "B04",
+   "B07"
+  ],
+  "definition": "The part of the data a model learns from.",
+  "related": []
+ },
+ {
+  "term": "test set",
+  "defined": "B00",
+  "used": [
+   "B01",
+   "B02",
+   "B03",
+   "B04",
+   "B09",
+   "B10"
+  ],
+  "definition": "The part of the data kept back and used once, to measure the finished model.",
+  "related": []
+ },
+ {
+  "term": "logistic regression",
+  "defined": "B00",
+  "used": [
+   "B03",
+   "B04",
+   "B06",
+   "B07",
+   "B10"
+  ],
+  "definition": "A simple classifier that gives each feature a weight, adds them into one score per class and picks the highest. In two dimensions its boundary is a straight line.",
+  "related": []
+ },
+ {
+  "term": "confusion matrix",
+  "defined": "B00",
+  "used": [
+   "B04",
+   "B09"
+  ],
+  "definition": "A table with the true classes on the rows and the predicted classes on the columns, so correct answers fall on the diagonal.",
+  "related": []
+ },
+ {
+  "term": "precision",
+  "defined": "B00",
+  "used": [
+   "B04"
+  ],
+  "definition": "When the model says a case is positive, how often it is right.",
+  "related": []
+ },
+ {
+  "term": "recall",
+  "defined": "B00",
+  "used": [
+   "B04",
+   "B12"
+  ],
+  "definition": "Of the real positive cases, how many the model found.",
+  "related": []
+ },
+ {
+  "term": "error analysis",
+  "defined": "B00",
+  "used": [],
+  "definition": "Looking at the failures to ask whether the data or the model is the limit.",
+  "related": []
+ },
+ {
+  "term": "data leakage",
+  "defined": "B01",
+  "used": [
+   "B02",
+   "B04",
+   "B12"
+  ],
+  "definition": "Information in the training data that would not be available when the prediction is needed, such as a column recorded after the outcome. It makes a model look better than it is.",
+  "related": []
+ },
+ {
+  "term": "correlation",
+  "defined": "B01",
+  "used": [],
+  "definition": "How strongly one number goes up and down together with another, on a scale from -1 to 1. It measures straight-line association only, and says nothing about cause.",
+  "related": []
+ },
+ {
+  "term": "imputing",
+  "defined": "B02",
+  "used": [],
+  "definition": "Filling a missing value with a typical one, such as the median of the training rows.",
+  "related": []
+ },
+ {
+  "term": "scaling",
+  "defined": "B02",
+  "used": [
+   "B03",
+   "B05"
+  ],
+  "definition": "Subtracting the training mean and dividing by the training standard deviation, so every column has mean 0 and spread 1.",
+  "related": []
+ },
+ {
+  "term": "one-hot encoding",
+  "defined": "B02",
+  "used": [],
+  "definition": "Giving each category its own 0/1 column.",
+  "related": []
+ },
+ {
+  "term": "cross-validation",
+  "defined": "B02",
+  "used": [
+   "B04"
+  ],
+  "definition": "Repeating the experiment on several different splits and reporting the spread.",
+  "related": []
+ },
+ {
+  "term": "inductive bias",
+  "defined": "B03",
+  "used": [],
+  "definition": "A model's built-in preference for a certain kind of answer, which decides which patterns it can find easily.",
+  "related": []
+ },
+ {
+  "term": "overfitting",
+  "defined": "B03",
+  "used": [
+   "B04",
+   "B07",
+   "B10"
+  ],
+  "definition": "Fitting the noise in the training data: the training score is high and the score on new data is clearly lower.",
+  "related": []
+ },
+ {
+  "term": "k-nearest neighbours",
+  "defined": "B03",
+  "used": [],
+  "definition": "A model that finds the k training points closest to a new point and takes a vote.",
+  "related": []
+ },
+ {
+  "term": "decision tree",
+  "defined": "B03",
+  "used": [
+   "B04"
+  ],
+  "definition": "A model that splits the data with simple rules such as 'feature 1 < 0.3', choosing each split to make the groups on either side as pure as possible.",
+  "related": []
+ },
+ {
+  "term": "random forest",
+  "defined": "B03",
+  "used": [],
+  "definition": "Many trees trained on random samples of the data, whose votes are averaged.",
+  "related": []
+ },
+ {
+  "term": "hyperparameters",
+  "defined": "B04",
+  "used": [],
+  "definition": "Settings of a model that we choose ourselves rather than learn, such as C in logistic regression or the depth of a tree.",
+  "related": [
+   "regression",
+   "logistic regression"
+  ]
+ },
+ {
+  "term": "validation set",
+  "defined": "B04",
+  "used": [
+   "B07",
+   "B12"
+  ],
+  "definition": "Data for decisions that need unseen examples, such as choosing a threshold, so that the test set stays untouched.",
+  "related": [
+   "test set",
+   "threshold"
+  ]
+ },
+ {
+  "term": "threshold",
+  "defined": "B04",
+  "used": [
+   "B12"
+  ],
+  "definition": "The score at or above which a case is flagged positive.",
+  "related": []
+ },
+ {
+  "term": "accuracy",
+  "defined": "B04",
+  "used": [
+   "B06",
+   "B07",
+   "B08",
+   "B09",
+   "B10",
+   "B12"
+  ],
+  "definition": "The share of all cases the model gets right. On imbalanced data it needs the baseline beside it.",
+  "related": [
+   "baseline"
+  ]
+ },
+ {
+  "term": "clustering",
+  "defined": "B05",
+  "used": [],
+  "definition": "Grouping similar points without labels.",
+  "related": []
+ },
+ {
+  "term": "dimensionality reduction",
+  "defined": "B05",
+  "used": [],
+  "definition": "Describing data with fewer numbers than it started with, to look at it or to simplify it.",
+  "related": []
+ },
+ {
+  "term": "principal component analysis (PCA)",
+  "defined": "B05",
+  "used": [],
+  "definition": "A method that finds the directions along which the data varies most and keeps the first few. A 2D map should say how much variance it keeps.",
+  "related": []
+ },
+ {
+  "term": "silhouette score",
+  "defined": "B05",
+  "used": [],
+  "definition": "For each point, a comparison of its distance to its own cluster with its distance to the nearest other cluster; it needs no labels.",
+  "related": []
+ },
+ {
+  "term": "adjusted Rand index",
+  "defined": "B05",
+  "used": [],
+  "definition": "A measure of agreement between a clustering and hidden labels, where 1.0 is perfect.",
+  "related": [
+   "clustering"
+  ]
+ },
+ {
+  "term": "activation",
+  "defined": "B06",
+  "used": [],
+  "definition": "The non-linear function applied to a unit's weighted sum, which is what makes stacked layers more than one layer.",
+  "related": []
+ },
+ {
+  "term": "loss",
+  "defined": "B06",
+  "used": [
+   "B07",
+   "B08",
+   "B09",
+   "B10"
+  ],
+  "definition": "One number that says how wrong the model is on the training data.",
+  "related": []
+ },
+ {
+  "term": "gradient",
+  "defined": "B06",
+  "used": [
+   "B07",
+   "B09"
+  ],
+  "definition": "For each weight, how fast the loss rises when that weight is nudged up.",
+  "related": [
+   "loss"
+  ]
+ },
+ {
+  "term": "gradient descent",
+  "defined": "B06",
+  "used": [],
+  "definition": "Training by repeatedly moving every weight a small step against its gradient.",
+  "related": [
+   "gradient"
+  ]
+ },
+ {
+  "term": "learning rate",
+  "defined": "B06",
+  "used": [
+   "B07",
+   "B09"
+  ],
+  "definition": "The size of the step taken in each update.",
+  "related": []
+ },
+ {
+  "term": "backpropagation",
+  "defined": "B06",
+  "used": [
+   "B07"
+  ],
+  "definition": "Computing the gradient for every weight in every layer by going backwards through the calculation.",
+  "related": [
+   "gradient"
+  ]
+ },
+ {
+  "term": "epoch",
+  "defined": "B06",
+  "used": [
+   "B07",
+   "B08",
+   "B09",
+   "B10"
+  ],
+  "definition": "One pass through the training data.",
+  "related": []
+ },
+ {
+  "term": "optimiser",
+  "defined": "B06",
+  "used": [
+   "B07",
+   "B08",
+   "B09"
+  ],
+  "definition": "The part of the training loop that takes the step after the gradients are computed (Adam in this course).",
+  "related": [
+   "gradient"
+  ]
+ },
+ {
+  "term": "hidden layer",
+  "defined": "B06",
+  "used": [
+   "B07"
+  ],
+  "definition": "A layer between the inputs and the output whose units learn new features that make the final decision easy.",
+  "related": [
+   "features"
+  ]
+ },
+ {
+  "term": "early stopping",
+  "defined": "B07",
+  "used": [
+   "B09",
+   "B10"
+  ],
+  "definition": "Stopping training once the validation loss has stopped improving, and going back to the best weights.",
+  "related": [
+   "loss"
+  ]
+ },
+ {
+  "term": "dropout",
+  "defined": "B07",
+  "used": [],
+  "definition": "Randomly switching off some hidden units at each training step so the network cannot rely on any one of them.",
+  "related": []
+ },
+ {
+  "term": "L2 regularisation",
+  "defined": "B07",
+  "used": [],
+  "definition": "A penalty for large weights added to the loss, which pushes the network towards smoother solutions.",
+  "related": [
+   "loss"
+  ]
+ },
+ {
+  "term": "mini-batch",
+  "defined": "B07",
+  "used": [
+   "B08",
+   "B09"
+  ],
+  "definition": "A small group of training examples used for one update step.",
+  "related": []
+ },
+ {
+  "term": "convolutional neural network (CNN)",
+  "defined": "B08",
+  "used": [
+   "B09",
+   "B12"
+  ],
+  "definition": "A network that slides small filters over an image, using the same weights at every position.",
+  "related": [
+   "filter"
+  ]
+ },
+ {
+  "term": "filter",
+  "defined": "B08",
+  "used": [
+   "B12"
+  ],
+  "definition": "A small grid of weights, such as 3 x 3, that is multiplied with each patch of an image and summed.",
+  "related": []
+ },
+ {
+  "term": "channels",
+  "defined": "B08",
+  "used": [],
+  "definition": "The colour layers of an image (one for grey, three for RGB), or the number of feature maps in a layer.",
+  "related": []
+ },
+ {
+  "term": "backbone",
+  "defined": "B09",
+  "used": [],
+  "definition": "The part of a network that turns an input into a short list of numbers describing it, often pretrained.",
+  "related": []
+ },
+ {
+  "term": "head",
+  "defined": "B09",
+  "used": [
+   "B11"
+  ],
+  "definition": "The small layer on top of a backbone that turns its numbers into class probabilities.",
+  "related": [
+   "backbone"
+  ]
+ },
+ {
+  "term": "fine-tuning",
+  "defined": "B09",
+  "used": [
+   "B12"
+  ],
+  "definition": "Continuing to train some or all of a pretrained network on your own data, with a small learning rate.",
+  "related": [
+   "learning rate"
+  ]
+ },
+ {
+  "term": "transfer learning",
+  "defined": "B09",
+  "used": [
+   "B10"
+  ],
+  "definition": "Starting from a network trained on a large dataset instead of from random weights.",
+  "related": []
+ },
+ {
+  "term": "tokens",
+  "defined": "B10",
+  "used": [
+   "B11",
+   "B12"
+  ],
+  "definition": "The pieces a text is cut into before a model sees it.",
+  "related": []
+ },
+ {
+  "term": "bag-of-words",
+  "defined": "B10",
+  "used": [],
+  "definition": "Representing a text by which words appear and how often, ignoring their order.",
+  "related": []
+ },
+ {
+  "term": "TF-IDF",
+  "defined": "B10",
+  "used": [
+   "B12"
+  ],
+  "definition": "Word counts weighted by how rare each word is across documents, so common words count for little.",
+  "related": []
+ },
+ {
+  "term": "bigrams",
+  "defined": "B10",
+  "used": [],
+  "definition": "Pairs of neighbouring words, such as 'not good', used as extra features.",
+  "related": [
+   "features"
+  ]
+ },
+ {
+  "term": "embedding",
+  "defined": "B10",
+  "used": [
+   "B12"
+  ],
+  "definition": "A learned vector of numbers standing for a token, so that tokens used alike get similar vectors.",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "LSTM",
+  "defined": "B10",
+  "used": [
+   "B11"
+  ],
+  "definition": "A network that reads a sequence one token at a time and keeps a memory it updates after every token.",
+  "related": []
+ },
+ {
+  "term": "attention",
+  "defined": "B11",
+  "used": [],
+  "definition": "A mechanism that gives each token a weighted mix of the other tokens' value vectors, with weights from query-key matches.",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "query, key and value",
+  "defined": "B11",
+  "used": [],
+  "definition": "For each token: a query (what it is looking for), a key (what it offers to be found by) and a value (the information it hands over when chosen).",
+  "related": []
+ },
+ {
+  "term": "causal mask",
+  "defined": "B11",
+  "used": [],
+  "definition": "A mask that sets the scores of later tokens to a huge negative number, so a generator cannot read ahead.",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "subwords",
+  "defined": "B11",
+  "used": [],
+  "definition": "Pieces of words from a fixed vocabulary: common words are one token, rare words several, so no word is ever unknown.",
+  "related": []
+ },
+ {
+  "term": "transformer",
+  "defined": "B11",
+  "used": [
+   "B12"
+  ],
+  "definition": "The architecture built from attention and per-token MLP layers that most language models use.",
+  "related": [
+   "attention"
+  ]
+ },
+ {
+  "term": "greedy decoding",
+  "defined": "B12",
+  "used": [],
+  "definition": "Generating text by taking the most likely next token every time.",
+  "related": []
+ },
+ {
+  "term": "sampling",
+  "defined": "B12",
+  "used": [],
+  "definition": "Generating text by picking each next token at random in proportion to its probability.",
+  "related": []
+ },
+ {
+  "term": "temperature",
+  "defined": "B12",
+  "used": [],
+  "definition": "A number that divides the scores before the softmax: below 1 makes the distribution sharper, above 1 flatter.",
+  "related": []
+ },
+ {
+  "term": "retrieval-augmented generation (RAG)",
+  "defined": "B12",
+  "used": [],
+  "definition": "Finding the relevant documents first and putting them in the prompt, so the model answers from them.",
+  "related": []
+ },
+ {
+  "term": "MRR",
+  "defined": "B12",
+  "used": [],
+  "definition": "Mean reciprocal rank: the average of 1 divided by the rank of the right document.",
+  "related": []
+ },
+ {
+  "term": "prompt injection",
+  "defined": "B12",
+  "used": [],
+  "definition": "Text in the input, such as a retrieved document, that carries instructions the model may follow.",
+  "related": []
+ }
+]

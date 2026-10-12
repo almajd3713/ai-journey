@@ -115,7 +115,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a00-forward-pass.png",
-  "caption": "Figure 0.4 — The forward pass in shapes. Six ids become six rows of 768 numbers, then six rows of 50257 scores. The last row, turned into probabilities by a softmax, is the prediction for the next token; the ten most likely are listed at the right.",
+  "caption": "Figure 0.5 — The forward pass in shapes. Six ids become six rows of 768 numbers, then six rows of 50257 scores. The last row, turned into probabilities by a softmax, is the prediction for the next token; the ten most likely are listed at the right.",
   "alt": "Four boxes in a row, from six token ids to an embedding of 6 by 768, to transformer blocks, to a table of 6 by 50,257 scores, with the ten most likely next tokens and their probabilities listed beside it.",
   "numbers": [
    {
@@ -159,7 +159,7 @@
   "kind": "S",
   "priority": "★",
   "file": "figures/a00-bits-per-char.png",
-  "caption": "Figure 0.5 — The same four sentences scored in three languages. Per token, Arabic looks cheapest (4.29 bits); per character, which does not depend on how the text was cut up, it is the most expensive (4.22 bits) and the ranking flips.",
+  "caption": "Figure 0.6 — The same four sentences scored in three languages. Per token, Arabic looks cheapest (4.29 bits); per character, which does not depend on how the text was cut up, it is the most expensive (4.22 bits) and the ranking flips.",
   "alt": "Two bar charts of three languages. Left, bits per token: Arabic 4.29, English 6.17, French 8.19. Right, bits per character: English 1.34, French 2.74, Arabic 4.22.",
   "numbers": [
    {
@@ -209,7 +209,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a00-one-pass.png",
-  "caption": "Figure 0.6 — Training against generating. Training scores all 21 positions of a text in one forward pass; generating 12 tokens takes 12 passes in sequence, because each new token depends on the one before it.",
+  "caption": "Figure 0.7 — Training against generating. Training scores all 21 positions of a text in one forward pass; generating 12 tokens takes 12 passes in sequence, because each new token depends on the one before it.",
   "alt": "Two timelines. Training: one wide bar for a single forward pass over all 21 positions. Generating: 12 narrow numbered bars in a row, one pass per new token.",
   "numbers": [
    {
@@ -241,7 +241,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/a00-embedding-lookup.png",
-  "caption": "Figure 0.7 — The embedding table. A token id picks one row of 768 numbers; rows of tokens used in similar ways are close. These are the nearest rows to ' battery'.",
+  "caption": "Figure 0.4 — The embedding table. A token id picks one row of 768 numbers; rows of tokens used in similar ways are close. These are the nearest rows to ' battery'.",
   "alt": "A tall table of 50,257 rows with one row highlighted for ' battery', and a bar list of its six nearest rows: ' Battery', ' batteries', 'Battery', ' lithium', 'attery' and ' charger'.",
   "numbers": [
    {
@@ -349,7 +349,7 @@
   "kind": "S",
   "priority": "★",
   "file": "figures/a01-sqrt-dk.png",
-  "caption": "Figure 1.2 — What dividing by √d_k changes, measured on random queries and keys. Without it the largest softmax weight climbs towards 1 and the gradient shrinks as d_k grows (to 0.977 and 0.033 at d_k = 4096); with it both stay level.",
+  "caption": "Figure 1.3 — What dividing by √d_k changes, measured on random queries and keys. Without it the largest softmax weight climbs towards 1 and the gradient shrinks as d_k grows (to 0.977 and 0.033 at d_k = 4096); with it both stay level.",
   "alt": "Two line charts against key size from 4 to 4096. Without the division, the largest weight rises from 0.347 to 0.977 and the gradient falls from 0.293 to 0.033; with the division, both stay roughly flat.",
   "numbers": [
    {
@@ -387,7 +387,7 @@
   "kind": "S",
   "priority": "★",
   "file": "figures/a01-copy-bits.png",
-  "caption": "Figure 1.3 — The cost of 50 random tokens, then the same 50 again. The first copy costs 18.7 bits per token, worse than guessing uniformly (15.6); the second costs 0.65, because the model finds the earlier copy and reads the answer from it.",
+  "caption": "Figure 1.4 — The cost of 50 random tokens, then the same 50 again. The first copy costs 18.7 bits per token, worse than guessing uniformly (15.6); the second costs 0.65, because the model finds the earlier copy and reads the answer from it.",
   "alt": "Three horizontal bars in bits per token: first copy 18.7, uniform guessing 15.6, second copy 0.65.",
   "numbers": [
    {
@@ -425,7 +425,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a01-induction.png",
-  "caption": "Figure 1.4 — The induction mechanism on \"… A B … A → ?\". A previous-token head (layer 4, head 11) writes into B a note that A came before it; an induction head in a later layer (layer 5, head 5) finds the token whose note matches the current token and copies what follows. The notebook measured both heads' patterns but did not test the link between them.",
+  "caption": "Figure 1.6 — The induction mechanism on \"… A B … A → ?\". A previous-token head (layer 4, head 11) writes into B a note that A came before it; an induction head in a later layer (layer 5, head 5) finds the token whose note matches the current token and copies what follows. The notebook measured both heads' patterns but did not test the link between them.",
   "alt": "A row of tokens 'A B' then later 'A ?'. Arrows show a previous-token head writing a note into B, an induction head from the second A looking back to B, and B being copied as the prediction.",
   "numbers": [
    {
@@ -438,6 +438,64 @@
     "value": "0.94",
     "source": {
      "cell": 6
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "a01-layer4-heads-sentence",
+  "session": "A01",
+  "anchor": "The tensors have the shapes the formula says.",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/a01-layer4-heads-sentence.png",
+  "caption": "Figure 1.2 — Layer 4's 12 heads on the 14 tokens of the example sentence, one small map per head (row: the token reading; column: the token it reads from; dark means a large weight). The empty upper triangle is the causal mask. The heads look different from one another: some stay close to the diagonal, others park their weight on the first token.",
+  "alt": "Twelve small triangular heatmaps in a grid of two rows by six columns, one per attention head of layer 4, each showing a different pattern of weights between the 14 tokens.",
+  "numbers": [
+   {
+    "value": 12,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 14,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "a01-bits-along-sequence",
+  "session": "A01",
+  "anchor": "GPT-2 pays 18.7 bits per token on the first copy",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/a01-bits-along-sequence.png",
+  "caption": "Figure 1.5 — What each of the 100 positions cost GPT-2: the 50 random tokens (left of the dashed line) and the same 50 again (right). The first copy sits around 18.7 bits per token, above the 15.6 bits of uniform guessing. The first token of the second copy still costs 16.8 bits, because nothing yet says the sequence is repeating; the cost then falls within a few tokens to almost nothing, with two small bumps, and the second copy averages 0.65 bits.",
+  "alt": "A line of bits per token against position over 100 tokens: high and noisy on the first 50, a spike at the start of the second copy, then close to zero for the remaining tokens.",
+  "numbers": [
+   {
+    "value": 18.7,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.65,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 15.6,
+    "source": {
+     "markdown": true
     }
    }
   ],
@@ -763,7 +821,7 @@
   "kind": "S",
   "priority": "○",
   "file": "figures/a03-typical-repeat.png",
-  "caption": "Figure 3.4 — The six sampling settings on two measures: how typical the text is under the model, from 0.82 to 6.71 bits per token, and how repetitive it is, from 22.41 percent of 4-grams repeated down to 0.22 percent. Greedy gives 1 different story of 64.",
+  "caption": "Figure 3.5 — The six sampling settings on two measures: how typical the text is under the model, from 0.82 to 6.71 bits per token, and how repetitive it is, from 22.41 percent of 4-grams repeated down to 0.22 percent. Greedy gives 1 different story of 64.",
   "alt": "A scatter plot of six points, one per sampling setting, with bits per token on the horizontal axis and repeated 4-grams on the vertical axis. Greedy is at the top left; temperature 1.5 is at the bottom right; each point is labelled with how many of its 64 samples differ.",
   "numbers": [
    {
@@ -813,7 +871,7 @@
   "kind": "S",
   "priority": "○",
   "file": "figures/a03-bpc.png",
-  "caption": "Figure 3.5 — Bits per character on the same 300 validation stories: unigram 2.30, bigram 1.32, GPT-2 small 0.82, our GPT 0.54.",
+  "caption": "Figure 3.6 — Bits per character on the same 300 validation stories: unigram 2.30, bigram 1.32, GPT-2 small 0.82, our GPT 0.54.",
   "alt": "A horizontal bar chart of four bars: unigram, bigram, GPT-2 small and our GPT, shortest for our GPT, each labelled with its bits per character.",
   "numbers": [
    {
@@ -850,6 +908,32 @@
   "licence": null
  },
  {
+  "id": "a03-sampling-keeps",
+  "session": "A03",
+  "anchor": "Top-k** keeps only the 40 most likely tokens",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/a03-sampling-keeps.png",
+  "caption": "Figure 3.4 — What each setting does to one real next-token distribution from the saved checkpoint: the model's probabilities for the token after \"Once upon a time, there was a\", most likely first. Top row: temperature 0.5, 1.0 and 1.5 keep every token but reshape the distribution. Bottom row: greedy keeps only the top token, top-k 40 keeps the 40 most likely, top-p 0.9 keeps the smallest set whose probabilities add to 0.9 (green: kept, grey: removed; log scale, so the long tail is visible).",
+  "alt": "Six bar charts of the same next-token distribution: three with temperature 0.5, 1.0 and 1.5 reshaping the bars, and three showing on a log scale which bars greedy, top-k 40 and top-p 0.9 keep in green and remove in grey.",
+  "numbers": [
+   {
+    "value": 40,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.9,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
   "id": "a04-layout-masks",
   "session": "A04",
   "anchor": "## 1. What each layout can read",
@@ -870,7 +954,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/a04-passes.png",
-  "caption": "Figure 4.2 — Using the right-hand context to fill a blank. BERT reads the sentence with one [MASK] and gives a probability to every candidate word in one pass. GPT-2 has to score a complete sentence for each candidate, so it needs one pass per candidate.",
+  "caption": "Figure 4.3 — Using the right-hand context to fill a blank. BERT reads the sentence with one [MASK] and gives a probability to every candidate word in one pass. GPT-2 has to score a complete sentence for each candidate, so it needs one pass per candidate.",
   "alt": "Two panels. Left: one sentence with a mask goes through one forward pass and gives all five candidate words. Right: five complete sentences, one per candidate, each needing its own pass.",
   "numbers": [],
   "licence": null
@@ -883,7 +967,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a04-masking-recipe.png",
-  "caption": "Figure 4.3 — BERT's masking recipe with what was measured on each branch. Of 11,227 chosen positions, 8995 were masked and BERT recovered 0.704 of them; 1112 were replaced by a random word and BERT recovered 0.549; 1120 were left unchanged and BERT recovered 0.993. The overall accuracy was 0.717.",
+  "caption": "Figure 4.4 — BERT's masking recipe with what was measured on each branch. Of 11,227 chosen positions, 8995 were masked and BERT recovered 0.704 of them; 1112 were replaced by a random word and BERT recovered 0.549; 1120 were left unchanged and BERT recovered 0.993. The overall accuracy was 0.717.",
   "alt": "A tree. All tokens lead to the chosen 15 percent, which splits into three boxes: replaced with the mask token, replaced with a random word, and left unchanged, each with its token count and the share BERT recovers.",
   "numbers": [
    {
@@ -954,6 +1038,58 @@
    },
    {
     "value": "600",
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "a04-bert-blank-halves",
+  "session": "A04",
+  "anchor": "With the whole sentence, BERT puts 0.419 on `dead`",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/a04-bert-blank-halves.png",
+  "caption": "Figure 4.2 — BERT's probabilities for the blank, with and without the second half of the sentence. With \"…, so the robot stopped working\" after the blank (left), `dead` takes 0.419 and the next words are far behind. With the sentence ending at the blank (right), the probability is spread over several plausible words and `dead` falls to 0.041.",
+  "alt": "Two horizontal bar charts of BERT's top eight words for the blank in The battery is blank: with the whole sentence dead dominates, and without the right-hand half the bars are small and similar.",
+  "numbers": [
+   {
+    "value": 0.419,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.041,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 0.055,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "a04-alignment-outlined",
+  "session": "A04",
+  "anchor": "T5 produces *La batterie est vide",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/a04-alignment-outlined.png",
+  "caption": "Figure 4.5 — The hand-written word alignment outlined on T5's cross-attention (decoder layer 2). Each outlined cell pairs a French token with the English token it translates; in this layer the darkest cell of each row falls inside the outline for all 12 of the 12 tokens.",
+  "alt": "A heatmap of cross-attention from French tokens to English tokens with a red outline around the cell of each hand-aligned pair, most outlines on the darkest cell of their row.",
+  "numbers": [
+   {
+    "value": 12,
     "source": {
      "markdown": true
     }
@@ -1556,7 +1692,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a06-reward-model.png",
-  "caption": "Figure 6.3 — A reward model. The prompt and an answer go through the language model; the vector at the last token (896 numbers for the 0.5B model) goes through a linear layer to give one score. Trained on pairs, it is pushed to score the preferred answer above the rejected one.",
+  "caption": "Figure 6.4 — A reward model. The prompt and an answer go through the language model; the vector at the last token (896 numbers for the 0.5B model) goes through a linear layer to give one score. Trained on pairs, it is pushed to score the preferred answer above the rejected one.",
   "alt": "A left-to-right chain from prompt and answer through a frozen language model, the last token's vector and a linear layer to a score. Below it, the scores of a preferred and a rejected answer with a greater-than sign between them.",
   "numbers": [
    {
@@ -1576,7 +1712,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/a06-best-of-n.png",
-  "caption": "Figure 6.4 — Best-of-N as a procedure. For each prompt, 64 samples are scored by the proxy reward model and the highest is kept; a second reward model, which the proxy was not trained against, then judges the pick.",
+  "caption": "Figure 6.5 — Best-of-N as a procedure. For each prompt, 64 samples are scored by the proxy reward model and the highest is kept; a second reward model, which the proxy was not trained against, then judges the pick.",
   "alt": "A left-to-right flow of five boxes: one prompt, 64 samples, scoring by the proxy reward model, keeping the highest, and judging the pick with the gold reward model.",
   "numbers": [
    {
@@ -1608,7 +1744,7 @@
   "kind": "S",
   "priority": "○",
   "file": "figures/a06-cut-off.png",
-  "caption": "Figure 6.5 — Gold reward of samples that stopped at the 200-token limit (-1.09, 41% of samples) against those that finished (0.26).",
+  "caption": "Figure 6.6 — Gold reward of samples that stopped at the 200-token limit (-1.09, 41% of samples) against those that finished (0.26).",
   "alt": "Two horizontal bars from a zero line: samples cut off at the limit are well below zero, and samples that finished are slightly above it.",
   "numbers": [
    {
@@ -1646,7 +1782,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a06-dpo.png",
-  "caption": "Figure 6.6 — The DPO signal for one pair. The policy that is being trained and a frozen copy of the starting model each rate the preferred and the rejected answer; the margin is how much more the policy raises the preferred answer than the rejected one, relative to the reference, and the loss pushes it up.",
+  "caption": "Figure 6.7 — The DPO signal for one pair. The policy that is being trained and a frozen copy of the starting model each rate the preferred and the rejected answer; the margin is how much more the policy raises the preferred answer than the rejected one, relative to the reference, and the loss pushes it up.",
   "alt": "Two rows, preferred and rejected answer, each comparing the policy with the frozen reference as a log-probability ratio, and below them a box for the margin, the difference of the two ratios.",
   "numbers": [],
   "licence": null
@@ -1659,7 +1795,7 @@
   "kind": "S",
   "priority": "○",
   "file": "figures/a06-vote-vs-checker.png",
-  "caption": "Figure 6.7 — One real problem from the step-by-step run, 56 × 65 = 3640. 2 of the 8 samples are right, but the most common answer is 3460 and so a majority vote is wrong, while a checker that can test each answer finds the right one.",
+  "caption": "Figure 6.8 — One real problem from the step-by-step run, 56 × 65 = 3640. 2 of the 8 samples are right, but the most common answer is 3460 and so a majority vote is wrong, while a checker that can test each answer finds the right one.",
   "alt": "Eight boxes with the eight sampled answers, the correct ones outlined in green, and below them two boxes: the majority vote picks the wrong most common answer, the checker finds the correct one.",
   "numbers": [
    {
@@ -1696,6 +1832,32 @@
   "licence": null
  },
  {
+  "id": "a06-loss-tokens",
+  "session": "A06",
+  "anchor": "Each turn sits between `<|im_start|>` and `<|im_end|>` markers",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/a06-loss-tokens.png",
+  "caption": "Figure 6.3 — The 40 tokens of the training example \"What is the capital of France?\" / \"Paris.\" after the chat template. Only the last 4 (green) carry loss in supervised fine-tuning: the answer, the end-of-turn marker and the newline after it. The other 36 tokens, including the default system message the template adds, are context.",
+  "alt": "Forty token chips in wrapped rows: the grey and violet context tokens of the system message and the question, then four green chips for Paris, a full stop, the end-of-turn marker and a newline.",
+  "numbers": [
+   {
+    "value": 40,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 4,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
   "id": "a07-lora-shapes",
   "session": "A07",
   "anchor": "The class below wraps one linear layer this way",
@@ -1703,7 +1865,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a07-lora-shapes.png",
-  "caption": "Figure 7.1 — LoRA on one 896 × 896 attention matrix. The frozen W is left alone; two thin matrices B and A are trained, and their product, scaled by α/r, is added to W. B starts at zero, and after training the sum can be merged back into one matrix of the original shape.",
+  "caption": "Figure 7.3 — LoRA on one 896 × 896 attention matrix. The frozen W is left alone; two thin matrices B and A are trained, and their product, scaled by α/r, is added to W. B starts at zero, and after training the sum can be merged back into one matrix of the original shape.",
   "alt": "A large square labelled W frozen, plus a tall thin matrix B times a wide flat matrix A, equal to a merged matrix with the same shape as W.",
   "numbers": [
    {
@@ -1767,7 +1929,7 @@
   "kind": "S",
   "priority": "★",
   "file": "figures/a07-results-grid.png",
-  "caption": "Figure 7.3 — Every method on every test set. The shading shows accuracy (darker is higher). All the LoRA ranks read the training layouts and layout 4 perfectly and fail on layout 5; only fine-tuning the last four blocks reads some of layout 5. The orange column is the loss on general answers, the cost in forgetting.",
+  "caption": "Figure 7.4 — Every method on every test set. The shading shows accuracy (darker is higher). All the LoRA ranks read the training layouts and layout 4 perfectly and fail on layout 5; only fine-tuning the last four blocks reads some of layout 5. The orange column is the loss on general answers, the cost in forgetting.",
   "alt": "A grid with seven rows (no training, one example in the prompt, LoRA at ranks 1, 4, 8 and 32, and full fine-tuning of the last four blocks) and columns for accuracy on training layouts, layout 4, layout 5, loss on general answers and trainable parameters.",
   "numbers": [
    {
@@ -1817,7 +1979,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a07-storage.png",
-  "caption": "Figure 7.4 — Storage, drawn to scale. The rank-8 adapter for all 24 blocks takes 4.4 MB against 988 MB for the model, so one copy of the base model can serve many tasks, each with its own small adapter file.",
+  "caption": "Figure 7.5 — Storage, drawn to scale. The rank-8 adapter for all 24 blocks takes 4.4 MB against 988 MB for the model, so one copy of the base model can serve many tasks, each with its own small adapter file.",
   "alt": "A long bar for the 988 MB base model and a barely visible sliver for the 4.4 MB adapter, beside a base model connected to three adapter files.",
   "numbers": [
    {
@@ -1836,6 +1998,32 @@
   "licence": null
  },
  {
+  "id": "a07-six-layouts",
+  "session": "A07",
+  "anchor": "Before training anything, we ask the instruct model as it is",
+  "position": "before",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/a07-six-layouts.png",
+  "caption": "Figure 7.1 — The six layouts of the log line, one freshly generated example each, with every field coloured and labelled by the JSON key it must become. The same five values appear in a different order and different punctuation in each layout; layouts 4 and 5 (right-hand label) are never used for training.",
+  "alt": "Six rows of robot log lines, one per layout, with the robot, battery, charger, status and time values highlighted in five colours and labelled with their JSON keys, in a different order in each row.",
+  "numbers": [
+   {
+    "value": 2000,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 200,
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
   "id": "a08-paraphrase",
   "session": "A08",
   "anchor": "The pattern matches how the two work.",
@@ -1843,7 +2031,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a08-paraphrase.png",
-  "caption": "Figure 8.1 — The same question and passage seen by the two retrievers. The question says \"weights\" and the passage says \"parameters\", so TF-IDF finds no shared word and ranks the passage 13th; MiniLM compares meaning and ranks it 3rd.",
+  "caption": "Figure 8.3 — The same question and passage seen by the two retrievers. The question says \"weights\" and the passage says \"parameters\", so TF-IDF finds no shared word and ranks the passage 13th; MiniLM compares meaning and ranks it 3rd.",
   "alt": "Two panels. TF-IDF: the words 'weights' and 'parameters' do not match, so the passage is ranked 13th. MiniLM: the question and passage vectors are close, so the passage is ranked 3rd.",
   "numbers": [
    {
@@ -1895,7 +2083,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a08-where-questions-went.png",
-  "caption": "Figure 8.3 — Where the 36 questions went. The answer passage was in the top 3 for 28; the model got 22 of those right. For the other 8 it got 1 right. Two stages fail separately: retrieval, then reading.",
+  "caption": "Figure 8.4 — Where the 36 questions went. The answer passage was in the top 3 for 28; the model got 22 of those right. For the other 8 it got 1 right. Two stages fail separately: retrieval, then reading.",
   "alt": "A bar of 36 questions split into 28 with the answer passage retrieved and 8 without; below, how many of each group were answered right (22 and 1) and wrong.",
   "numbers": [
    {
@@ -1939,7 +2127,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a08-agent-loop.png",
-  "caption": "Figure 8.4 — The agent loop in Qwen's tool-calling format. The model either writes a final answer or a <tool_call>; the program checks the call against the allowlist, runs the tool, and returns the result as a message with the role \"tool\".",
+  "caption": "Figure 8.5 — The agent loop in Qwen's tool-calling format. The model either writes a final answer or a <tool_call>; the program checks the call against the allowlist, runs the tool, and returns the result as a message with the role \"tool\".",
   "alt": "Cycle diagram: the model writes a tool call, the program runs the tool, the result returns as a tool message and the model reads it again, until the model gives a final answer.",
   "numbers": [],
   "licence": null
@@ -1952,7 +2140,7 @@
   "kind": "S",
   "priority": "★",
   "file": "figures/a08-task-outcomes.png",
-  "caption": "Figure 8.5 — Where the 20 agent tasks went: 6 right, 4 answered from memory without searching, 6 where the search returned passages without the needed numbers, and 4 where the right numbers were in front of the model and the answer was still wrong.",
+  "caption": "Figure 8.6 — Where the 20 agent tasks went: 6 right, 4 answered from memory without searching, 6 where the search returned passages without the needed numbers, and 4 where the right numbers were in front of the model and the answer was still wrong.",
   "alt": "A grid of 20 squares coloured by outcome: 6 right, 4 answered without searching, 6 with the needed numbers not retrieved, 4 with numbers retrieved but a wrong answer.",
   "numbers": [
    {
@@ -1990,7 +2178,7 @@
   "kind": "S",
   "priority": "○",
   "file": "figures/a08-trace.png",
-  "caption": "Figure 8.6 — One failing trace. The search returns passages about shifted digits; the model builds its answer from a number in them (25.8, an accuracy drop) and does not search again.",
+  "caption": "Figure 8.7 — One failing trace. The search returns passages about shifted digits; the model builds its answer from a number in them (25.8, an accuracy drop) and does not search again.",
   "alt": "Three steps in a row: a search for the two networks' parameters, two passages returned about shifted digits, and a wrong answer built from the number 25.8.",
   "numbers": [
    {
@@ -2010,7 +2198,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a08-injection-halves.png",
-  "caption": "Figure 8.7 — The two halves of the attack. Calling send_email would have been blocked by the allowlist, but no task tried it. Answering 0 needs no tool, so nothing blocks it, and 8 tasks did it.",
+  "caption": "Figure 8.8 — The two halves of the attack. Calling send_email would have been blocked by the allowlist, but no task tried it. Answering 0 needs no tool, so nothing blocks it, and 8 tasks did it.",
   "alt": "Diagram: a planted passage tells the model to call a tool and to answer 0. The tool call would be stopped by the allowlist; the answer 0 passes through and was given by 8 tasks.",
   "numbers": [
    {
@@ -2041,6 +2229,38 @@
     "value": "2",
     "source": {
      "cell": 10
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "a08-one-cell-three-cuts",
+  "session": "A08",
+  "anchor": "Smaller passages mean more of them: 448 at 60 words",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/a08-one-cell-three-cuts.png",
+  "caption": "Figure 8.1 — One text cell of the basic course (the longest one) cut at the three passage sizes. Each block is one passage, its width its length in words; sentences are never split, and passages never cross the cell's end. Smaller sizes give more, shorter passages from the same text.",
+  "alt": "Three horizontal strips of equal total length, split into passages: many narrow blocks for 60 words, a few wider blocks for 120, and only one or two for 250.",
+  "numbers": [
+   {
+    "value": 448,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 243,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 157,
+    "source": {
+     "markdown": true
     }
    }
   ],
@@ -2360,7 +2580,7 @@
   "kind": "S",
   "priority": "★",
   "file": "figures/a09-attention-memory.png",
-  "caption": "Figure 9.8 — Extra memory for one attention layer, written out against fused, by sequence length on log axes. The naive version grows with the square of the length, from 14.875 MiB at 512 tokens to 3648 MiB at 8192; the fused version stays at 14.438 MiB at 8192 tokens.",
+  "caption": "Figure 9.9 — Extra memory for one attention layer, written out against fused, by sequence length on log axes. The naive version grows with the square of the length, from 14.875 MiB at 512 tokens to 3648 MiB at 8192; the fused version stays at 14.438 MiB at 8192 tokens.",
   "alt": "A log-log line chart with two lines over sequence lengths from 512 to 8,192. The naive line climbs steeply from about 15 to 3,648 MiB; the fused line stays near the bottom, reaching 14 MiB.",
   "numbers": [
    {
@@ -2404,7 +2624,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/a09-flash-tiles.png",
-  "caption": "Figure 9.9 — The idea behind fused attention. The full table of scores is never written out; a block of queries is compared with a block of keys and values in fast on-chip memory, and the result is accumulated block by block.",
+  "caption": "Figure 9.8 — The idea behind fused attention. The full table of scores is never written out; a block of queries is compared with a block of keys and values in fast on-chip memory, and the result is accumulated block by block.",
   "alt": "A grid of squares standing for the scores of every pair of positions, with two highlighted squares linked to a box labelled on-chip memory, which holds one block at a time.",
   "numbers": [],
   "licence": null
@@ -2417,7 +2637,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/a09-speculative.png",
-  "caption": "Figure 9.10 — One speculative round, drawn to the measured step times. The draft proposes 4 tokens at 72 ms each, and the 1.5B model checks them in one pass of about 85 ms. The round pays off only if it yields 4.4 tokens, and the most it can yield is 5; the measured average is 2.59 tokens per target pass.",
+  "caption": "Figure 9.11 — One speculative round, drawn to the measured step times. The draft proposes 4 tokens at 72 ms each, and the 1.5B model checks them in one pass of about 85 ms. The round pays off only if it yields 4.4 tokens, and the most it can yield is 5; the measured average is 2.59 tokens per target pass.",
   "alt": "Four short blue boxes for the draft steps followed by one violet box for the target's check, drawn to scale of their durations, with a note that break-even needs 4.4 tokens a round against a measured 2.59.",
   "numbers": [
    {
@@ -2452,6 +2672,38 @@
    },
    {
     "value": "4",
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "a09-int4-levels",
+  "session": "A09",
+  "anchor": "The reason is outliers. In block 1's MLP down projection",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/a09-int4-levels.png",
+  "caption": "Figure 9.10 — The 16 int4 levels (vertical lines) laid over real weights from block 1's MLP down projection. Left: one scale for the whole matrix, set by its single largest weight, so the steps are wide and most ordinary weights land on the zero level. Middle: the scale of one row, set by that row's largest weight. Right: one scale for one group of 128 weights. Each panel is zoomed to its own range of levels. The share of weights that round to exactly zero is printed above each panel.",
+  "alt": "Three histograms of weight values with 16 evenly spaced vertical lines each: very wide spacing with almost all weights between the two middle lines, narrower spacing for one row, and the narrowest spacing for one group of 128 weights.",
+  "numbers": [
+   {
+    "value": 0.305,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 128,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 16,
     "source": {
      "markdown": true
     }
@@ -2883,7 +3135,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/a11-flawed-report.png",
-  "caption": "Figure 11.5 — The report as submitted, set out as a page to mark up. Find everything that stops you believing the conclusion, and say what experiment would fix each problem.",
+  "caption": "Figure 11.6 — The report as submitted, set out as a page to mark up. Find everything that stops you believing the conclusion, and say what experiment would fix each problem.",
   "alt": "A boxed page headed Report, listing seven statements: a 2% improvement, each model trained once, twice as many steps for the variant, a learning rate tuned by test loss, one test batch, the best of ten ideas, and the conclusion.",
   "numbers": [
    {
@@ -2894,6 +3146,38 @@
    },
    {
     "value": "64",
+    "source": {
+     "markdown": true
+    }
+   }
+  ],
+  "licence": null
+ },
+ {
+  "id": "a11-false-discovery-vs-tweaks",
+  "session": "A11",
+  "anchor": "A single test gives p < 0.05 in 4.9% of cases, as it should.",
+  "position": "after",
+  "kind": "R",
+  "priority": "★",
+  "file": "figures/a11-false-discovery-vs-tweaks.png",
+  "caption": "Figure 11.5 — The share of studies that report a false discovery as the number of tweaks tried grows from 1 to 20, in 1,000 simulated studies where no tweak does anything. Without a correction (orange) it climbs from 4% for one tweak to 29% at twenty (the run above found 28%: this is a separate draw of the same simulation). With the Bonferroni correction, p < 0.05 divided by the number of tweaks (green), it stays under the dotted 5% line and ends at 2%.",
+  "alt": "Two curves against the number of tweaks tried from 1 to 20: the uncorrected share of studies with a significant tweak rising from about 5 percent to 28 percent, and the Bonferroni-corrected share staying flat near or below 5 percent.",
+  "numbers": [
+   {
+    "value": 28,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 1000,
+    "source": {
+     "markdown": true
+    }
+   },
+   {
+    "value": 20,
     "source": {
      "markdown": true
     }

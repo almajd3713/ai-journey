@@ -1,0 +1,31 @@
+# Checks only; nothing is published from here (the site is served by Vercel at journey.etclub.online).
+# Fails when the site's course text is out of date with the notebooks or a marker no longer matches.
+name: Content check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Check content against the notebooks
+        run: |
+          python -I tools/extract_content.py
+          git diff --exit-code content/courses || (echo "content/courses is out of date: run tools/extract_content.py and commit" && exit 1)
+          python -I tools/check_markers.py
+          python -I tools/collect_site_data.py
+          git diff --exit-code content/extras.json public/explorables || (echo 'site data is out of date: run tools/collect_site_data.py and commit' && exit 1)

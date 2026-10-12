@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { STATIONS, STATION_BY_ID } from "./lib/content";
+import { STATIONS, STATION_BY_ID, SHOW_DOWNLOADS } from "./lib/content";
 import { END, dive, enterDive, exitDive, onDive } from "./lib/dive";
 import { loadTerrain, type Terrain } from "./lib/terrain";
 import { canWebGL2, choseThreeD, clearOldTheme, initialMode, saveMode, type Mode } from "./lib/theme";
@@ -8,8 +8,8 @@ import { Dive } from "./ui/Dive";
 import { Gauge } from "./ui/Gauge";
 import { Header } from "./ui/Header";
 import { Sprite } from "./ui/Icon";
+import { Glossary } from "./ui/Glossary";
 import { Kit } from "./ui/Kit";
-import { SHOW_DOWNLOADS } from "./lib/features";
 import { LearnerPanel } from "./ui/Learner";
 import { Method } from "./ui/Method";
 import { Footer, Guides, Hero } from "./ui/Sections";
@@ -107,6 +107,7 @@ export default function App() {
       <main id="main">
         <Hero T={T} learner={T ? <LearnerPanel T={T} /> : null} />
         <Kit />
+        <Glossary />
         <Guides />
         <Method T={T} />
       </main>

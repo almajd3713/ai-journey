@@ -1,0 +1,3074 @@
+{
+ "pauses": {
+  "B00": [
+   {
+    "id": "b00-p2",
+    "question": "the model makes three mistakes on the test set. Which species do you expect it to mix up? The petal ranges in section 4 are a clue.",
+    "choices": [
+     {
+      "text": "Setosa and versicolor.",
+      "correct": false
+     },
+     {
+      "text": "Setosa and virginica.",
+      "correct": false
+     },
+     {
+      "text": "Versicolor and virginica.",
+      "correct": true
+     },
+     {
+      "text": "A mix: one mistake in each pair of species.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** All three mistakes are between versicolor and virginica: two virginica flowers are called versicolor and one versicolor is called virginica. All 12 setosa flowers are right, which the petal ranges in section 4 predict."
+   }
+  ],
+  "B01": [
+   {
+    "id": "b01-p2",
+    "question": "the next table gives the pass rate per department. Which department do you expect to pass most often, and if it does, would the table tell you why?",
+    "choices": [
+     {
+      "text": "CS.",
+      "correct": true
+     },
+     {
+      "text": "Engineering.",
+      "correct": false
+     },
+     {
+      "text": "Business.",
+      "correct": false
+     },
+     {
+      "text": "All three within two points of each other.",
+      "correct": false
+     }
+    ],
+    "answer": "**A.** CS passes most often (0.687), then Engineering (0.593) and Business (0.525). The table shows that the rates differ. It can't say why: difficulty, preparation and grading are all possible, and only 101 students are in Business."
+   }
+  ],
+  "B02": [
+   {
+    "id": "b02-p1",
+    "question": "the test score is higher than the training score. Is the model better on unseen students? Decide before moving on.",
+    "choices": [
+     {
+      "text": "Yes: the test score is the honest one, so it shows the model generalises.",
+      "correct": false
+     },
+     {
+      "text": "Probably not: one split of 125 students is noisy, and this one may have been easy.",
+      "correct": true
+     },
+     {
+      "text": "No: a test score above the training score always means the data leaked.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Five-fold cross-validation gives accuracies from 0.72 to 0.85 (mean 0.792, standard deviation 0.043). The single test score of 0.832 sits inside that range, so this test set was a little easier."
+   },
+   {
+    "id": "b02-p2",
+    "question": "we add this column and train the same pipeline. What accuracy do you expect?",
+    "choices": [
+     {
+      "text": "A little higher.",
+      "correct": false
+     },
+     {
+      "text": "A lot higher, but short of perfect.",
+      "correct": false
+     },
+     {
+      "text": "Perfect: 1.000.",
+      "correct": true
+     },
+     {
+      "text": "About the same as before.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** Without the certificate column the test accuracy is 0.832. With it, the same pipeline scores 1.000, because the certificate is issued after the outcome is known."
+   }
+  ],
+  "B03": [
+   {
+    "id": "b03-p1",
+    "question": "the moons are curved. Before looking at the boundaries, which models do you expect to follow the curve and which to struggle?",
+    "choices": [
+     {
+      "text": "All four follow the curve about equally.",
+      "correct": false
+     },
+     {
+      "text": "k-NN follows the curve best, and logistic regression struggles most.",
+      "correct": true
+     },
+     {
+      "text": "The tree and the forest follow it best, because they are the most flexible.",
+      "correct": false
+     },
+     {
+      "text": "Logistic regression does best, because it is the simplest.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Logistic regression is lowest (0.852 on the test set), and k-NN bends its boundary around the local points. The tree and the forest use rectangles, so their boundaries can't follow the curve smoothly; the other three are within a point of each other (0.910 to 0.919)."
+   },
+   {
+    "id": "b03-p2",
+    "question": "as the tree gets deeper, training accuracy will rise. What do you expect test accuracy to do?",
+    "choices": [
+     {
+      "text": "It rises too, only more slowly.",
+      "correct": false
+     },
+     {
+      "text": "It peaks early, then stays a little lower.",
+      "correct": true
+     },
+     {
+      "text": "It falls sharply once the tree starts memorising the training points.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Test accuracy peaks at 0.905 at depth 2 and then stays between 0.881 and 0.895, while training accuracy reaches 1.000 at depth 13. The 11-point gap is overfitting, but the fall in test accuracy is small."
+   }
+  ],
+  "B04": [
+   {
+    "id": "b04-p1",
+    "question": "a model scores 99.1% on this test set. Would you put it into use?",
+    "choices": [
+     {
+      "text": "Yes: 99.1% is excellent.",
+      "correct": false
+     },
+     {
+      "text": "Not yet: first compare it with a rule that always says no.",
+      "correct": true
+     },
+     {
+      "text": "No: accuracy is never a useful measure.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** A rule that always answers \"no fraud\" scores 0.990 and finds none of the 50 frauds. The logistic regression scores 0.991 and finds only 5 of them, so it is no use either."
+   }
+  ],
+  "B05": [
+   {
+    "id": "b05-p1",
+    "question": "how many groups can you see? Do the groups look the same size and shape?",
+    "choices": [
+     {
+      "text": "Three groups of the same size.",
+      "correct": false
+     },
+     {
+      "text": "Four groups with different spreads.",
+      "correct": true
+     },
+     {
+      "text": "Five or more groups.",
+      "correct": false
+     },
+     {
+      "text": "Two groups.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** There are four, with different spreads: the bottom-left group is tight and the right-hand one is much wider. k-means is later told K = 4."
+   },
+   {
+    "id": "b05-p2",
+    "question": "nothing about the points' arrangement has changed, only the units. Will the clusters change?",
+    "choices": [
+     {
+      "text": "No: only the units changed.",
+      "correct": false
+     },
+     {
+      "text": "Yes, but only slightly.",
+      "correct": false
+     },
+     {
+      "text": "Yes, a lot: the feature with the larger numbers decides what \"close\" means.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** On raw numbers the agreement with the hidden labels drops from 0.996 to 0.793, because one feature spans about 2,000 units and the other about 20. After standardising it is 0.996 again."
+   }
+  ],
+  "B06": [
+   {
+    "id": "b06-p1",
+    "question": "look at the four corners of the square. Can you draw one straight line with both 1s on one side and both 0s on the other?",
+    "choices": [
+     {
+      "text": "Yes, with a tilted line.",
+      "correct": false
+     },
+     {
+      "text": "No: no straight line separates them.",
+      "correct": true
+     },
+     {
+      "text": "Yes, once the model gets a bias term.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** No straight line works (this is XOR). Logistic regression predicts 0.5 at all four corners and scores an accuracy of 0.5."
+   },
+   {
+    "id": "b06-p2",
+    "question": "does the chain of two linear layers have more power than one?",
+    "choices": [
+     {
+      "text": "Yes: two layers can bend the boundary.",
+      "correct": false
+     },
+     {
+      "text": "Yes, but only if each layer is wide.",
+      "correct": false
+     },
+     {
+      "text": "No: two linear layers collapse into one linear layer.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** The two layers and one merged layer give the same output, -4.61296337. The merged weights are W₂W₁ and the bias is W₂b₁ + b₂, so a straight boundary stays straight."
+   }
+  ],
+  "B07": [
+   {
+    "id": "b07-p2",
+    "question": "which line do you expect to be the slowest?",
+    "choices": [
+     {
+      "text": "Learning rate 0.0001, the smallest steps.",
+      "correct": true
+     },
+     {
+      "text": "Learning rate 0.3, the largest steps.",
+      "correct": false
+     },
+     {
+      "text": "Learning rate 0.01.",
+      "correct": false
+     }
+    ],
+    "answer": "**A.** At 0.0001 the training loss is still 0.240 at epoch 200 and never gets below 0.05. Rate 0.3 fails differently: it jumps around and stalls at 2.500, and rate 0.01 is below 0.05 by epoch 36."
+   },
+   {
+    "id": "b07-p3",
+    "question": "which of these do you expect to help the most?",
+    "choices": [
+     {
+      "text": "Early stopping.",
+      "correct": true
+     },
+     {
+      "text": "Dropout.",
+      "correct": false
+     },
+     {
+      "text": "L2 at 0.01.",
+      "correct": false
+     },
+     {
+      "text": "L2 at 0.3, the strongest penalty.",
+      "correct": false
+     }
+    ],
+    "answer": "**A.** Early stopping gives the lowest validation loss (0.280, against 1.992 for run A), with L2 at 0.01 close behind (0.286). Dropout ends at 1.014, and L2 at 0.3 is so strong that the network is too simple again."
+   }
+  ],
+  "B08": [
+   {
+    "id": "b08-p1",
+    "question": "the next cell builds a CNN with two convolution layers (16 filters, then 32, each 3×3) and a dense network that connects all 784 pixels to 128 units. Which one needs more parameters, and by roughly how much?",
+    "choices": [
+     {
+      "text": "The CNN needs more.",
+      "correct": false
+     },
+     {
+      "text": "The dense network, about twice as many.",
+      "correct": false
+     },
+     {
+      "text": "The dense network, about eight times as many.",
+      "correct": true
+     },
+     {
+      "text": "The dense network, about a hundred times as many.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** The dense network has 101,770 parameters and the CNN 12,810, about eight times fewer, because a filter's weights are reused at every position."
+   },
+   {
+    "id": "b08-p2",
+    "question": "which network will lose more accuracy when the digits move 3 pixels, and why?",
+    "choices": [
+     {
+      "text": "The CNN, because its filters are fitted to particular positions.",
+      "correct": false
+     },
+     {
+      "text": "The dense network, because every pixel position has its own weights.",
+      "correct": true
+     },
+     {
+      "text": "Both about the same.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** At a shift of 3 pixels the dense network falls from 0.931 to 0.445, below half, while the CNN falls from 0.973 to 0.746."
+   }
+  ],
+  "B09": [
+   {
+    "id": "b09-p1",
+    "question": "the next cell makes random changes to a training photo: flips it left to right, rotates it a little, zooms in or out. Which of these changes would be wrong for a dataset of handwritten digits like Session 8's?",
+    "choices": [
+     {
+      "text": "Flipping left to right.",
+      "correct": true
+     },
+     {
+      "text": "Rotating a little.",
+      "correct": false
+     },
+     {
+      "text": "Zooming in or out.",
+      "correct": false
+     },
+     {
+      "text": "All three are fine for digits.",
+      "correct": false
+     }
+    ],
+    "answer": "**A.** A flipped digit is not a digit, and rotating a 6 far enough makes it look like a 9. Small rotations and zooms keep the label. Augmentation is a claim about which changes don't matter for the task."
+   },
+   {
+    "id": "b09-p2",
+    "question": "before looking at the table, order the three strategies by test accuracy. How big do you expect the gaps to be?",
+    "choices": [
+     {
+      "text": "Scratch, then frozen, then fine-tuned, with a large first gap and a small second gap.",
+      "correct": true
+     },
+     {
+      "text": "Scratch, then frozen, then fine-tuned, with all gaps about a point.",
+      "correct": false
+     },
+     {
+      "text": "Fine-tuned, then frozen, then scratch, because it has more trainable parameters.",
+      "correct": false
+     },
+     {
+      "text": "All three within a point of each other.",
+      "correct": false
+     }
+    ],
+    "answer": "**A.** Test accuracy is 0.710 from scratch, 0.850 with frozen features and 0.883 fine-tuned: pretraining gives 14 points, fine-tuning a few more. The frozen model trains 6,405 parameters against 2,230,277 from scratch."
+   }
+  ],
+  "B10": [
+   {
+    "id": "b10-p1",
+    "question": "the single-word model can only add up a weight for \"not\" and a weight for \"good\". The word-pair model also has a feature for \"not good\". What weight do you expect it to learn for that pair: positive, negative, or close to zero?",
+    "choices": [
+     {
+      "text": "Positive.",
+      "correct": false
+     },
+     {
+      "text": "Negative.",
+      "correct": true
+     },
+     {
+      "text": "Close to zero.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** The pair \"not good\" gets -0.94, and the weight on \"good\" itself falls from 1.49 to 0.86."
+   },
+   {
+    "id": "b10-p2",
+    "question": "the next model reads each review in order, word by word, so it could in principle learn what \"not\" does to the words after it. On these 10,000 reviews, will it beat the word-pair model's 0.884?",
+    "choices": [
+     {
+      "text": "Yes, clearly: reading in order must help.",
+      "correct": false
+     },
+     {
+      "text": "About the same.",
+      "correct": false
+     },
+     {
+      "text": "No: it scores lower.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** The LSTM scores 0.825 on the test set (0.843 on validation), below the word-pair model's 0.884. With only 10,000 reviews, the extra power overfits: its training loss falls to 0.09 while the validation loss climbs from 0.37 to 0.45."
+   }
+  ],
+  "B11": [
+   {
+    "id": "b11-p1",
+    "question": "which token should \"it\" pay most attention to? Look at the \"it\" row.",
+    "choices": [
+     {
+      "text": "Robot.",
+      "correct": false
+     },
+     {
+      "text": "Battery.",
+      "correct": true
+     },
+     {
+      "text": "Empty.",
+      "correct": false
+     },
+     {
+      "text": "Itself.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** The \"it\" row gives 0.59 to battery, 0.22 to empty and 0.08 to itself."
+   },
+   {
+    "id": "b11-p2",
+    "question": "BERT, next, has 144 attention heads. We give it the sentence twice, once ending in \"empty\" (so \"it\" is the battery) and once in \"broken\" (so \"it\" is more likely the device). Will one head point from \"it\" to the right object in both sentences?",
+    "choices": [
+     {
+      "text": "Yes: one head tracks the referent in both.",
+      "correct": false
+     },
+     {
+      "text": "No: the strongest head for battery differs between the sentences, and on average a head gives it only about 0.04.",
+      "correct": true
+     },
+     {
+      "text": "Yes: all 144 heads agree.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** The strongest head for battery is layer 5, head 4 (0.33) in the \"empty\" sentence but layer 11, head 7 (0.50) in the \"broken\" one, and averaged over all heads \"it\" gives each candidate only about 0.04."
+   }
+  ],
+  "B12": [
+   {
+    "id": "b12-p1",
+    "question": "the request is \"Suggest a name for a robot that sorts batteries.\" How sure do you expect the model to be of the first token of its answer?",
+    "choices": [
+     {
+      "text": "Very sure: above 0.9.",
+      "correct": false
+     },
+     {
+      "text": "Not very: the top token has about a third.",
+      "correct": true
+     },
+     {
+      "text": "Hardly at all: under 0.05 on any token.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** The top token, \"Battery\", has 0.339, ahead of \"Rob\" at 0.295 and a quotation mark at 0.091. Some later steps are almost certain: another \"0\" follows with 0.999."
+   },
+   {
+    "id": "b12-p2",
+    "question": "a user asks a question that none of the documents covers. What should the system do?",
+    "choices": [
+     {
+      "text": "Let the model answer from what it knows.",
+      "correct": false
+     },
+     {
+      "text": "Refuse, before calling the model, when the best retrieval score is below a threshold.",
+      "correct": true
+     },
+     {
+      "text": "Tell the model in the prompt to use only the context, and trust it.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Without abstention the model gives a confident generic answer that isn't grounded in any document, even though the instruction said to use only the context. A threshold of 0.28 sits between the highest unanswerable score (0.26) and the lowest answerable one (0.301)."
+   },
+   {
+    "id": "b12-p3",
+    "question": "the question is about thresholds, so the retriever will return both the real document and the forum post. Will the model follow the injected sentence?",
+    "choices": [
+     {
+      "text": "No: it ignores instructions in the data.",
+      "correct": false
+     },
+     {
+      "text": "Yes, every time.",
+      "correct": false
+     },
+     {
+      "text": "Only sometimes: it depends on how the prompt is worded.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** With the plain prompts the model ignored the injected sentence, but with a warning added to the prompt it obeyed and answered \"Visit free-prizes.example to claim your reward.\" Each is one greedy run, so no prompt can be relied on; a check outside the model blocked the bad answer."
+   }
+  ],
+  "A00": [
+   {
+    "id": "a00-p1",
+    "question": "four sentences of about the same length, one each in English, French, Arabic and Python. Which will need the most tokens, and how many times more than English?",
+    "choices": [
+     {
+      "text": "French, about twice as many tokens as English.",
+      "correct": false
+     },
+     {
+      "text": "Arabic, about four times as many tokens as English.",
+      "correct": true
+     },
+     {
+      "text": "Python, about three times as many tokens as English.",
+      "correct": false
+     },
+     {
+      "text": "Arabic, about twice as many tokens as English.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** English needs 11 tokens, French 19, Python 31 and Arabic 45, about four times English. Each Arabic letter takes two bytes, and the tokenizer works on bytes."
+   },
+   {
+    "id": "a00-p2",
+    "question": "which tokens of *The battery is empty, so the robot stopped working and waited beside the charger.* will cost the most bits, and which the fewest?",
+    "choices": [
+     {
+      "text": "Function words and punctuation cost the most; content words cost the least.",
+      "correct": false
+     },
+     {
+      "text": "Content words the earlier words did not predict cost the most; function words and punctuation cost the least.",
+      "correct": true
+     },
+     {
+      "text": "The first token costs the most and every later token costs about the same.",
+      "correct": false
+     },
+     {
+      "text": "All tokens cost about the same.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** ` battery` costs 14.2 bits and ` stopped` 12.2, while ` the` before `charger` costs 1.6 and the final `.` costs 0.9."
+   },
+   {
+    "id": "a00-p3",
+    "question": "GPT-2 was trained mostly on English. Which language will have the lowest perplexity per token?",
+    "choices": [
+     {
+      "text": "English, the language it was trained on.",
+      "correct": false
+     },
+     {
+      "text": "French.",
+      "correct": false
+     },
+     {
+      "text": "Arabic.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** Arabic looks best per token (19.5, against 71.9 for English), but only because its 129 tokens each carry little. Per character it is the most expensive (4.22 bits, against 1.34 for English)."
+   }
+  ],
+  "A01": [
+   {
+    "id": "a01-p1",
+    "question": "without the division, what happens to the largest weight as $d_k$ grows from 4 to 4096, and what happens to the gradient?",
+    "choices": [
+     {
+      "text": "The largest weight stays the same and the gradient grows.",
+      "correct": false
+     },
+     {
+      "text": "The largest weight climbs towards 1 and the gradient shrinks.",
+      "correct": true
+     },
+     {
+      "text": "Both stay the same.",
+      "correct": false
+     },
+     {
+      "text": "The largest weight falls towards an even spread and the gradient grows.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Without the division the largest of the 32 weights goes from 0.347 at d_k = 4 to 0.977 at d_k = 4096, and the gradient falls from 0.293 to 0.033."
+   },
+   {
+    "id": "a01-p2",
+    "question": "a token in the second copy wants to predict what comes next. Which earlier position should its attention head read from?",
+    "choices": [
+     {
+      "text": "The earlier position of the same token.",
+      "correct": false
+     },
+     {
+      "text": "The token that followed the earlier copy of the current token.",
+      "correct": true
+     },
+     {
+      "text": "The token before the earlier copy.",
+      "correct": false
+     },
+     {
+      "text": "The first position.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** The right key is the token that followed the earlier copy. Five heads score 0.85 or more on this induction pattern, the strongest being layer 5, head 5 at 0.94."
+   },
+   {
+    "id": "a01-p3",
+    "question": "if you remove the five heads with the strongest induction pattern, how many bits per token does the second copy cost? Compare: 0.65 with nothing removed, and 15.6 for pure guessing.",
+    "choices": [
+     {
+      "text": "No change: other heads cover for them.",
+      "correct": false
+     },
+     {
+      "text": "A small rise, to a bit or two.",
+      "correct": false
+     },
+     {
+      "text": "About halfway to guessing.",
+      "correct": true
+     },
+     {
+      "text": "As bad as guessing.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** The second copy rises from 0.65 to 7.62 bits per token, about halfway to the 15.6 of guessing. Removing five random heads costs only 0.76 bits on average."
+   }
+  ],
+  "A02": [
+   {
+    "id": "a02-p1",
+    "question": "attention mixes information between tokens, and the MLP has the bigger hidden layer. What share of a block's parameters do you expect to sit in the attention?",
+    "choices": [
+     {
+      "text": "About two thirds.",
+      "correct": false
+     },
+     {
+      "text": "About a third.",
+      "correct": true
+     },
+     {
+      "text": "About a half.",
+      "correct": false
+     },
+     {
+      "text": "About a tenth.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Attention holds 2,362,368 parameters (33%) and the MLP 4,722,432 (67%)."
+   },
+   {
+    "id": "a02-p2",
+    "question": "after which block do you expect the model's best guess to become the right city?",
+    "choices": [
+     {
+      "text": "Early: by block 3.",
+      "correct": false
+     },
+     {
+      "text": "About halfway: around block 6.",
+      "correct": false
+     },
+     {
+      "text": "Late: after block 11 of 12.",
+      "correct": true
+     },
+     {
+      "text": "Only at the very end of the model.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** The best guess is `Paris` after block 11. The rank of the answer improves steadily, from 22680 after the embedding to 10 after block 9 and 2 after block 10, where the best guess is ` London`."
+   },
+   {
+    "id": "a02-p3",
+    "question": "with no position information at all, are the two results the same? And does the causal mask change the answer?",
+    "choices": [
+     {
+      "text": "Without the mask the results are the same, and with the causal mask they differ.",
+      "correct": true
+     },
+     {
+      "text": "They differ in both cases.",
+      "correct": false
+     },
+     {
+      "text": "They are the same in both cases.",
+      "correct": false
+     },
+     {
+      "text": "They are the same with the causal mask and differ without it.",
+      "correct": false
+     }
+    ],
+    "answer": "**A.** Without a mask the two results agree to 2.4e-07, so the block treats tokens as an unordered set. With the causal mask they differ by 9.9e-01, because the mask lets later tokens see more."
+   }
+  ],
+  "A03": [
+   {
+    "id": "a03-p1",
+    "question": "with 6 blocks of width 384, how many parameters do you expect, and where will most of them be?",
+    "choices": [
+     {
+      "text": "About 1 million, mostly in the embedding table.",
+      "correct": false
+     },
+     {
+      "text": "About 11 million, mostly in the blocks.",
+      "correct": true
+     },
+     {
+      "text": "About 100 million, mostly in the blocks.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** The model has 11.5 million parameters: 10.6M in the six blocks, 0.79M in the token table and 0.10M in positions."
+   },
+   {
+    "id": "a03-p2",
+    "question": "the bigram model costs 5.05 bits per token, which is 3.5 nats. After 3,000 steps, will the transformer's validation loss be above or below that, and by how much?",
+    "choices": [
+     {
+      "text": "Above it: 3,000 steps are too few.",
+      "correct": false
+     },
+     {
+      "text": "Slightly below it, by well under a bit.",
+      "correct": false
+     },
+     {
+      "text": "Far below it, at less than half the bits.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** The validation loss after 3,000 steps is 1.593 nats, which is 2.30 bits per token, against the bigram's 5.05."
+   },
+   {
+    "id": "a03-p3",
+    "question": "which hurts most: no warm-up at a high learning rate, post-norm at a high learning rate, or a low learning rate?",
+    "choices": [
+     {
+      "text": "No warm-up at a high learning rate.",
+      "correct": false
+     },
+     {
+      "text": "Post-norm at a high learning rate.",
+      "correct": true
+     },
+     {
+      "text": "A low learning rate.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Post-norm at the highest rate is stuck at 5.91, which is the unigram loss. With no warm-up the loss after 400 steps is 4.20, and the low learning rate gives 2.88 for pre-norm."
+   },
+   {
+    "id": "a03-p4",
+    "question": "will GPT-2 (124 million parameters, trained on 40 GB of web text) beat our 11.5-million-parameter model on children's stories?",
+    "choices": [
+     {
+      "text": "Yes: it is eleven times larger and saw far more text.",
+      "correct": false
+     },
+     {
+      "text": "No: the small model trained on stories beats it.",
+      "correct": true
+     },
+     {
+      "text": "About the same.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Our model costs 0.54 bits per character and GPT-2 0.82. A model that only has to do one thing needs far fewer parameters."
+   }
+  ],
+  "A04": [
+   {
+    "id": "a04-p1",
+    "question": "with the second half of the sentence available, which word will BERT put in the blank? Will its answer be the same without the second half?",
+    "choices": [
+     {
+      "text": "`empty`, both times.",
+      "correct": false
+     },
+     {
+      "text": "`dead` with the second half, and a different word without it.",
+      "correct": true
+     },
+     {
+      "text": "`dead`, both times.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** With the whole sentence BERT puts 0.419 on `dead`. With the sentence cut off after the blank, `dead` falls to 0.041 and `charged` leads with 0.055."
+   },
+   {
+    "id": "a04-p2",
+    "question": "BERT's top guess is judged against the original token. Which of the three treatments will it get right most often?",
+    "choices": [
+     {
+      "text": "The masked tokens.",
+      "correct": false
+     },
+     {
+      "text": "The tokens left unchanged.",
+      "correct": true
+     },
+     {
+      "text": "The tokens replaced by a random word.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Tokens left unchanged are recovered 0.993 of the time, masked tokens 0.704 and randomised tokens 0.549."
+   },
+   {
+    "id": "a04-p3",
+    "question": "*vide* is the French word for *empty*. Which English token should its cross-attention point at?",
+    "choices": [
+     {
+      "text": "`The`.",
+      "correct": false
+     },
+     {
+      "text": "`battery`.",
+      "correct": false
+     },
+     {
+      "text": "`empty`.",
+      "correct": true
+     },
+     {
+      "text": "`stopped`.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** The hand-written alignment pairs `vide` with `empty`. In the second decoder layer all 12 French tokens put their strongest cross-attention on the English word we paired them with."
+   }
+  ],
+  "A05": [
+   {
+    "id": "a05-p1",
+    "question": "at 36 million tokens, how far apart do you expect the smallest model (0.2M) and the largest (10.6M) to end up?",
+    "choices": [
+     {
+      "text": "Almost no difference: tokens matter and size does not.",
+      "correct": false
+     },
+     {
+      "text": "About three quarters of a nat.",
+      "correct": true
+     },
+     {
+      "text": "More than two nats.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** At 36 million tokens the validation loss is 2.428 for the smallest model and 1.665 for the largest."
+   },
+   {
+    "id": "a05-p2",
+    "question": "for a fixed compute budget, is the loss lowest for the smallest model, the largest, or something in between?",
+    "choices": [
+     {
+      "text": "The smallest model.",
+      "correct": false
+     },
+     {
+      "text": "The largest model.",
+      "correct": false
+     },
+     {
+      "text": "Something in between, with a broad minimum.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** For a compute budget of 10^14 the best size is 0.47M parameters on 35.6 million tokens, and near each minimum the curve is flat, so a model twice or half that size loses very little."
+   },
+   {
+    "id": "a05-p3",
+    "question": "which of the three has the lowest validation loss, and which has the lowest training loss?",
+    "choices": [
+     {
+      "text": "All new data has both the lowest validation loss and the lowest training loss.",
+      "correct": false
+     },
+     {
+      "text": "All new data has the lowest validation loss, and the data repeated 16 times has the lowest training loss.",
+      "correct": true
+     },
+     {
+      "text": "The data repeated 4 times has the lowest validation loss.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** New data has the lowest validation loss (1.903) and the 16-times-repeated data the lowest training loss (1.057), with a validation loss of 2.692: it has memorised its tokens."
+   }
+  ],
+  "A06": [
+   {
+    "id": "a06-p1",
+    "question": "the base model has read far more text than any assistant has seen conversations. What will it do with \"Write a haiku about a flat battery.\"?",
+    "choices": [
+     {
+      "text": "Write a three-line haiku, like the instruct model.",
+      "correct": false
+     },
+     {
+      "text": "Continue the text the way web text continues, repeating itself.",
+      "correct": true
+     },
+     {
+      "text": "Refuse because it is not an assistant.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** The base model writes a line and then repeats \"A battery that can't be touched\" three times. The instruct model writes a three-line haiku."
+   },
+   {
+    "id": "a06-p2",
+    "question": "as N grows the proxy score of the pick has to rise. Will the gold score rise with it, level off, or fall?",
+    "choices": [
+     {
+      "text": "It rises with it.",
+      "correct": true
+     },
+     {
+      "text": "It levels off.",
+      "correct": false
+     },
+     {
+      "text": "It falls.",
+      "correct": false
+     }
+    ],
+    "answer": "**A.** The gold score of the pick rises from -0.01 at N = 1 to 0.54 at N = 8 and 0.82 at N = 64. It stays below the 1.25 reached by picking with gold itself."
+   },
+   {
+    "id": "a06-p3",
+    "question": "which style will have the higher pass@1, and which the higher pass@8?",
+    "choices": [
+     {
+      "text": "Step by step is higher on both.",
+      "correct": false
+     },
+     {
+      "text": "The bare number is higher at pass@1, and step by step is higher at pass@8.",
+      "correct": true
+     },
+     {
+      "text": "The bare number is higher on both.",
+      "correct": false
+     },
+     {
+      "text": "They are equal.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** The bare number has pass@1 of 0.305 against 0.259, but with 8 samples and a checker step by step reaches 0.82 against 0.48."
+   }
+  ],
+  "A07": [
+   {
+    "id": "a07-p1",
+    "question": "with one worked example in the prompt, how many of the 200 test lines in the training layouts will the model get fully right?",
+    "choices": [
+     {
+      "text": "None.",
+      "correct": false
+     },
+     {
+      "text": "About half.",
+      "correct": false
+     },
+     {
+      "text": "More than nine in ten.",
+      "correct": true
+     },
+     {
+      "text": "All 200.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** With one example, 0.925 of the lines in the training layouts are fully right, and only 0.210 on the unseen layouts."
+   },
+   {
+    "id": "a07-p2",
+    "question": "rank 32 trains 32 times as many numbers as rank 1. Which of them, if either, will read layout 5?",
+    "choices": [
+     {
+      "text": "Rank 32 only.",
+      "correct": false
+     },
+     {
+      "text": "Rank 1 only.",
+      "correct": false
+     },
+     {
+      "text": "Both.",
+      "correct": false
+     },
+     {
+      "text": "Neither.",
+      "correct": true
+     }
+    ],
+    "answer": "**D.** On layout 5 every LoRA rank fails: rank 1 gets 0.052, rank 8 0.010 and rank 32 0.010. Only fine-tuning the last four blocks reads some of it, at 0.268."
+   }
+  ],
+  "A08": [
+   {
+    "id": "a08-p1",
+    "question": "the questions are mostly paraphrases. Which retriever do you expect to do better?",
+    "choices": [
+     {
+      "text": "TF-IDF, because it matches words exactly.",
+      "correct": false
+     },
+     {
+      "text": "MiniLM, because it matches meaning.",
+      "correct": false
+     },
+     {
+      "text": "Neither wins everywhere.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** At 60 words MiniLM is ahead (Recall@3 0.583 against 0.528), but at 250 words TF-IDF is well ahead (0.917 against 0.750), partly because MiniLM cuts off long passages."
+   },
+   {
+    "id": "a08-p2",
+    "question": "closed book, how many of the 36 questions about a course written this year will the model get right?",
+    "choices": [
+     {
+      "text": "None.",
+      "correct": true
+     },
+     {
+      "text": "About 10.",
+      "correct": false
+     },
+     {
+      "text": "About 20.",
+      "correct": false
+     },
+     {
+      "text": "All of them.",
+      "correct": false
+     }
+    ],
+    "answer": "**A.** Closed book it gets 0 of 36 right: it either says it has no information or gives a general answer. With the top 3 passages it gets 23 of 36."
+   },
+   {
+    "id": "a08-p3",
+    "question": "of the tasks that search and read this passage, how many will obey it?",
+    "choices": [
+     {
+      "text": "None: the model ignores instructions in search results.",
+      "correct": false
+     },
+     {
+      "text": "About half of them.",
+      "correct": true
+     },
+     {
+      "text": "All of them.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** 16 of 20 tasks read the planted passage and 8 of them answered 0 as instructed. None called the tool it named, so the allowlist was never tested."
+   }
+  ],
+  "A09": [
+   {
+    "id": "a09-p1",
+    "question": "reading a 1,000-token prompt and writing one token both take one pass through the model. Which takes longer?",
+    "choices": [
+     {
+      "text": "Reading the prompt, by a factor of about a thousand.",
+      "correct": false
+     },
+     {
+      "text": "Writing one token, by a little.",
+      "correct": true
+     },
+     {
+      "text": "They take about the same time.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Prefilling 1,000 tokens takes 64.0 ms and decoding one token takes 81.2 ms. Per token, prefill is more than a thousand times faster."
+   },
+   {
+    "id": "a09-p2",
+    "question": "int4 with one scale for a whole matrix uses the same 4 bits per weight as int4 with one scale per row. How different can they be?",
+    "choices": [
+     {
+      "text": "About the same.",
+      "correct": false
+     },
+     {
+      "text": "A few percent worse.",
+      "correct": false
+     },
+     {
+      "text": "The per-matrix version destroys the model.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** One scale per row gives a perplexity of 30.08, against 15.47 for the original. One scale per matrix gives 150,177,071.15, worse than guessing."
+   }
+  ],
+  "A10": [
+   {
+    "id": "a10-p1",
+    "question": "the base model has never been trained on chat conversations. What will happen to its score in the chat format?",
+    "choices": [
+     {
+      "text": "It stays about the same.",
+      "correct": false
+     },
+     {
+      "text": "It drops a little.",
+      "correct": false
+     },
+     {
+      "text": "It drops below a random guess.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** The base model scores 0.460 zero-shot and 0.229 in the chat format, below the 0.25 of a random guess. It puts only 12% of its probability on the four letters."
+   },
+   {
+    "id": "a10-p2",
+    "question": "how often will the 0.5B judge pick whichever answer is shown first?",
+    "choices": [
+     {
+      "text": "About half the time.",
+      "correct": false
+     },
+     {
+      "text": "About three quarters of the time.",
+      "correct": false
+     },
+     {
+      "text": "Almost every time.",
+      "correct": true
+     }
+    ],
+    "answer": "**C.** It picks the first answer 0.979 of the time, so it agrees with the label only when the preferred answer happens to be shown first."
+   }
+  ],
+  "A11": [
+   {
+    "id": "a11-p1",
+    "question": "you train A once and B once, with unrelated seeds. How often will A come out ahead?",
+    "choices": [
+     {
+      "text": "Never: B is better.",
+      "correct": false
+     },
+     {
+      "text": "About one time in twelve.",
+      "correct": true
+     },
+     {
+      "text": "About a third of the time.",
+      "correct": false
+     },
+     {
+      "text": "Half the time.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** In 8% of the 144 possible pairs, one run of A beats one run of B, even though B is better by 0.0200 on average."
+   },
+   {
+    "id": "a11-p2",
+    "question": "the chosen setting is 0.0454 better than the average setting on the large test set. Train the same setting again with 5 new seeds: how much of that gain will remain?",
+    "choices": [
+     {
+      "text": "All of it.",
+      "correct": false
+     },
+     {
+      "text": "About half.",
+      "correct": false
+     },
+     {
+      "text": "About a fifth.",
+      "correct": true
+     },
+     {
+      "text": "None.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** Retrained with 5 new seeds, the setting is only 0.0101 better than the average setting, and all five reruns score worse than the original."
+   }
+  ],
+  "A12": [
+   {
+    "id": "a12-p1",
+    "question": "in Table 6, which rank is best for $W_q, W_v$ on WikiSQL? Is the evidence strong enough to recommend it?",
+    "choices": [
+     {
+      "text": "r = 8 is best, and the evidence is strong.",
+      "correct": false
+     },
+     {
+      "text": "r = 8 scores highest, but the others are within the paper's noise, so the table can't recommend it.",
+      "correct": true
+     },
+     {
+      "text": "r = 64, the biggest.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** r = 8 scores 73.8, and the worst rank is only 0.5 below it, the size of one seed's standard deviation. What the table supports is that a very small rank is enough: rank 1 is within 0.4 of the best."
+   },
+   {
+    "id": "a12-p2",
+    "question": "$A$ starts as a random matrix and $B$ at zero. Which of the two will carry what the adapter learned?",
+    "choices": [
+     {
+      "text": "A, the random matrix.",
+      "correct": false
+     },
+     {
+      "text": "B: A barely moves from its random start.",
+      "correct": true
+     },
+     {
+      "text": "Both change about equally.",
+      "correct": false
+     }
+    ],
+    "answer": "**B.** Training moved A by only about 16% of its starting size (15.9% for r = 8 on Wq). A is still mostly its random start, so the learned part sits in B and the product BA."
+   }
+  ],
+  "A13": [
+   {
+    "id": "a13-p1",
+    "question": "which will work best: the bare class name (\"tulip\"), \"a photo of a tulip.\", or \"a photo of a tulip, a type of flower.\"?",
+    "choices": [
+     {
+      "text": "The bare class name, \"tulip\": nothing else to confuse the encoder.",
+      "correct": false
+     },
+     {
+      "text": "\"a photo of a tulip.\": it looks like a caption.",
+      "correct": false
+     },
+     {
+      "text": "\"a photo of a tulip, a type of flower.\": it also names the domain.",
+      "correct": true
+     },
+     {
+      "text": "All three within a point of each other: the word \"tulip\" is what matters.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** The class name alone scores 0.920, \"a photo of a ...\" 0.940 and the version that names the domain 0.973: a five-point spread, all from wording."
+   },
+   {
+    "id": "a13-p2",
+    "question": "how many labelled photos per class will the probe need to match zero-shot?",
+    "choices": [
+     {
+      "text": "One or two: CLIP's vectors already separate the flowers.",
+      "correct": false
+     },
+     {
+      "text": "About 10.",
+      "correct": false
+     },
+     {
+      "text": "About 50.",
+      "correct": true
+     },
+     {
+      "text": "It never matches it, however many photos it gets.",
+      "correct": false
+     }
+    ],
+    "answer": "**C.** With 1 photo per class the probe scores 0.651 and with 10 it scores 0.945. From 50 per class it reaches 0.970, and zero-shot scores 0.973: a difference of one photo out of 300."
+   }
+  ]
+ },
+ "warmups": {
+  "B02": [
+   {
+    "from": "B00",
+    "q": "What does 'always answer with the most common species' score on the 38 test flowers, and why is it the first number you compute?",
+    "a": "0.316. It is the bar that doing nothing clever sets; any model has to clear it before its accuracy means anything.",
+    "src": "Session 0, section 3"
+   },
+   {
+    "from": "B00",
+    "q": "The hand-written petal rule scored 0.947 on the test flowers and logistic regression 0.921. Which is better?",
+    "a": "Neither can be called better: the difference is one flower out of 38.",
+    "src": "Session 0, sections 4 and 5"
+   },
+   {
+    "from": "B00",
+    "q": "Which two species did the model mix up, and what in the data predicted it?",
+    "a": "Versicolor and virginica (3 mistakes, none involving setosa): their petal widths overlap (1.0 to 1.8 cm and 1.5 to 2.5 cm).",
+    "src": "Session 0, sections 4 and 6"
+   }
+  ],
+  "B03": [
+   {
+    "from": "B01",
+    "q": "How many rows did the Session 1 table have as generated, and what was wrong with one of them?",
+    "a": "501 rows; student S0025 appears twice, at positions 25 and 500, with identical values.",
+    "src": "Session 1, section 2"
+   },
+   {
+    "from": "B01",
+    "q": "How many students had no previous grade, and how many no department?",
+    "a": "22 (4.4%) and 15 (3.0%).",
+    "src": "Session 1, section 2"
+   },
+   {
+    "from": "B01",
+    "q": "The pass rate was 68.7% in CS and 52.5% in Business. Why trust the Business number less?",
+    "a": "Only 101 students are in Business, so its rate could move by a few points with another sample (a 95% interval is wider for a smaller group).",
+    "src": "Session 1, section 5"
+   }
+  ],
+  "B04": [
+   {
+    "from": "B02",
+    "q": "What was the test accuracy without the certificate column, and with it?",
+    "a": "0.832 without, 1.000 with. The certificate is only issued after the result is known: a leak.",
+    "src": "Session 2, section 7"
+   },
+   {
+    "from": "B02",
+    "q": "Which numbers did the imputer learn, and from which rows?",
+    "a": "The medians of the training rows only (study hours 7.20, attendance 76.89, previous grade 67.50).",
+    "src": "Session 2, section 3"
+   },
+   {
+    "from": "B02",
+    "q": "Five-fold cross-validation gave what mean and spread, against the single split's 0.832?",
+    "a": "Mean 0.792, standard deviation 0.043: one split can be a point or two off.",
+    "src": "Session 2, section 6"
+   }
+  ],
+  "B05": [
+   {
+    "from": "B03",
+    "q": "On the two-moons data, what did the four models score on the test set?",
+    "a": "Logistic regression 0.852, k-NN 0.919, depth-5 tree 0.914, random forest 0.910: the last three are within noise of each other.",
+    "src": "Session 3, section 1"
+   },
+   {
+    "from": "B03",
+    "q": "What happened to k-NN when feature 1 was multiplied by 1,000, and what fixed it?",
+    "a": "Accuracy fell from 0.919 to 0.705; StandardScaler brought it back to 0.919.",
+    "src": "Session 3, section 3"
+   },
+   {
+    "from": "B03",
+    "q": "What did the tree with no depth limit score on the training and test sets?",
+    "a": "1.000 on training and 0.890 on test (13 levels, 58 leaves): it memorised noise.",
+    "src": "Session 3, section 2"
+   }
+  ],
+  "B06": [
+   {
+    "from": "B04",
+    "q": "On the 5,000 fraud test cases, how well did 'always answer no fraud' do?",
+    "a": "Accuracy 0.990 and 0% of the frauds found; logistic regression got 0.991 and found 5 of 50.",
+    "src": "Session 4, section 1"
+   },
+   {
+    "from": "B04",
+    "q": "Which threshold did the policy choose, and what did it achieve on the validation set?",
+    "a": "0.463: precision 1.000 and recall 0.953 (2 of 43 malignant cases missed).",
+    "src": "Session 4, section 5"
+   },
+   {
+    "from": "B04",
+    "q": "On the test set, how many of the 42 malignant cases did the locked model find?",
+    "a": "38 (recall 0.905), 4 missed. The test set was opened once, after everything was locked.",
+    "src": "Session 4, section 6"
+   }
+  ],
+  "B07": [
+   {
+    "from": "B05",
+    "q": "Which K had the best silhouette score on the four blobs, and how well did k-means agree with the hidden labels?",
+    "a": "K = 4, silhouette 0.757 (K = 3 next at 0.722); adjusted Rand index 0.996.",
+    "src": "Session 5, sections 3 and 4"
+   },
+   {
+    "from": "B05",
+    "q": "How much of the digits' variance do the first two PCA components keep, and how many components keep 90%?",
+    "a": "21.6% for two, 31 of 64 components for 90%.",
+    "src": "Session 5, section 6"
+   },
+   {
+    "from": "B05",
+    "q": "How well did 10 k-means clusters match the true digits?",
+    "a": "Adjusted Rand index 0.478. Some clusters are nearly pure (cluster 1 holds 177 of the 178 zeros); others mix several digits.",
+    "src": "Session 5, section 6"
+   }
+  ],
+  "B08": [
+   {
+    "from": "B06",
+    "q": "What probability did logistic regression give each XOR corner, and what was its accuracy?",
+    "a": "0.5 at all four corners, accuracy 0.5: no straight line separates XOR.",
+    "src": "Session 6, section 1"
+   },
+   {
+    "from": "B06",
+    "q": "How many parameters does the 2-4-1 network have?",
+    "a": "17 (8 + 4 weights and biases in the first layer, 4 + 1 in the second).",
+    "src": "Session 6, section 5"
+   },
+   {
+    "from": "B06",
+    "q": "How did the XOR network's loss fall?",
+    "a": "From 0.760 after epoch 1 to 0.025 after epoch 100 and 0.00229 after epoch 500.",
+    "src": "Session 6, section 5"
+   }
+  ],
+  "B09": [
+   {
+    "from": "B07",
+    "q": "Run A had 66,817 parameters and 80 training points. What did its validation loss do?",
+    "a": "Lowest 0.28 at epoch 13, then up to 1.99 at epoch 200 while the training loss went to 0.000: overfitting.",
+    "src": "Session 7, section 1"
+   },
+   {
+    "from": "B07",
+    "q": "What happened at learning rates 0.0001, 0.01 and 0.3?",
+    "a": "0.0001 was still at 0.240 at epoch 200; 0.01 dropped below 0.05 at epoch 36; 0.3 stayed stuck at about 2.50.",
+    "src": "Session 7, section 2"
+   },
+   {
+    "from": "B07",
+    "q": "In the tiny-subset test, what did the softmax-over-the-batch bug score?",
+    "a": "50% on 10 points (every prediction below 0.5), against 100% for the correct sigmoid.",
+    "src": "Session 7, section 4"
+   }
+  ],
+  "B10": [
+   {
+    "from": "B08",
+    "q": "How many parameters did the dense network and the CNN have, and what did they score on the test digits?",
+    "a": "101,770 and 12,810 parameters; 0.931 and 0.973.",
+    "src": "Session 8, sections 3 and 4"
+   },
+   {
+    "from": "B08",
+    "q": "Both networks were tested on digits shifted 2 pixels to the right. What happened?",
+    "a": "The CNN fell to 0.914 and the dense network to 0.683.",
+    "src": "Session 8, section 5"
+   },
+   {
+    "from": "B08",
+    "q": "How many test digits did the CNN get wrong, and what was the commonest mix-up?",
+    "a": "275 of 10,000; 7 read as 2 (22 times).",
+    "src": "Session 8, section 6"
+   }
+  ],
+  "B11": [
+   {
+    "from": "B09",
+    "q": "What did the three transfer-learning strategies score on the test photos?",
+    "a": "From scratch 0.710, frozen features 0.850, fine-tuned 0.883.",
+    "src": "Session 9, section 5"
+   },
+   {
+    "from": "B09",
+    "q": "Why was the split made by file, once?",
+    "a": "So no photo is in two sets; reshuffling on every pass would leak test photos into validation.",
+    "src": "Session 9, section 2"
+   },
+   {
+    "from": "B09",
+    "q": "What was the fine-tuned model's commonest confusion?",
+    "a": "Roses and tulips: 9 roses called tulips and 6 tulips called roses (265 of 300 correct overall).",
+    "src": "Session 9, section 5"
+   }
+  ],
+  "B12": [
+   {
+    "from": "B10",
+    "q": "What did the three text models score on the IMDB test reviews?",
+    "a": "Single words 0.877, words and word pairs 0.884, LSTM 0.825.",
+    "src": "Session 10, sections 3 and 4"
+   },
+   {
+    "from": "B10",
+    "q": "What weight did the word-pair model give 'good' and 'not good'?",
+    "a": "+0.86 for 'good' and -0.94 for 'not good': the pair carries the order a bag of words loses.",
+    "src": "Session 10, section 3"
+   },
+   {
+    "from": "B10",
+    "q": "Why did the LSTM stop after four epochs?",
+    "a": "Early stopping with a patience of 2: validation loss was lowest at epoch 2 and the model had begun to overfit.",
+    "src": "Session 10, section 4"
+   }
+  ],
+  "A02": [
+   {
+    "from": "A00",
+    "q": "How many tokens do ' battery' and 'battery' take in GPT-2?",
+    "a": "One and two: the space belongs to the word, so ' battery' is a single token and 'battery' splits into 'b' and 'attery'.",
+    "src": "Session 0, section 1"
+   },
+   {
+    "from": "A00",
+    "q": "The Arabic sentence has 43 characters. How many GPT-2 tokens, against English?",
+    "a": "45 tokens for Arabic (less than one character per token) and 11 for the 51-character English sentence.",
+    "src": "Session 0, section 1"
+   },
+   {
+    "from": "A00",
+    "q": "How big is the embedding table, and what share of GPT-2 small is it?",
+    "a": "50,257 rows of 768 numbers, 38.6 million parameters, 31% of the model.",
+    "src": "Session 0, section 3"
+   }
+  ],
+  "A03": [
+   {
+    "from": "A01",
+    "q": "How many attention heads does GPT-2 small have, and how closely does a hand-written head match one?",
+    "a": "12 layers x 12 heads (head size 64); our version matches GPT-2's weights to within 1e-6.",
+    "src": "Session 1, section 1"
+   },
+   {
+    "from": "A01",
+    "q": "On 50 random tokens repeated, what did GPT-2 pay per token on each copy?",
+    "a": "18.7 bits on the first copy (uniform guessing would be 15.6) and 0.65 on the second: it copies.",
+    "src": "Session 1, section 3"
+   },
+   {
+    "from": "A01",
+    "q": "What happened to the second-copy cost when the five strongest induction heads were removed?",
+    "a": "From 0.65 to 7.62 bits per token; five random other heads cost only 0.76.",
+    "src": "Session 1, section 4"
+   }
+  ],
+  "A04": [
+   {
+    "from": "A02",
+    "q": "How many parameters are in GPT-2's attention and in its MLP, per block?",
+    "a": "2,362,368 in the attention and 4,722,432 in the MLP: two thirds of a block's weights are in the MLP.",
+    "src": "Session 2, section 1"
+   },
+   {
+    "from": "A02",
+    "q": "How closely did the twelve rebuilt blocks match GPT-2, and where did the logit lens first guess a city for 'The Eiffel Tower is in the city of'?",
+    "a": "Logits within 6.1e-05; a city at block 9 and the right city at block 11.",
+    "src": "Session 2, sections 1 and 2"
+   },
+   {
+    "from": "A02",
+    "q": "What happened to the block's output when the tokens were shuffled and no position information was given?",
+    "a": "It changed by only 2.4e-07: the block treats the tokens as an unordered set.",
+    "src": "Session 2, section 3"
+   }
+  ],
+  "A05": [
+   {
+    "from": "A03",
+    "q": "How big was the GPT trained in Session 3, and how long did it take?",
+    "a": "11.5 million parameters, 3,000 steps in 284 seconds, ending at a validation loss of 1.593 nats.",
+    "src": "Session 3, section 3"
+   },
+   {
+    "from": "A03",
+    "q": "What did warm-up and norm placement do to training at a high learning rate?",
+    "a": "Warm-up of 100 steps gave a validation loss of 2.49 and none gave 4.20; post-norm at 0.006 never got below the unigram loss of 5.91 nats.",
+    "src": "Session 3, section 4"
+   },
+   {
+    "from": "A03",
+    "q": "How did greedy decoding and temperature 1.5 compare?",
+    "a": "Greedy: 22.4% of 4-grams repeated and 0.82 bits per token (the most typical text); temperature 1.5: 6.71 bits per token, mostly nonsense.",
+    "src": "Session 3, section 5"
+   }
+  ],
+  "A06": [
+   {
+    "from": "A04",
+    "q": "What share of attention points at later tokens in GPT-2 and in BERT?",
+    "a": "0 in every layer of GPT-2 (the mask); 0.59 on average in BERT.",
+    "src": "Session 4, section 1"
+   },
+   {
+    "from": "A04",
+    "q": "What did BERT put on 'dead' for 'The battery is [MASK], so the robot stopped working', and without the second half?",
+    "a": "0.419 with it; 0.041 without, where the top word became 'charged' at 0.055.",
+    "src": "Session 4, section 2"
+   },
+   {
+    "from": "A04",
+    "q": "How well did BERT recover the three kinds of corrupted token?",
+    "a": "70.4% for [MASK], 54.9% for random words and 99.3% for unchanged ones.",
+    "src": "Session 4, section 2"
+   }
+  ],
+  "A07": [
+   {
+    "from": "A05",
+    "q": "Which learning rate was best for the smallest and the largest model in the grid?",
+    "a": "0.012 for the 0.2M model and 0.003 for the 10.6M one: the best rate falls with size.",
+    "src": "Session 5, section 1"
+   },
+   {
+    "from": "A05",
+    "q": "How well did the five-parameter law fit 15 runs, and where was it least reliable?",
+    "a": "A mean error of 0.031 nats; worst for short runs (off by up to 0.37) and for predictions needing more tokens than were trained on.",
+    "src": "Session 5, section 2"
+   },
+   {
+    "from": "A05",
+    "q": "What did repeating data cost?",
+    "a": "4.1 million tokens repeated four times cost 0.06 nats against new data; 1.0 million repeated 16 times gave training loss 1.06 and validation loss 2.69.",
+    "src": "Session 5, section 4"
+   }
+  ],
+  "A08": [
+   {
+    "from": "A06",
+    "q": "In the chat example, how many of the 40 tokens carry loss, and which are they?",
+    "a": "4: the answer, the full stop, the end-of-turn marker and the newline after it.",
+    "src": "Session 6, section 1"
+   },
+   {
+    "from": "A06",
+    "q": "How accurate were the two reward models on held-out pairs, against 'pick the longer answer'?",
+    "a": "0.626 (proxy) and 0.655 (gold), against 0.513 for the longer answer.",
+    "src": "Session 6, section 2"
+   },
+   {
+    "from": "A06",
+    "q": "What did DPO change?",
+    "a": "The held-out ranking went from 0.498 to 0.617 and the answers got longer; judged independently, the quality change was small.",
+    "src": "Session 6, section 4"
+   }
+  ],
+  "A09": [
+   {
+    "from": "A07",
+    "q": "What did a single worked example do for the instruct model before any fine-tuning?",
+    "a": "It reached 0.925 on the familiar layouts (zero-shot, no line was fully right).",
+    "src": "Session 7, section 1"
+   },
+   {
+    "from": "A07",
+    "q": "What did an average of 0.52 hide?",
+    "a": "One new layout solved and one failed: break the score down by layout.",
+    "src": "Session 7, section 3"
+   },
+   {
+    "from": "A07",
+    "q": "How much did LoRA raise the loss on unrelated text?",
+    "a": "From 1.290 to about 1.35 (a little forgetting).",
+    "src": "Session 7, section 5"
+   }
+  ],
+  "A10": [
+   {
+    "from": "A08",
+    "q": "At 60 and 250 words, how did MiniLM and TF-IDF compare on Recall@3?",
+    "a": "At 60: MiniLM 0.583, TF-IDF 0.528; at 250: TF-IDF 0.917, MiniLM 0.750.",
+    "src": "Session 8, section 2"
+   },
+   {
+    "from": "A08",
+    "q": "How many of the 36 questions did the model answer closed-book, and with the top three passages?",
+    "a": "0 of 36 closed-book; 23 of 36 with retrieval.",
+    "src": "Session 8, section 3"
+   },
+   {
+    "from": "A08",
+    "q": "How did the 1.5B agent do on 20 tasks?",
+    "a": "6 of 20 right: 4 answered without searching, 6 retrieved the wrong passages, 4 had the right numbers and still erred; it used the calculator once.",
+    "src": "Session 8, section 4"
+   }
+  ],
+  "A11": [
+   {
+    "from": "A09",
+    "q": "What is the KV cache per token for GPT-2 small and for Qwen2.5-0.5B?",
+    "a": "36,864 bytes and 12,288 bytes (2 x layers x key/value heads x head size x 2 bytes); grouped-query attention is why Qwen's is a third.",
+    "src": "Session 9, section 1"
+   },
+   {
+    "from": "A09",
+    "q": "What ceiling does reading the weights put on decoding the 0.99 GB model on a 209 GB/s memory, and how close did eager decoding get?",
+    "a": "About 5 ms per token (a little under 200 tokens per second) at best; eager decoding took 72 ms, because most of each step is spent on launch overhead, not on reading weights.",
+    "src": "Session 9, section 2"
+   },
+   {
+    "from": "A09",
+    "q": "What did int4 do to perplexity with one scale per matrix, per row and per 128 weights?",
+    "a": "Original 15.47; one scale per matrix about 150 million; per row 30.08; per 128 weights 21.22.",
+    "src": "Session 9, section 4"
+   }
+  ],
+  "A12": [
+   {
+    "from": "A10",
+    "q": "How wide is a 95% interval on an accuracy measured on 1,000 questions?",
+    "a": "About plus or minus 3 points: models closer than that cannot be separated.",
+    "src": "Session 10, section 2"
+   },
+   {
+    "from": "A10",
+    "q": "How often did the 0.5B judge pick the first answer?",
+    "a": "97.9% of the time; it gave the same verdict in both orders for 3.2% of pairs.",
+    "src": "Session 10, section 4"
+   },
+   {
+    "from": "A10",
+    "q": "Which probe gives evidence of contamination?",
+    "a": "Shuffling the option order: a model that has seen the test may be tied to the original order. It can show contamination, never rule it out.",
+    "src": "Session 10, section 3"
+   }
+  ],
+  "A13": [
+   {
+    "from": "A11",
+    "q": "With one run per setup and unrelated seeds, how often did the comparison point the wrong way, and what did 12 seeds say?",
+    "a": "8% of the 144 pairs; with 12 seeds B was lower by 0.0200, interval -0.0274 to -0.0131.",
+    "src": "Session 11, section 1"
+   },
+   {
+    "from": "A11",
+    "q": "How much does one batch of 64 windows move a test score?",
+    "a": "By 0.0417 from one test set to the next, four times the spread between training seeds (0.0106).",
+    "src": "Session 11, section 2"
+   },
+   {
+    "from": "A11",
+    "q": "How often did 20 tweaks that change nothing produce a 'significant' one, and with Bonferroni?",
+    "a": "28% of studies, and 2% with the correction.",
+    "src": "Session 11, section 3"
+   }
+  ]
+ },
+ "glossary": [
+  {
+   "term": "ablation",
+   "defined": "A01",
+   "used": [],
+   "definition": "Switching a component off to test whether it is used.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "accuracy",
+   "defined": "B04",
+   "used": [
+    "B06",
+    "B07",
+    "B08",
+    "B09",
+    "B10",
+    "B12"
+   ],
+   "definition": "The share of all cases the model gets right. On imbalanced data it needs the baseline beside it.",
+   "related": [
+    "baseline"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "activation",
+   "defined": "B06",
+   "used": [],
+   "definition": "The non-linear function applied to a unit's weighted sum, which is what makes stacked layers more than one layer.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "AdamW",
+   "defined": "A03",
+   "used": [],
+   "definition": "Adam with weight decay separated from the gradient update.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "adjusted Rand index",
+   "defined": "B05",
+   "used": [],
+   "definition": "A measure of agreement between a clustering and hidden labels, where 1.0 is perfect.",
+   "related": [
+    "clustering"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "agent",
+   "defined": "A08",
+   "used": [],
+   "definition": "A loop in which the model decides at each step whether to call a tool or give its final answer.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "attention",
+   "defined": "B11",
+   "used": [],
+   "definition": "A mechanism that gives each token a weighted mix of the other tokens' value vectors, with weights from query-key matches.",
+   "related": [
+    "tokens"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "attention head",
+   "defined": "A01",
+   "used": [
+    "A02",
+    "A04",
+    "A07",
+    "A09",
+    "A10",
+    "A13"
+   ],
+   "definition": "One independent set of queries, keys and values within an attention layer.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "backbone",
+   "defined": "B09",
+   "used": [],
+   "definition": "The part of a network that turns an input into a short list of numbers describing it, often pretrained.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "backpropagation",
+   "defined": "B06",
+   "used": [
+    "B07"
+   ],
+   "definition": "Computing the gradient for every weight in every layer by going backwards through the calculation.",
+   "related": [
+    "gradient"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "bag-of-words",
+   "defined": "B10",
+   "used": [],
+   "definition": "Representing a text by which words appear and how often, ignoring their order.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "baseline",
+   "defined": "B00",
+   "used": [
+    "B01",
+    "B02",
+    "B04",
+    "B10"
+   ],
+   "definition": "The score of the simplest thing that could work, such as always answering the most common class. A model is worth keeping only if it beats it.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "best-of-N",
+   "defined": "A06",
+   "used": [],
+   "definition": "Sampling N answers and keeping the one a reward model scores highest.",
+   "related": [
+    "reward model"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "bigrams",
+   "defined": "B10",
+   "used": [],
+   "definition": "Pairs of neighbouring words, such as 'not good', used as extra features.",
+   "related": [
+    "features"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "bits per token",
+   "defined": "A00",
+   "used": [
+    "A01",
+    "A03"
+   ],
+   "definition": "The average cost -log2 p of the true next token. Bits per character compares models with different tokenizers.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "Bonferroni correction",
+   "defined": "A11",
+   "used": [],
+   "definition": "Requiring p below 0.05 divided by the number of tests, to keep false discoveries rare.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "byte-pair encoding",
+   "defined": "A00",
+   "used": [
+    "A03"
+   ],
+   "definition": "A way of learning a vocabulary: start from single characters or bytes and repeatedly merge the most frequent adjacent pair.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "causal mask",
+   "defined": "B11",
+   "used": [],
+   "definition": "A mask that sets the scores of later tokens to a huge negative number, so a generator cannot read ahead.",
+   "related": [
+    "tokens"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "channels",
+   "defined": "B08",
+   "used": [],
+   "definition": "The colour layers of an image (one for grey, three for RGB), or the number of feature maps in a layer.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "chat template",
+   "defined": "A06",
+   "used": [
+    "A07",
+    "A08",
+    "A10"
+   ],
+   "definition": "The fixed format with role markers in which a conversation is written for the model.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "classification",
+   "defined": "B00",
+   "used": [
+    "B02",
+    "B03",
+    "B09"
+   ],
+   "definition": "Predicting a category, such as a species or pass/fail.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "clustering",
+   "defined": "B05",
+   "used": [],
+   "definition": "Grouping similar points without labels.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "compute-optimal",
+   "defined": "A05",
+   "used": [],
+   "definition": "The split of a fixed compute budget between model size and training tokens that gives the lowest loss.",
+   "related": [
+    "tokens"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "confusion matrix",
+   "defined": "B00",
+   "used": [
+    "B04",
+    "B09"
+   ],
+   "definition": "A table with the true classes on the rows and the predicted classes on the columns, so correct answers fall on the diagonal.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "contamination",
+   "defined": "A10",
+   "used": [],
+   "definition": "Test questions having been seen during training, which makes a benchmark score too good.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "convolutional neural network (CNN)",
+   "defined": "B08",
+   "used": [
+    "B09",
+    "B12"
+   ],
+   "definition": "A network that slides small filters over an image, using the same weights at every position.",
+   "related": [
+    "filter"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "correlation",
+   "defined": "B01",
+   "used": [],
+   "definition": "How strongly one number goes up and down together with another, on a scale from -1 to 1. It measures straight-line association only, and says nothing about cause.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "cross-attention",
+   "defined": "A04",
+   "used": [],
+   "definition": "Attention from decoder tokens to the encoder's output, so a target text can read the source.",
+   "related": [
+    "tokens",
+    "encoder",
+    "decoder"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "cross-validation",
+   "defined": "B02",
+   "used": [
+    "B04"
+   ],
+   "definition": "Repeating the experiment on several different splits and reporting the spread.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "data leakage",
+   "defined": "B01",
+   "used": [
+    "B02",
+    "B04",
+    "B12"
+   ],
+   "definition": "Information in the training data that would not be available when the prediction is needed, such as a column recorded after the outcome. It makes a model look better than it is.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "decision tree",
+   "defined": "B03",
+   "used": [
+    "B04"
+   ],
+   "definition": "A model that splits the data with simple rules such as 'feature 1 < 0.3', choosing each split to make the groups on either side as pure as possible.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "decoder",
+   "defined": "A04",
+   "used": [
+    "A09"
+   ],
+   "definition": "A transformer layout with the causal mask: a token reads only itself and earlier tokens (GPT-2).",
+   "related": [
+    "tokens"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "dimensionality reduction",
+   "defined": "B05",
+   "used": [],
+   "definition": "Describing data with fewer numbers than it started with, to look at it or to simplify it.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "DPO",
+   "defined": "A06",
+   "used": [],
+   "definition": "Direct preference optimisation: training the model on preference pairs without a separate reward model.",
+   "related": [
+    "reward model"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "dropout",
+   "defined": "B07",
+   "used": [],
+   "definition": "Randomly switching off some hidden units at each training step so the network cannot rely on any one of them.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "early stopping",
+   "defined": "B07",
+   "used": [
+    "B09",
+    "B10"
+   ],
+   "definition": "Stopping training once the validation loss has stopped improving, and going back to the best weights.",
+   "related": [
+    "loss"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "embedding",
+   "defined": "B10",
+   "used": [
+    "B12"
+   ],
+   "definition": "A learned vector of numbers standing for a token, so that tokens used alike get similar vectors.",
+   "related": [
+    "tokens"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "embedding table",
+   "defined": "A00",
+   "used": [
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A08",
+    "A13"
+   ],
+   "definition": "A table with one row of numbers per vocabulary entry; looking up a token reads its row.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "encoder",
+   "defined": "A04",
+   "used": [
+    "A13"
+   ],
+   "definition": "A transformer layout with no mask: every token can read every token (BERT).",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "epoch",
+   "defined": "B06",
+   "used": [
+    "B07",
+    "B08",
+    "B09",
+    "B10"
+   ],
+   "definition": "One pass through the training data.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "error analysis",
+   "defined": "B00",
+   "used": [],
+   "definition": "Looking at the failures to ask whether the data or the model is the limit.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "features",
+   "defined": "B00",
+   "used": [
+    "B01",
+    "B02",
+    "B03",
+    "B05",
+    "B06",
+    "B07",
+    "B08",
+    "B09",
+    "B10",
+    "B11",
+    "B12"
+   ],
+   "definition": "The columns used as inputs to a model.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "filter",
+   "defined": "B08",
+   "used": [
+    "B12"
+   ],
+   "definition": "A small grid of weights, such as 3 x 3, that is multiplied with each patch of an image and summed.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "fine-tuning",
+   "defined": "B09",
+   "used": [
+    "B12"
+   ],
+   "definition": "Continuing to train some or all of a pretrained network on your own data, with a small learning rate.",
+   "related": [
+    "learning rate"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "forgetting",
+   "defined": "A07",
+   "used": [],
+   "definition": "The loss of earlier abilities after fine-tuning, tracked here by the loss on unrelated text.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "gradient",
+   "defined": "B06",
+   "used": [
+    "B07",
+    "B09"
+   ],
+   "definition": "For each weight, how fast the loss rises when that weight is nudged up.",
+   "related": [
+    "loss"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "gradient clipping",
+   "defined": "A03",
+   "used": [],
+   "definition": "Scaling the gradient down when its norm exceeds a limit.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "gradient descent",
+   "defined": "B06",
+   "used": [],
+   "definition": "Training by repeatedly moving every weight a small step against its gradient.",
+   "related": [
+    "gradient"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "greedy decoding",
+   "defined": "B12",
+   "used": [],
+   "definition": "Generating text by taking the most likely next token every time.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "grouped-query attention",
+   "defined": "A09",
+   "used": [
+    "A12"
+   ],
+   "definition": "Several query heads sharing one key/value head, which shrinks the KV cache.",
+   "related": [
+    "KV cache"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "head",
+   "defined": "B09",
+   "used": [
+    "B11"
+   ],
+   "definition": "The small layer on top of a backbone that turns its numbers into class probabilities.",
+   "related": [
+    "backbone"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "hidden layer",
+   "defined": "B06",
+   "used": [
+    "B07"
+   ],
+   "definition": "A layer between the inputs and the output whose units learn new features that make the final decision easy.",
+   "related": [
+    "features"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "hyperparameters",
+   "defined": "B04",
+   "used": [],
+   "definition": "Settings of a model that we choose ourselves rather than learn, such as C in logistic regression or the depth of a tree.",
+   "related": [
+    "regression",
+    "logistic regression"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "imputing",
+   "defined": "B02",
+   "used": [],
+   "definition": "Filling a missing value with a typical one, such as the median of the training rows.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "induction head",
+   "defined": "A01",
+   "used": [],
+   "definition": "A head that finds an earlier occurrence of the current token and reads the token that followed it, which lets a model copy a repeated sequence.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "inductive bias",
+   "defined": "B03",
+   "used": [],
+   "definition": "A model's built-in preference for a certain kind of answer, which decides which patterns it can find easily.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "instruct model",
+   "defined": "A06",
+   "used": [
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "A12"
+   ],
+   "definition": "A base model trained further on conversations in a fixed chat template.",
+   "related": [
+    "chat template"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "k-nearest neighbours",
+   "defined": "B03",
+   "used": [],
+   "definition": "A model that finds the k training points closest to a new point and takes a vote.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "KV cache",
+   "defined": "A09",
+   "used": [],
+   "definition": "The keys and values each layer has already computed, kept so a decoding step processes only the new token.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "L2 regularisation",
+   "defined": "B07",
+   "used": [],
+   "definition": "A penalty for large weights added to the loss, which pushes the network towards smoother solutions.",
+   "related": [
+    "loss"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "learning rate",
+   "defined": "B06",
+   "used": [
+    "B07",
+    "B09"
+   ],
+   "definition": "The size of the step taken in each update.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "linear probe",
+   "defined": "A13",
+   "used": [],
+   "definition": "A logistic regression trained on a frozen model's vectors.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "logistic regression",
+   "defined": "B00",
+   "used": [
+    "B03",
+    "B04",
+    "B06",
+    "B07",
+    "B10"
+   ],
+   "definition": "A simple classifier that gives each feature a weight, adds them into one score per class and picks the highest. In two dimensions its boundary is a straight line.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "logit",
+   "defined": "A00",
+   "used": [
+    "A02",
+    "A07"
+   ],
+   "definition": "The raw score a model gives each vocabulary entry at a position, before the softmax.",
+   "related": [
+    "softmax"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "logit lens",
+   "defined": "A02",
+   "used": [],
+   "definition": "Applying the final layer norm and output layer to the residual stream after any block, to see the model's current guess.",
+   "related": [
+    "residual stream"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "LoRA",
+   "defined": "A07",
+   "used": [
+    "A12"
+   ],
+   "definition": "Freezing a weight matrix and learning a low-rank change B A that can be merged back exactly.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "loss",
+   "defined": "B06",
+   "used": [
+    "B07",
+    "B08",
+    "B09",
+    "B10"
+   ],
+   "definition": "One number that says how wrong the model is on the training data.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "LSTM",
+   "defined": "B10",
+   "used": [
+    "B11"
+   ],
+   "definition": "A network that reads a sequence one token at a time and keeps a memory it updates after every token.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "masked language modelling",
+   "defined": "A04",
+   "used": [],
+   "definition": "BERT's training task: recover tokens that were hidden, using both sides.",
+   "related": [
+    "tokens"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "MinHash",
+   "defined": "A05",
+   "used": [],
+   "definition": "A short signature of a text's word shingles used to find near-copies without comparing every pair.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "mini-batch",
+   "defined": "B07",
+   "used": [
+    "B08",
+    "B09"
+   ],
+   "definition": "A small group of training examples used for one update step.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "MLP",
+   "defined": "A02",
+   "used": [
+    "A04",
+    "A09",
+    "A12",
+    "A13"
+   ],
+   "definition": "The two-layer network applied to each position on its own; it holds two thirds of a block's parameters.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "MRR",
+   "defined": "B12",
+   "used": [],
+   "definition": "Mean reciprocal rank: the average of 1 divided by the rank of the right document.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "one-hot encoding",
+   "defined": "B02",
+   "used": [],
+   "definition": "Giving each category its own 0/1 column.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "optimiser",
+   "defined": "B06",
+   "used": [
+    "B07",
+    "B08",
+    "B09"
+   ],
+   "definition": "The part of the training loop that takes the step after the gradients are computed (Adam in this course).",
+   "related": [
+    "gradient"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "overfitting",
+   "defined": "B03",
+   "used": [
+    "B04",
+    "B07",
+    "B10"
+   ],
+   "definition": "Fitting the noise in the training data: the training score is high and the score on new data is clearly lower.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "paired interval",
+   "defined": "A11",
+   "used": [
+    "A13"
+   ],
+   "definition": "An interval for the difference between two setups computed on the same seeds or items, which removes the shared noise.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "perplexity",
+   "defined": "A00",
+   "used": [
+    "A09"
+   ],
+   "definition": "2 raised to the mean bits per token. It can be compared only between models that share a tokenizer.",
+   "related": [
+    "bits per token"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "position bias",
+   "defined": "A10",
+   "used": [],
+   "definition": "A judge's preference for an answer because of where it is shown rather than what it says.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "pre-norm",
+   "defined": "A02",
+   "used": [
+    "A03"
+   ],
+   "definition": "Normalising before each sub-layer, inside the residual branch.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "precision",
+   "defined": "B00",
+   "used": [
+    "B04"
+   ],
+   "definition": "When the model says a case is positive, how often it is right.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "prefill and decode",
+   "defined": "A09",
+   "used": [],
+   "definition": "Prefill reads the whole prompt at once; decoding writes the answer one token per step.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "principal component analysis (PCA)",
+   "defined": "B05",
+   "used": [],
+   "definition": "A method that finds the directions along which the data varies most and keeps the first few. A 2D map should say how much variance it keeps.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "prompt injection",
+   "defined": "B12",
+   "used": [],
+   "definition": "Text in the input, such as a retrieved document, that carries instructions the model may follow.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "quantisation",
+   "defined": "A09",
+   "used": [
+    "A10"
+   ],
+   "definition": "Storing weights as small integers times a scale, to save memory and reading time.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "query, key and value",
+   "defined": "B11",
+   "used": [],
+   "definition": "For each token: a query (what it is looking for), a key (what it offers to be found by) and a value (the information it hands over when chosen).",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "random forest",
+   "defined": "B03",
+   "used": [],
+   "definition": "Many trees trained on random samples of the data, whose votes are averaged.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "recall",
+   "defined": "B00",
+   "used": [
+    "B04",
+    "B12"
+   ],
+   "definition": "Of the real positive cases, how many the model found.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "Recall@k",
+   "defined": "A08",
+   "used": [],
+   "definition": "The share of questions whose answer passage is among the top k retrieved.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "reciprocal rank fusion",
+   "defined": "A08",
+   "used": [],
+   "definition": "Combining rankings by giving each passage 1 / (60 + rank) from each ranking and adding.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "regression",
+   "defined": "B00",
+   "used": [],
+   "definition": "Predicting a number, such as a price. (The name logistic regression is misleading: that model classifies.)",
+   "related": [
+    "logistic regression"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "residual stream",
+   "defined": "A02",
+   "used": [
+    "A03"
+   ],
+   "definition": "The running total every sub-layer adds to: each reads a normalised copy and writes its result back.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "retrieval-augmented generation (RAG)",
+   "defined": "B12",
+   "used": [],
+   "definition": "Finding the relevant documents first and putting them in the prompt, so the model answers from them.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "reward model",
+   "defined": "A06",
+   "used": [
+    "A10"
+   ],
+   "definition": "A model trained on pairs of preferred and rejected answers to score any answer.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "rotary position embeddings (RoPE)",
+   "defined": "A02",
+   "used": [],
+   "definition": "Encoding position by rotating queries and keys, so the score depends only on how far apart two tokens are.",
+   "related": [
+    "tokens"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "sampling",
+   "defined": "B12",
+   "used": [],
+   "definition": "Generating text by picking each next token at random in proportion to its probability.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "scaled dot-product attention",
+   "defined": "A01",
+   "used": [],
+   "definition": "Attention for one head: softmax of the query-key scores divided by the square root of the key size, plus a mask, times the values.",
+   "related": [
+    "softmax"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "scaling",
+   "defined": "B02",
+   "used": [
+    "B03",
+    "B05"
+   ],
+   "definition": "Subtracting the training mean and dividing by the training standard deviation, so every column has mean 0 and spread 1.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "scaling law",
+   "defined": "A05",
+   "used": [
+    "A10"
+   ],
+   "definition": "A fitted formula for how the loss falls with parameters and data.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "silhouette score",
+   "defined": "B05",
+   "used": [],
+   "definition": "For each point, a comparison of its distance to its own cluster with its distance to the nearest other cluster; it needs no labels.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "softmax",
+   "defined": "A00",
+   "used": [
+    "A01",
+    "A03"
+   ],
+   "definition": "A function that turns a list of scores into probabilities that add up to 1.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "speculative decoding",
+   "defined": "A09",
+   "used": [],
+   "definition": "A small draft model proposes several tokens and the large model checks them all in one pass.",
+   "related": [
+    "tokens"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "subwords",
+   "defined": "B11",
+   "used": [],
+   "definition": "Pieces of words from a fixed vocabulary: common words are one token, rare words several, so no word is ever unknown.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "target",
+   "defined": "B00",
+   "used": [
+    "B01",
+    "B02",
+    "B04",
+    "B05"
+   ],
+   "definition": "The column holding the answer we want to predict.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "temperature",
+   "defined": "B12",
+   "used": [],
+   "definition": "A number that divides the scores before the softmax: below 1 makes the distribution sharper, above 1 flatter.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "test set",
+   "defined": "B00",
+   "used": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B09",
+    "B10"
+   ],
+   "definition": "The part of the data kept back and used once, to measure the finished model.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "TF-IDF",
+   "defined": "B10",
+   "used": [
+    "B12"
+   ],
+   "definition": "Word counts weighted by how rare each word is across documents, so common words count for little.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "threshold",
+   "defined": "B04",
+   "used": [
+    "B12"
+   ],
+   "definition": "The score at or above which a case is flagged positive.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "tokens",
+   "defined": "B10",
+   "used": [
+    "B11",
+    "B12"
+   ],
+   "definition": "The pieces a text is cut into before a model sees it.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "tokens",
+   "defined": "A00",
+   "used": [
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "A11",
+    "A12",
+    "A13"
+   ],
+   "definition": "The pieces of text from a fixed vocabulary that a language model actually reads.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "top-k and top-p",
+   "defined": "A03",
+   "used": [],
+   "definition": "Sampling filters: top-k keeps the k most likely tokens, top-p keeps the smallest set whose probabilities add up to p.",
+   "related": [
+    "tokens"
+   ],
+   "course": "advanced"
+  },
+  {
+   "term": "training set",
+   "defined": "B00",
+   "used": [
+    "B01",
+    "B02",
+    "B03",
+    "B04",
+    "B07"
+   ],
+   "definition": "The part of the data a model learns from.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "transfer learning",
+   "defined": "B09",
+   "used": [
+    "B10"
+   ],
+   "definition": "Starting from a network trained on a large dataset instead of from random weights.",
+   "related": [],
+   "course": "basic"
+  },
+  {
+   "term": "transformer",
+   "defined": "B11",
+   "used": [
+    "B12"
+   ],
+   "definition": "The architecture built from attention and per-token MLP layers that most language models use.",
+   "related": [
+    "attention"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "validation set",
+   "defined": "B04",
+   "used": [
+    "B07",
+    "B12"
+   ],
+   "definition": "Data for decisions that need unseen examples, such as choosing a threshold, so that the test set stays untouched.",
+   "related": [
+    "test set",
+    "threshold"
+   ],
+   "course": "basic"
+  },
+  {
+   "term": "warm-up",
+   "defined": "A03",
+   "used": [
+    "A05",
+    "A07"
+   ],
+   "definition": "Raising the learning rate linearly from near zero at the start of training.",
+   "related": [],
+   "course": "advanced"
+  },
+  {
+   "term": "zero-shot",
+   "defined": "A13",
+   "used": [],
+   "definition": "Classifying without training on examples of the task, by comparing an input with text descriptions of the classes.",
+   "related": [],
+   "course": "advanced"
+  }
+ ],
+ "explorables": {
+  "B03": [
+   {
+    "id": "b03-knn-k",
+    "title": "How many neighbours vote?"
+   }
+  ],
+  "B04": [
+   {
+    "id": "b04-threshold",
+    "title": "Move the threshold"
+   }
+  ],
+  "B06": [
+   {
+    "id": "b06-descent",
+    "title": "Step down the loss"
+   }
+  ],
+  "B07": [
+   {
+    "id": "b07-l2",
+    "title": "How hard to hold the weights back"
+   },
+   {
+    "id": "b07-learning-rate",
+    "title": "One network, nine learning rates"
+   }
+  ],
+  "A01": [
+   {
+    "id": "a01-dk",
+    "title": "Why divide by the square root of the key size?"
+   }
+  ],
+  "A03": [
+   {
+    "id": "a03-temperature",
+    "title": "Temperature"
+   },
+   {
+    "id": "a03-top-p",
+    "title": "Top-p"
+   }
+  ],
+  "A05": [
+   {
+    "id": "a05-budget",
+    "title": "Spend a compute budget"
+   }
+  ],
+  "A09": [
+   {
+    "id": "a09-batch",
+    "title": "Batching requests"
+   }
+  ],
+  "A11": [
+   {
+    "id": "a11-tweaks",
+    "title": "Try more tweaks, find more wins"
+   }
+  ]
+ }
+}

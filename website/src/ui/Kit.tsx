@@ -1,25 +1,26 @@
 import { useState } from "react";
-import { COURSES, KIT_BUILT, KIT_BYTES, REPO_URL, assetUrl, nextSession, sessionOf, size, whenText, type Course, type Station } from "../lib/content";
+import { COURSES, KIT_BUILT, KIT_BYTES, REPO_URL, SHOW_DOWNLOADS, assetUrl, nextSession, sessionOf, size, whenText, type Course, type Station } from "../lib/content";
 import { enterDive } from "../lib/dive";
-import { SHOW_DOWNLOADS } from "../lib/features";
 import { clearLog, useLog } from "../lib/log";
 import { Icon } from "./Icon";
 import { Html } from "./Station";
+import { CoursePractice, PracticeLinks } from "./Extras";
 
 const Label = ({ long, short, compact }: { long: string; short: string; compact: boolean }) =>
   compact ? <span>{short}</span> : <><span className="l-long">{long}</span><span className="l-short">{short}</span></>;
 
 /** The three ways into one session: download, read, run. Full labels shorten on a phone. */
 export function Downloads({ st, compact = false }: { st: Station; compact?: boolean }) {
-  if (!SHOW_DOWNLOADS) return null;
+  const files = st.files;
+  if (!files) return null;
   return (
     <div className={`dl${compact ? " dl-compact" : ""}`}>
-      <a className="dl-a dl-main" href={assetUrl(st.files.ipynb.path)} download={st.notebook} title={`SHA-256 ${st.files.ipynb.sha256}`}>
+      <a className="dl-a dl-main" href={assetUrl(files.ipynb.path)} download={st.notebook} title={`SHA-256 ${files.ipynb.sha256}`}>
         <Icon name="notebook" size={18} />
         <Label long="Notebook" short=".ipynb" compact={compact} />
-        <span className="sz">{size(st.files.ipynb.bytes)}</span>
+        <span className="sz">{size(files.ipynb.bytes)}</span>
       </a>
-      <a className="dl-a" href={assetUrl(st.files.html.path)} target="_blank" rel="noopener">
+      <a className="dl-a" href={assetUrl(files.html.path)} target="_blank" rel="noopener">
         <Icon name="render" size={18} />
         <Label long="Read in the browser" short="Read" compact={compact} />
       </a>
@@ -39,7 +40,7 @@ function SessionRow({ st, seen, pinged }: { st: Station; seen: boolean; pinged: 
   const id = `row-${st.id}`;
   const when = sessionOf(st.id), isNext = !!when && nextSession()?.station === st.id;
   return (
-    <li className="srow" data-route={st.course} data-nodl={SHOW_DOWNLOADS ? undefined : ""} data-open={open ? "" : undefined}>
+    <li className="srow" data-route={st.course} data-nodl={st.files || st.practice.exercise || st.practice.solutions ? undefined : ""} data-open={open ? "" : undefined}>
       <button type="button" className="srow-t" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
         <span className="code-link">{st.code}</span>
         <span className="nm">
@@ -50,6 +51,7 @@ function SessionRow({ st, seen, pinged }: { st: Station; seen: boolean; pinged: 
         <Icon name={open ? "minus" : "plus"} size={16} />
       </button>
       <Downloads st={st} compact />
+      <PracticeLinks st={st} compact />
       <button type="button" className="sq srow-dive" onClick={() => enterDive(st.i)} aria-label={`Dive to ${st.code}, ${st.title}`} title="Dive here">
         <Icon name="descent" size={18} />
       </button>
@@ -78,14 +80,15 @@ function CourseBlock({ c }: { c: Course }) {
               : "After the basic course. Read from the saved outputs; re-running needs a GPU."}
           </p>
         </div>
-        {SHOW_DOWNLOADS && <div className="course-files">
-          <a className="btn btn-glow btn-s chamfer" href={assetUrl(c.zip.path)} download>
-            <Icon name="zip" size={18} /> Whole course <span className="sz mono">{size(c.zip.bytes)}</span>
-          </a>
-          <a className="btn btn-line btn-s" href={assetUrl(c.requirements.path)} download>requirements.txt</a>
+        {(c.stations.some((s) => s.files) || c.zip) && <div className="course-files">
+          {c.zip && <a className="btn btn-glow btn-s chamfer" href={assetUrl(c.zip.path)} download>
+            <Icon name="zip" size={18} /> {c.stations.every((s) => s.files) ? "Whole course" : "Released sessions"} <span className="sz mono">{size(c.zip.bytes)}</span>
+          </a>}
+          {c.requirements && <a className="btn btn-line btn-s" href={assetUrl(c.requirements.path)} download>requirements.txt</a>}
           <a className="btn btn-line btn-s" href={c.github} target="_blank" rel="noopener">GitHub <Icon name="arrow-ne" size={14} /></a>
         </div>}
       </header>
+      <CoursePractice c={c} />
       <ul className="srows" role="list">
         {c.stations.map((s) => <SessionRow key={s.id} st={s} seen={log.visited.includes(s.id)} pinged={s.id in log.pings} />)}
       </ul>
@@ -112,8 +115,8 @@ export function Kit() {
           {SHOW_DOWNLOADS ? (
             <>
               <span className="label"><Icon name="kit" size={16} /> Field kit · {KIT_BYTES ? size(KIT_BYTES) : ""} · built {KIT_BUILT}</span>
-              <h2 className="az h-1" id="kit-t">Every session, ready to take</h2>
-              <p className="lead">Each session is one notebook with its outputs saved, so you can read it without running anything.</p>
+              <h2 className="az h-1" id="kit-t">Sessions, released as we go</h2>
+              <p className="lead">Each session is one notebook with its outputs saved, so you can read it without running anything. Downloads appear on a session as it is released.</p>
             </>
           ) : (
             <>

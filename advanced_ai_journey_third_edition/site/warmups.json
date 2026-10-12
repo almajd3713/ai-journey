@@ -1,0 +1,290 @@
+[
+ {
+  "course": "advanced",
+  "session": "A02",
+  "from": "A00",
+  "question": "How many tokens do ' battery' and 'battery' take in GPT-2?",
+  "answer": "One and two: the space belongs to the word, so ' battery' is a single token and 'battery' splits into 'b' and 'attery'.",
+  "source": "Session 0, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A02",
+  "from": "A00",
+  "question": "The Arabic sentence has 43 characters. How many GPT-2 tokens, against English?",
+  "answer": "45 tokens for Arabic (less than one character per token) and 11 for the 51-character English sentence.",
+  "source": "Session 0, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A02",
+  "from": "A00",
+  "question": "How big is the embedding table, and what share of GPT-2 small is it?",
+  "answer": "50,257 rows of 768 numbers, 38.6 million parameters, 31% of the model.",
+  "source": "Session 0, section 3"
+ },
+ {
+  "course": "advanced",
+  "session": "A03",
+  "from": "A01",
+  "question": "How many attention heads does GPT-2 small have, and how closely does a hand-written head match one?",
+  "answer": "12 layers x 12 heads (head size 64); our version matches GPT-2's weights to within 1e-6.",
+  "source": "Session 1, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A03",
+  "from": "A01",
+  "question": "On 50 random tokens repeated, what did GPT-2 pay per token on each copy?",
+  "answer": "18.7 bits on the first copy (uniform guessing would be 15.6) and 0.65 on the second: it copies.",
+  "source": "Session 1, section 3"
+ },
+ {
+  "course": "advanced",
+  "session": "A03",
+  "from": "A01",
+  "question": "What happened to the second-copy cost when the five strongest induction heads were removed?",
+  "answer": "From 0.65 to 7.62 bits per token; five random other heads cost only 0.76.",
+  "source": "Session 1, section 4"
+ },
+ {
+  "course": "advanced",
+  "session": "A04",
+  "from": "A02",
+  "question": "How many parameters are in GPT-2's attention and in its MLP, per block?",
+  "answer": "2,362,368 in the attention and 4,722,432 in the MLP: two thirds of a block's weights are in the MLP.",
+  "source": "Session 2, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A04",
+  "from": "A02",
+  "question": "How closely did the twelve rebuilt blocks match GPT-2, and where did the logit lens first guess a city for 'The Eiffel Tower is in the city of'?",
+  "answer": "Logits within 6.1e-05; a city at block 9 and the right city at block 11.",
+  "source": "Session 2, sections 1 and 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A04",
+  "from": "A02",
+  "question": "What happened to the block's output when the tokens were shuffled and no position information was given?",
+  "answer": "It changed by only 2.4e-07: the block treats the tokens as an unordered set.",
+  "source": "Session 2, section 3"
+ },
+ {
+  "course": "advanced",
+  "session": "A05",
+  "from": "A03",
+  "question": "How big was the GPT trained in Session 3, and how long did it take?",
+  "answer": "11.5 million parameters, 3,000 steps in 284 seconds, ending at a validation loss of 1.593 nats.",
+  "source": "Session 3, section 3"
+ },
+ {
+  "course": "advanced",
+  "session": "A05",
+  "from": "A03",
+  "question": "What did warm-up and norm placement do to training at a high learning rate?",
+  "answer": "Warm-up of 100 steps gave a validation loss of 2.49 and none gave 4.20; post-norm at 0.006 never got below the unigram loss of 5.91 nats.",
+  "source": "Session 3, section 4"
+ },
+ {
+  "course": "advanced",
+  "session": "A05",
+  "from": "A03",
+  "question": "How did greedy decoding and temperature 1.5 compare?",
+  "answer": "Greedy: 22.4% of 4-grams repeated and 0.82 bits per token (the most typical text); temperature 1.5: 6.71 bits per token, mostly nonsense.",
+  "source": "Session 3, section 5"
+ },
+ {
+  "course": "advanced",
+  "session": "A06",
+  "from": "A04",
+  "question": "What share of attention points at later tokens in GPT-2 and in BERT?",
+  "answer": "0 in every layer of GPT-2 (the mask); 0.59 on average in BERT.",
+  "source": "Session 4, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A06",
+  "from": "A04",
+  "question": "What did BERT put on 'dead' for 'The battery is [MASK], so the robot stopped working', and without the second half?",
+  "answer": "0.419 with it; 0.041 without, where the top word became 'charged' at 0.055.",
+  "source": "Session 4, section 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A06",
+  "from": "A04",
+  "question": "How well did BERT recover the three kinds of corrupted token?",
+  "answer": "70.4% for [MASK], 54.9% for random words and 99.3% for unchanged ones.",
+  "source": "Session 4, section 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A07",
+  "from": "A05",
+  "question": "Which learning rate was best for the smallest and the largest model in the grid?",
+  "answer": "0.012 for the 0.2M model and 0.003 for the 10.6M one: the best rate falls with size.",
+  "source": "Session 5, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A07",
+  "from": "A05",
+  "question": "How well did the five-parameter law fit 15 runs, and where was it least reliable?",
+  "answer": "A mean error of 0.031 nats; worst for short runs (off by up to 0.37) and for predictions needing more tokens than were trained on.",
+  "source": "Session 5, section 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A07",
+  "from": "A05",
+  "question": "What did repeating data cost?",
+  "answer": "4.1 million tokens repeated four times cost 0.06 nats against new data; 1.0 million repeated 16 times gave training loss 1.06 and validation loss 2.69.",
+  "source": "Session 5, section 4"
+ },
+ {
+  "course": "advanced",
+  "session": "A08",
+  "from": "A06",
+  "question": "In the chat example, how many of the 40 tokens carry loss, and which are they?",
+  "answer": "4: the answer, the full stop, the end-of-turn marker and the newline after it.",
+  "source": "Session 6, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A08",
+  "from": "A06",
+  "question": "How accurate were the two reward models on held-out pairs, against 'pick the longer answer'?",
+  "answer": "0.626 (proxy) and 0.655 (gold), against 0.513 for the longer answer.",
+  "source": "Session 6, section 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A08",
+  "from": "A06",
+  "question": "What did DPO change?",
+  "answer": "The held-out ranking went from 0.498 to 0.617 and the answers got longer; judged independently, the quality change was small.",
+  "source": "Session 6, section 4"
+ },
+ {
+  "course": "advanced",
+  "session": "A09",
+  "from": "A07",
+  "question": "What did a single worked example do for the instruct model before any fine-tuning?",
+  "answer": "It reached 0.925 on the familiar layouts (zero-shot, no line was fully right).",
+  "source": "Session 7, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A09",
+  "from": "A07",
+  "question": "What did an average of 0.52 hide?",
+  "answer": "One new layout solved and one failed: break the score down by layout.",
+  "source": "Session 7, section 3"
+ },
+ {
+  "course": "advanced",
+  "session": "A09",
+  "from": "A07",
+  "question": "How much did LoRA raise the loss on unrelated text?",
+  "answer": "From 1.290 to about 1.35 (a little forgetting).",
+  "source": "Session 7, section 5"
+ },
+ {
+  "course": "advanced",
+  "session": "A10",
+  "from": "A08",
+  "question": "At 60 and 250 words, how did MiniLM and TF-IDF compare on Recall@3?",
+  "answer": "At 60: MiniLM 0.583, TF-IDF 0.528; at 250: TF-IDF 0.917, MiniLM 0.750.",
+  "source": "Session 8, section 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A10",
+  "from": "A08",
+  "question": "How many of the 36 questions did the model answer closed-book, and with the top three passages?",
+  "answer": "0 of 36 closed-book; 23 of 36 with retrieval.",
+  "source": "Session 8, section 3"
+ },
+ {
+  "course": "advanced",
+  "session": "A10",
+  "from": "A08",
+  "question": "How did the 1.5B agent do on 20 tasks?",
+  "answer": "6 of 20 right: 4 answered without searching, 6 retrieved the wrong passages, 4 had the right numbers and still erred; it used the calculator once.",
+  "source": "Session 8, section 4"
+ },
+ {
+  "course": "advanced",
+  "session": "A11",
+  "from": "A09",
+  "question": "What is the KV cache per token for GPT-2 small and for Qwen2.5-0.5B?",
+  "answer": "36,864 bytes and 12,288 bytes (2 x layers x key/value heads x head size x 2 bytes); grouped-query attention is why Qwen's is a third.",
+  "source": "Session 9, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A11",
+  "from": "A09",
+  "question": "What ceiling does reading the weights put on decoding the 0.99 GB model on a 209 GB/s memory, and how close did eager decoding get?",
+  "answer": "About 5 ms per token (a little under 200 tokens per second) at best; eager decoding took 72 ms, because most of each step is spent on launch overhead, not on reading weights.",
+  "source": "Session 9, section 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A11",
+  "from": "A09",
+  "question": "What did int4 do to perplexity with one scale per matrix, per row and per 128 weights?",
+  "answer": "Original 15.47; one scale per matrix about 150 million; per row 30.08; per 128 weights 21.22.",
+  "source": "Session 9, section 4"
+ },
+ {
+  "course": "advanced",
+  "session": "A12",
+  "from": "A10",
+  "question": "How wide is a 95% interval on an accuracy measured on 1,000 questions?",
+  "answer": "About plus or minus 3 points: models closer than that cannot be separated.",
+  "source": "Session 10, section 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A12",
+  "from": "A10",
+  "question": "How often did the 0.5B judge pick the first answer?",
+  "answer": "97.9% of the time; it gave the same verdict in both orders for 3.2% of pairs.",
+  "source": "Session 10, section 4"
+ },
+ {
+  "course": "advanced",
+  "session": "A12",
+  "from": "A10",
+  "question": "Which probe gives evidence of contamination?",
+  "answer": "Shuffling the option order: a model that has seen the test may be tied to the original order. It can show contamination, never rule it out.",
+  "source": "Session 10, section 3"
+ },
+ {
+  "course": "advanced",
+  "session": "A13",
+  "from": "A11",
+  "question": "With one run per setup and unrelated seeds, how often did the comparison point the wrong way, and what did 12 seeds say?",
+  "answer": "8% of the 144 pairs; with 12 seeds B was lower by 0.0200, interval -0.0274 to -0.0131.",
+  "source": "Session 11, section 1"
+ },
+ {
+  "course": "advanced",
+  "session": "A13",
+  "from": "A11",
+  "question": "How much does one batch of 64 windows move a test score?",
+  "answer": "By 0.0417 from one test set to the next, four times the spread between training seeds (0.0106).",
+  "source": "Session 11, section 2"
+ },
+ {
+  "course": "advanced",
+  "session": "A13",
+  "from": "A11",
+  "question": "How often did 20 tweaks that change nothing produce a 'significant' one, and with Bonferroni?",
+  "answer": "28% of studies, and 2% with the correction.",
+  "source": "Session 11, section 3"
+ }
+]

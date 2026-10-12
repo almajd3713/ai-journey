@@ -5,6 +5,8 @@ import { answerPing, getLog } from "../lib/log";
 import { md } from "../lib/md";
 import { Icon } from "./Icon";
 import { Downloads } from "./Kit";
+import { ExplorableCard } from "./Explore";
+import { PausesList, PracticeLinks, WarmupList } from "./Extras";
 
 export const Html = ({ s, as: Tag = "span", className }: { s: string; as?: "span" | "p" | "li" | "strong"; className?: string }) => (
   <Tag className={className} dangerouslySetInnerHTML={{ __html: md(s) }} />
@@ -13,9 +15,9 @@ export const Html = ({ s, as: Tag = "span", className }: { s: string; as?: "span
 /** One station in the dive: kept short. The title, its sounding and the downloads show at
  *  once; the outcomes and the ping open on request. */
 export function DiveCard({ st }: { st: Station }) {
-  const [open, setOpen] = useState<"" | "more" | "ping" | "figs" | "wreck">("");
+  const [open, setOpen] = useState<"" | "more" | "ping" | "figs" | "wreck" | "pauses" | "warm" | "explore">("");
   useEffect(() => setOpen(""), [st.id]);
-  const toggle = (k: "more" | "ping" | "figs" | "wreck") => setOpen((o) => (o === k ? "" : k));
+  const toggle = (k: "more" | "ping" | "figs" | "wreck" | "pauses" | "warm" | "explore") => setOpen((o) => (o === k ? "" : k));
   const figs = st.figures.filter((f) => f.star);
   return (
     <article className="dcard card" data-route={st.course} aria-labelledby="dcard-t">
@@ -30,6 +32,7 @@ export function DiveCard({ st }: { st: Station }) {
         <span className="src">{st.notebook} · {st.sounding.src}</span>
       </div>
       <Downloads st={st} />
+      <PracticeLinks st={st} />
       <div className="dcard-tabs">
         <button type="button" className="chip" aria-expanded={open === "ping"} onClick={() => toggle("ping")}>
           <Icon name="ping" size={14} /> Ping · guess first
@@ -37,6 +40,21 @@ export function DiveCard({ st }: { st: Station }) {
         <button type="button" className="chip" aria-expanded={open === "more"} onClick={() => toggle("more")}>
           <Icon name={open === "more" ? "minus" : "plus"} size={14} /> What you learn
         </button>
+        {st.pauses.length > 1 && (
+          <button type="button" className="chip" aria-expanded={open === "pauses"} onClick={() => toggle("pauses")}>
+            <Icon name="ping" size={14} /> All pauses · {st.pauses.length}
+          </button>
+        )}
+        {st.explorables.length > 0 && (
+          <button type="button" className="chip" aria-expanded={open === "explore"} onClick={() => toggle("explore")}>
+            <Icon name="descent" size={14} /> Explore · {st.explorables.length}
+          </button>
+        )}
+        {st.warmups.length > 0 && (
+          <button type="button" className="chip" aria-expanded={open === "warm"} onClick={() => toggle("warm")}>
+            <Icon name="plus" size={14} /> Warm-up
+          </button>
+        )}
         {figs.length > 0 && (
           <button type="button" className="chip" aria-expanded={open === "figs"} onClick={() => toggle("figs")}>
             <Icon name="render" size={14} /> Figures · {figs.length}
@@ -51,6 +69,9 @@ export function DiveCard({ st }: { st: Station }) {
       </div>
       {open === "ping" && <PingCard st={st} />}
       {open === "wreck" && <WreckList st={st} />}
+      {open === "pauses" && <PausesList st={st} />}
+      {open === "warm" && <WarmupList st={st} />}
+      {open === "explore" && st.explorables.map((e) => <ExplorableCard key={e.id} id={e.id} />)}
       {open === "figs" && (
         <ul className="figs" aria-label="Figures from this session's notebook">
           {figs.map((f) => (

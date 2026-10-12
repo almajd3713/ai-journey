@@ -1,0 +1,449 @@
+[
+ {
+  "term": "tokens",
+  "defined": "A00",
+  "used": [
+   "A01",
+   "A02",
+   "A03",
+   "A04",
+   "A05",
+   "A06",
+   "A07",
+   "A08",
+   "A09",
+   "A10",
+   "A11",
+   "A12",
+   "A13"
+  ],
+  "definition": "The pieces of text from a fixed vocabulary that a language model actually reads.",
+  "related": []
+ },
+ {
+  "term": "byte-pair encoding",
+  "defined": "A00",
+  "used": [
+   "A03"
+  ],
+  "definition": "A way of learning a vocabulary: start from single characters or bytes and repeatedly merge the most frequent adjacent pair.",
+  "related": []
+ },
+ {
+  "term": "logit",
+  "defined": "A00",
+  "used": [
+   "A02",
+   "A07"
+  ],
+  "definition": "The raw score a model gives each vocabulary entry at a position, before the softmax.",
+  "related": [
+   "softmax"
+  ]
+ },
+ {
+  "term": "perplexity",
+  "defined": "A00",
+  "used": [
+   "A09"
+  ],
+  "definition": "2 raised to the mean bits per token. It can be compared only between models that share a tokenizer.",
+  "related": [
+   "bits per token"
+  ]
+ },
+ {
+  "term": "bits per token",
+  "defined": "A00",
+  "used": [
+   "A01",
+   "A03"
+  ],
+  "definition": "The average cost -log2 p of the true next token. Bits per character compares models with different tokenizers.",
+  "related": []
+ },
+ {
+  "term": "softmax",
+  "defined": "A00",
+  "used": [
+   "A01",
+   "A03"
+  ],
+  "definition": "A function that turns a list of scores into probabilities that add up to 1.",
+  "related": []
+ },
+ {
+  "term": "embedding table",
+  "defined": "A00",
+  "used": [
+   "A02",
+   "A03",
+   "A04",
+   "A05",
+   "A08",
+   "A13"
+  ],
+  "definition": "A table with one row of numbers per vocabulary entry; looking up a token reads its row.",
+  "related": []
+ },
+ {
+  "term": "attention head",
+  "defined": "A01",
+  "used": [
+   "A02",
+   "A04",
+   "A07",
+   "A09",
+   "A10",
+   "A13"
+  ],
+  "definition": "One independent set of queries, keys and values within an attention layer.",
+  "related": []
+ },
+ {
+  "term": "scaled dot-product attention",
+  "defined": "A01",
+  "used": [],
+  "definition": "Attention for one head: softmax of the query-key scores divided by the square root of the key size, plus a mask, times the values.",
+  "related": [
+   "softmax"
+  ]
+ },
+ {
+  "term": "induction head",
+  "defined": "A01",
+  "used": [],
+  "definition": "A head that finds an earlier occurrence of the current token and reads the token that followed it, which lets a model copy a repeated sequence.",
+  "related": []
+ },
+ {
+  "term": "ablation",
+  "defined": "A01",
+  "used": [],
+  "definition": "Switching a component off to test whether it is used.",
+  "related": []
+ },
+ {
+  "term": "residual stream",
+  "defined": "A02",
+  "used": [
+   "A03"
+  ],
+  "definition": "The running total every sub-layer adds to: each reads a normalised copy and writes its result back.",
+  "related": []
+ },
+ {
+  "term": "pre-norm",
+  "defined": "A02",
+  "used": [
+   "A03"
+  ],
+  "definition": "Normalising before each sub-layer, inside the residual branch.",
+  "related": []
+ },
+ {
+  "term": "MLP",
+  "defined": "A02",
+  "used": [
+   "A04",
+   "A09",
+   "A12",
+   "A13"
+  ],
+  "definition": "The two-layer network applied to each position on its own; it holds two thirds of a block's parameters.",
+  "related": []
+ },
+ {
+  "term": "logit lens",
+  "defined": "A02",
+  "used": [],
+  "definition": "Applying the final layer norm and output layer to the residual stream after any block, to see the model's current guess.",
+  "related": [
+   "residual stream"
+  ]
+ },
+ {
+  "term": "rotary position embeddings (RoPE)",
+  "defined": "A02",
+  "used": [],
+  "definition": "Encoding position by rotating queries and keys, so the score depends only on how far apart two tokens are.",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "AdamW",
+  "defined": "A03",
+  "used": [],
+  "definition": "Adam with weight decay separated from the gradient update.",
+  "related": []
+ },
+ {
+  "term": "warm-up",
+  "defined": "A03",
+  "used": [
+   "A05",
+   "A07"
+  ],
+  "definition": "Raising the learning rate linearly from near zero at the start of training.",
+  "related": []
+ },
+ {
+  "term": "gradient clipping",
+  "defined": "A03",
+  "used": [],
+  "definition": "Scaling the gradient down when its norm exceeds a limit.",
+  "related": []
+ },
+ {
+  "term": "top-k and top-p",
+  "defined": "A03",
+  "used": [],
+  "definition": "Sampling filters: top-k keeps the k most likely tokens, top-p keeps the smallest set whose probabilities add up to p.",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "encoder",
+  "defined": "A04",
+  "used": [
+   "A13"
+  ],
+  "definition": "A transformer layout with no mask: every token can read every token (BERT).",
+  "related": []
+ },
+ {
+  "term": "decoder",
+  "defined": "A04",
+  "used": [
+   "A09"
+  ],
+  "definition": "A transformer layout with the causal mask: a token reads only itself and earlier tokens (GPT-2).",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "cross-attention",
+  "defined": "A04",
+  "used": [],
+  "definition": "Attention from decoder tokens to the encoder's output, so a target text can read the source.",
+  "related": [
+   "tokens",
+   "encoder",
+   "decoder"
+  ]
+ },
+ {
+  "term": "masked language modelling",
+  "defined": "A04",
+  "used": [],
+  "definition": "BERT's training task: recover tokens that were hidden, using both sides.",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "scaling law",
+  "defined": "A05",
+  "used": [
+   "A10"
+  ],
+  "definition": "A fitted formula for how the loss falls with parameters and data.",
+  "related": []
+ },
+ {
+  "term": "compute-optimal",
+  "defined": "A05",
+  "used": [],
+  "definition": "The split of a fixed compute budget between model size and training tokens that gives the lowest loss.",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "MinHash",
+  "defined": "A05",
+  "used": [],
+  "definition": "A short signature of a text's word shingles used to find near-copies without comparing every pair.",
+  "related": []
+ },
+ {
+  "term": "instruct model",
+  "defined": "A06",
+  "used": [
+   "A07",
+   "A08",
+   "A09",
+   "A10",
+   "A12"
+  ],
+  "definition": "A base model trained further on conversations in a fixed chat template.",
+  "related": [
+   "chat template"
+  ]
+ },
+ {
+  "term": "chat template",
+  "defined": "A06",
+  "used": [
+   "A07",
+   "A08",
+   "A10"
+  ],
+  "definition": "The fixed format with role markers in which a conversation is written for the model.",
+  "related": []
+ },
+ {
+  "term": "reward model",
+  "defined": "A06",
+  "used": [
+   "A10"
+  ],
+  "definition": "A model trained on pairs of preferred and rejected answers to score any answer.",
+  "related": []
+ },
+ {
+  "term": "best-of-N",
+  "defined": "A06",
+  "used": [],
+  "definition": "Sampling N answers and keeping the one a reward model scores highest.",
+  "related": [
+   "reward model"
+  ]
+ },
+ {
+  "term": "DPO",
+  "defined": "A06",
+  "used": [],
+  "definition": "Direct preference optimisation: training the model on preference pairs without a separate reward model.",
+  "related": [
+   "reward model"
+  ]
+ },
+ {
+  "term": "LoRA",
+  "defined": "A07",
+  "used": [
+   "A12"
+  ],
+  "definition": "Freezing a weight matrix and learning a low-rank change B A that can be merged back exactly.",
+  "related": []
+ },
+ {
+  "term": "forgetting",
+  "defined": "A07",
+  "used": [],
+  "definition": "The loss of earlier abilities after fine-tuning, tracked here by the loss on unrelated text.",
+  "related": []
+ },
+ {
+  "term": "agent",
+  "defined": "A08",
+  "used": [],
+  "definition": "A loop in which the model decides at each step whether to call a tool or give its final answer.",
+  "related": []
+ },
+ {
+  "term": "Recall@k",
+  "defined": "A08",
+  "used": [],
+  "definition": "The share of questions whose answer passage is among the top k retrieved.",
+  "related": []
+ },
+ {
+  "term": "reciprocal rank fusion",
+  "defined": "A08",
+  "used": [],
+  "definition": "Combining rankings by giving each passage 1 / (60 + rank) from each ranking and adding.",
+  "related": []
+ },
+ {
+  "term": "KV cache",
+  "defined": "A09",
+  "used": [],
+  "definition": "The keys and values each layer has already computed, kept so a decoding step processes only the new token.",
+  "related": []
+ },
+ {
+  "term": "grouped-query attention",
+  "defined": "A09",
+  "used": [
+   "A12"
+  ],
+  "definition": "Several query heads sharing one key/value head, which shrinks the KV cache.",
+  "related": [
+   "KV cache"
+  ]
+ },
+ {
+  "term": "prefill and decode",
+  "defined": "A09",
+  "used": [],
+  "definition": "Prefill reads the whole prompt at once; decoding writes the answer one token per step.",
+  "related": []
+ },
+ {
+  "term": "quantisation",
+  "defined": "A09",
+  "used": [
+   "A10"
+  ],
+  "definition": "Storing weights as small integers times a scale, to save memory and reading time.",
+  "related": []
+ },
+ {
+  "term": "speculative decoding",
+  "defined": "A09",
+  "used": [],
+  "definition": "A small draft model proposes several tokens and the large model checks them all in one pass.",
+  "related": [
+   "tokens"
+  ]
+ },
+ {
+  "term": "contamination",
+  "defined": "A10",
+  "used": [],
+  "definition": "Test questions having been seen during training, which makes a benchmark score too good.",
+  "related": []
+ },
+ {
+  "term": "position bias",
+  "defined": "A10",
+  "used": [],
+  "definition": "A judge's preference for an answer because of where it is shown rather than what it says.",
+  "related": []
+ },
+ {
+  "term": "paired interval",
+  "defined": "A11",
+  "used": [
+   "A13"
+  ],
+  "definition": "An interval for the difference between two setups computed on the same seeds or items, which removes the shared noise.",
+  "related": []
+ },
+ {
+  "term": "Bonferroni correction",
+  "defined": "A11",
+  "used": [],
+  "definition": "Requiring p below 0.05 divided by the number of tests, to keep false discoveries rare.",
+  "related": []
+ },
+ {
+  "term": "zero-shot",
+  "defined": "A13",
+  "used": [],
+  "definition": "Classifying without training on examples of the task, by comparing an input with text descriptions of the classes.",
+  "related": []
+ },
+ {
+  "term": "linear probe",
+  "defined": "A13",
+  "used": [],
+  "definition": "A logistic regression trained on a frozen model's vectors.",
+  "related": []
+ }
+]
