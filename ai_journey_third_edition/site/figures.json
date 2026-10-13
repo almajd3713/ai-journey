@@ -1,18 +1,5 @@
 [
  {
-  "id": "b00-words",
-  "session": "B00",
-  "anchor": "This notebook follows one complete experiment",
-  "position": "after",
-  "kind": "D",
-  "priority": "○",
-  "file": "figures/b00-words.png",
-  "caption": "Figure 0.1 — The words you will hear, as circles within circles. This course teaches the middle ring first, then moves to the inner ones.",
-  "alt": "Nested circles: artificial intelligence contains machine learning, which contains deep learning, which contains generative AI.",
-  "numbers": [],
-  "licence": null
- },
- {
   "id": "b00-iris-photos",
   "session": "B00",
   "anchor": "## 1. The data",
@@ -20,7 +7,7 @@
   "kind": "I",
   "priority": "★",
   "file": "figures/b00-iris-photos.jpg",
-  "caption": "Figure 0.2 — The three species in the dataset. In an iris the three drooping outer parts are the sepals and the three smaller upright inner parts are the petals; the four measurements in the table are the length and width of each. Photos from Wikimedia Commons: Radomil (CC BY-SA 3.0), Danielle Langlois (CC BY-SA 3.0) and Frank Mayfield (CC BY-SA 2.0), cropped and resized.",
+  "caption": "Figure 0.1 — The three species in the dataset. In an iris the three drooping outer parts are the sepals and the three smaller upright inner parts are the petals; the four measurements in the table are the length and width of each. Photos from Wikimedia Commons: Radomil (CC BY-SA 3.0), Danielle Langlois (CC BY-SA 3.0) and Frank Mayfield (CC BY-SA 2.0), cropped and resized.",
   "alt": "Three photographs of iris flowers side by side, labelled Iris setosa, Iris versicolor and Iris virginica.",
   "numbers": [],
   "licence": [
@@ -50,12 +37,12 @@
  {
   "id": "b00-split",
   "session": "B00",
-  "anchor": "The split is random but fixed by a seed",
+  "anchor": "The split is random, but the seed fixes it",
   "position": "after",
   "kind": "D",
   "priority": "★",
   "file": "figures/b00-split.png",
-  "caption": "Figure 0.3 — The 150 flowers split into 112 for training and 38 for testing. Filled squares are the test flowers. Because of `stratify=y`, each species appears in both sets in the same proportion: 12, 13 and 13 of each species are in the test set.",
+  "caption": "Figure 0.2 — The 150 flowers split into 112 for training and 38 for testing. Filled squares are the test flowers. Because of `stratify=y`, each species appears in both sets in the same proportion: 12, 13 and 13 of each species are in the test set.",
   "alt": "Three rows of 50 squares, one row per species, with the 38 test flowers filled in and the rest outlined.",
   "numbers": [
    {
@@ -73,19 +60,19 @@
    {
     "value": "12",
     "source": {
-     "cell": 5
+     "cell": 8
     }
    },
    {
     "value": "13",
     "source": {
-     "cell": 5
+     "cell": 8
     }
    },
    {
     "value": "13",
     "source": {
-     "cell": 5
+     "cell": 8
     }
    }
   ],
@@ -99,7 +86,7 @@
   "kind": "D",
   "priority": "★",
   "file": "figures/b00-experiment-chain.png",
-  "caption": "Figure 0.6 — The five-step experiment chain that every later session follows: split, baseline, fit, evaluate, read the errors. A small version of this strip opens each session with that session's step highlighted.",
+  "caption": "Figure 0.4 — The five-step experiment chain that every later session follows: split, baseline, fit, evaluate, read the errors. A small version of this strip opens each session with that session's step highlighted.",
   "alt": "Five boxes in a row, joined by arrows: split, baseline, fit, evaluate, read the errors.",
   "numbers": [],
   "licence": null
@@ -112,7 +99,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/b00-timeline.png",
-  "caption": "Figure 0.7 — The history table as a timeline. Most of the methods in the course are older than they look; the labels near the line give the session that builds on each.",
+  "caption": "Figure 0.5 — The history table as a timeline. Most of the methods in the course are older than they look; the labels near the line give the session that builds on each.",
   "alt": "A horizontal timeline from 1936 to 2022 with ten events marked, each labelled with the session that builds on it.",
   "numbers": [],
   "licence": null
@@ -125,7 +112,7 @@
   "kind": "R",
   "priority": "★",
   "file": "figures/b00-rule-thresholds.png",
-  "caption": "Figure 0.4 — The hand-written rule. Left: the two questions, with how many of the 112 training flowers reach each answer. Right: the same two thresholds drawn on the training flowers' petals; circled flowers are the ones the rule gets wrong.",
+  "caption": "Figure 0.3 — The hand-written rule. Left: the two questions, with how many of the 112 training flowers reach each answer. Right: the same two thresholds drawn on the training flowers' petals; circled flowers are the ones the rule gets wrong.",
   "alt": "A two-question flowchart (petal length under 2.5 cm, then petal width under 1.75 cm) beside a scatter of the training flowers with a vertical line at 2.5 cm and a horizontal line at 1.75 cm.",
   "numbers": [
    {
@@ -140,12 +127,12 @@
  {
   "id": "b00-logreg-one-flower",
   "session": "B00",
-  "anchor": "The test accuracy is 0.921, against 0.316 for the baseline",
+  "anchor": "For each species $k$ the model forms a score",
   "position": "after",
   "kind": "R",
   "priority": "★",
   "file": "figures/b00-logreg-one-flower.png",
-  "caption": "Figure 0.5 — What the model computes for one test flower (the first one it gets wrong). The four rescaled measurements are multiplied by each species' weights and added to its intercept, giving three scores; softmax turns the scores into probabilities.",
+  "caption": "Figure 0.6 — What the model computes for one test flower (the first one it gets wrong). The four rescaled measurements are multiplied by each species' weights and added to its intercept, giving three scores; softmax turns the scores into probabilities.",
   "alt": "Four rescaled measurements, a three-by-four grid of fitted weights, three scores and three probabilities for one test flower, with the largest probability on the wrong species.",
   "numbers": [],
   "licence": null
@@ -790,7 +777,7 @@
   "kind": "D",
   "priority": "○",
   "file": "figures/b05-silhouette.png",
-  "caption": "Figure 5.1 — How one point's silhouette is built. It compares the average distance to its own group, a(i), with the average distance to the nearest other group, b(i). The score for the whole clustering in this session, 0.757, is the average over all points. The drawing is a diagram of the construction, not the notebook's data.",
+  "caption": "Figure 5.2 — How one point's silhouette is built. It compares the average distance to its own group, a(i), with the average distance to the nearest other group, b(i). The score for the whole clustering in this session, 0.757, is the average over all points. The drawing is a diagram of the construction, not the notebook's data.",
   "alt": "Two cluster regions with one orange point inside the left one; arrows run from it to points in its own cluster (labelled a) and to points in the other cluster (labelled b).",
   "numbers": [
    {
@@ -810,7 +797,7 @@
   "kind": "R",
   "priority": "★",
   "file": "figures/b05-pca-shadow.png",
-  "caption": "Figure 5.2 — PCA as a shadow, on a case small enough to see: Session 0's 150 iris flowers, two measurements each (petal length and petal width). The first principal direction is the line along which the flowers vary most; each flower's shadow on it is its first component, and the shadows keep most of the spread.",
+  "caption": "Figure 5.3 — PCA as a shadow, on a case small enough to see: Session 0's 150 iris flowers, two measurements each (petal length and petal width). The first principal direction is the line along which the flowers vary most; each flower's shadow on it is its first component, and the shadows keep most of the spread.",
   "alt": "A scatter of iris petal length against petal width with a long diagonal line through the cloud and short segments from each point to its nearest point on the line.",
   "numbers": [],
   "licence": null
@@ -823,7 +810,7 @@
   "kind": "R",
   "priority": "★",
   "file": "figures/b05-digits-and-centres.png",
-  "caption": "Figure 5.3 — Top: one real 8×8 digit of each kind from the data. Bottom: the 10 k-means cluster centres drawn as 8×8 images, each with the digits that make up most of its cluster. A centre is an average image, so a cluster that mixes digits has a blurred centre.",
+  "caption": "Figure 5.4 — Top: one real 8×8 digit of each kind from the data. Bottom: the 10 k-means cluster centres drawn as 8×8 images, each with the digits that make up most of its cluster. A centre is an average image, so a cluster that mixes digits has a blurred centre.",
   "alt": "A row of ten real 8 by 8 digit images and below it ten blurred cluster-centre images with the digits that dominate each cluster.",
   "numbers": [
    {
@@ -833,6 +820,19 @@
     }
    }
   ],
+  "licence": null
+ },
+ {
+  "id": "b05-kmeans-paths",
+  "session": "B05",
+  "anchor": "This loop is old: Stuart Lloyd described it",
+  "position": "after",
+  "kind": "R",
+  "priority": "○",
+  "file": "figures/b05-kmeans-paths.png",
+  "caption": "Figure 5.1 — The same updates as above, one panel each, with the path every centre takes. A hollow circle is where a centre was, a cross is where the update moves it, and the line between them is the move. The title of each panel gives the sum of squared distances from every point to its nearest centre before and after the update. It never goes up, and in the third update nothing moves, which is why k-means stops.",
+  "alt": "Three scatter panels of the same 600 points coloured by cluster, each with four hollow circles joined by lines to crosses that mark where the cluster centres move in that update.",
+  "numbers": [],
   "licence": null
  },
  {

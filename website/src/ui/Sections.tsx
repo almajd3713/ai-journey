@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { STATION_BY_ID, COURSES, KIT_BYTES, SHOW_DOWNLOADS, nextSession, whenText, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, REPO_URL, SITE, STATIONS, assetUrl, size } from "../lib/content";
+import { STATION_BY_ID, COURSES, KIT_BYTES, SHOW_DOWNLOADS, nextSession, whenText, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, SITE, STATIONS, assetUrl, size } from "../lib/content";
 import { enterDive, stepTo } from "../lib/dive";
 import { useLog } from "../lib/log";
 import type { Terrain } from "../lib/terrain";

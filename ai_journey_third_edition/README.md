@@ -2,7 +2,9 @@
 
 Thirteen notebooks that take you from "what does it mean to learn from examples?" to building a retrieval system around a language model and attacking it with prompt injection. Each one is a 60-minute, demonstration-led session: a short main path with real experiments, two or three pause questions, and a Going deeper section for reading afterwards.
 
-**Who it is for:** people new to machine learning, typically software engineers. The notebooks assume you read Python comfortably. They assume no ML background: every ML term is defined where it first appears, and the maths stays at an engineer's level, with derivations in Going deeper.
+**Who it is for:** people new to machine learning, typically software engineers. Reading Python helps, but it isn't required: the text before each code cell says what it does and the text after it reads the output, so the ideas can be followed without the code. The notebooks assume no ML background: every ML term is defined where it first appears, and the maths stays at an engineer's level, with derivations in Going deeper.
+
+**New to notebooks, Python or AI?** Start with `prelim_before_you_start`, an optional notebook of about 45 minutes that comes before Session 0. It shows how to run a notebook and how to follow the code without knowing Python, then explains learning from examples, the words of the field, and what each session is about.
 
 **Every output is saved.** You can read the whole course without running anything. Every number quoted in the text comes from the saved outputs, including the results that make a method look bad.
 
@@ -10,7 +12,8 @@ Thirteen notebooks that take you from "what does it mean to learn from examples?
 
 | # | Notebook | What it covers |
 |---|---|---|
-| 0 | `session_00_teaching_a_machine` | One complete experiment: split, baseline, a hand-written rule, a model, its mistakes. A map of the course and a timeline of the field. |
+| – | `prelim_before_you_start` | Optional, before Session 0: cells, running, errors; reading code without knowing Python; rules against examples, choosing a cut-off by hand, what training does; AI, ML, deep learning and generative AI; the course at a glance. |
+| 0 | `session_00_teaching_a_machine` | One complete experiment: split, baseline, a hand-written rule, a model, its mistakes. A timeline of the field. |
 | 1 | `session_01_reading_a_dataset` | A checklist for a new table: duplicates, missing and impossible values, the target, which features separate the outcomes. |
 | 2 | `session_02_preprocessing_and_leakage` | Fit preprocessing on training data only, pipelines, cross-validation, and a leaked column that gives a perfect score. |
 | 3 | `session_03_classical_models` | Logistic regression, k-nearest neighbours, a decision tree and a random forest on one protocol; overfitting; scaling. |

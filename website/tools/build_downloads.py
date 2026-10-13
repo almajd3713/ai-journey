@@ -36,7 +36,7 @@ COURSES = {
     "basic": {
         "dir": "ai_journey_third_edition",
         "zip": "ai-journey-basic",
-        "extra": ["README.md", "CHANGES.md", "requirements.txt"],
+        "extra": ["README.md", "CHANGES.md", "requirements.txt", "prelim_before_you_start.ipynb"],
     },
     "advanced": {
         "dir": "advanced_ai_journey_third_edition",
@@ -47,6 +47,23 @@ COURSES = {
 
 
 PRACTICE_PDF = {"basic": "experiment_checklist.pdf", "advanced": "transformer_at_a_glance.pdf"}
+
+
+PRELIM = "prelim_before_you_start.ipynb"
+
+
+def build_prelim(t, src, out, exporter):
+    """The notebook before Session 0 (basic only), when 'before_you_start' is on: the notebook and its browser render."""
+    if t.get("before_you_start") is not True:
+        return None
+    dst = out / PRELIM
+    shutil.copy2(src / PRELIM, dst)
+    nb = nbformat.read(src / PRELIM, as_version=4)
+    title = nb.cells[0].source.splitlines()[0].lstrip("# ").strip()
+    body, _ = exporter.from_notebook_node(nb, resources={"metadata": {"name": title}})
+    html = out / "read" / (dst.stem + ".html")
+    html.write_text(body)
+    return {"ipynb": entry(dst), "html": entry(html)}
 
 
 def build_practice(cid, c, t, src, out):
@@ -155,8 +172,10 @@ def main():
                 })
             print(f"{cid}: {len(figures)} figures")
         practice = build_practice(cid, c, t, src, out)
+        prelim = build_prelim(t, src, out, exporter) if (src / PRELIM).exists() else None
         manifest["courses"][cid] = {
             "practice": practice,
+            "prelim": prelim,
             "zip": entry(zpath) if t["zip"] else None,
             "requirements": entry(out / "requirements.txt") if notebooks else None,
             "sessions": sessions,

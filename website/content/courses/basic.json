@@ -12,7 +12,7 @@
    "summary": [
     "Suppose you want a program that names a flower from its measurements. You could write rules by hand: short petals mean *setosa*, then check the width, then add an exception for the awkward cases. The list gets long quickly. Machine learning takes a different route: you show the computer flowers whose species is already known, and it works out the rules itself.",
     "This notebook follows one complete experiment from start to finish. The code is short. The order of the steps is what you will reuse in every later session.",
-    "**Where the course goes.** Sessions 0–5 cover the foundations with small tables of data and scikit-learn: how to split data and set a baseline, how to read a dataset, preprocessing and leakage, four classical models, how to evaluate a model, and finding groups without labels. Sessions 6–9 move to neural networks in PyTorch: how a network learns, how to read its training curves, networks for images, and reusing a network someone else trained. Sessions 10–12 are about text: turning words into numbers, attention and transformers, and building a system around a language model."
+    "**New to notebooks, to Python or to AI?** Read *Before You Start* (`prelim_before_you_start.ipynb`) first. It shows how to run a notebook, how to follow the code without knowing Python, and the words this session uses. You don't need to read the code to follow this session: the text before each code cell says what it does, and the text after it reads the output."
    ],
    "outcomes": [
     "explain why part of the data is kept hidden until the end",
@@ -44,9 +44,9 @@
     "**evaluate** on the test set",
     "**read the errors**."
    ],
-   "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib` and `scikit-learn`. The outputs are already saved in the notebook. Everything runs in a few seconds, and your numbers may differ slightly from the ones quoted in the text.",
+   "run": "To run it yourself open the notebook in Google Colab or JupyterLab and run the cells from the top; it takes a few seconds and needs `numpy`, `pandas`, `matplotlib` and `scikit-learn`, which Colab already has. Every output is already saved, so you can also just read it. If you run it, your numbers may differ slightly from the ones quoted in the text.",
    "notebook": "session_00_teaching_a_machine.ipynb",
-   "bytes": 770624,
+   "bytes": 637884,
    "id": "basic-00",
    "code": "B00",
    "minutes": 60,
@@ -90,7 +90,7 @@
    "takeaways": [],
    "run": "To run it yourself you need `numpy`, `pandas` and `matplotlib`. The outputs are already saved in the notebook. It runs in a few seconds, and the numbers should match exactly because the data is generated from a fixed seed.",
    "notebook": "session_01_reading_a_dataset.ipynb",
-   "bytes": 634349,
+   "bytes": 634955,
    "id": "basic-01",
    "code": "B01",
    "minutes": 60,
@@ -133,7 +133,7 @@
    "takeaways": [],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib` and `scikit-learn`. The outputs are already saved in the notebook. It runs in a few seconds, and the numbers should match because the data comes from a fixed seed.",
    "notebook": "session_02_preprocessing_and_leakage.ipynb",
-   "bytes": 529341,
+   "bytes": 530356,
    "id": "basic-02",
    "code": "B02",
    "minutes": 60,
@@ -173,7 +173,7 @@
    "takeaways": [],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib` and `scikit-learn`. The outputs are already saved in the notebook. It runs in under a minute, and your numbers may differ slightly from the ones quoted in the text.",
    "notebook": "session_03_classical_models.ipynb",
-   "bytes": 1053892,
+   "bytes": 1054300,
    "id": "basic-03",
    "code": "B03",
    "minutes": 60,
@@ -215,7 +215,7 @@
    "takeaways": [],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib` and `scikit-learn`. The outputs are already saved in the notebook. It runs in about fifteen seconds, and your numbers may differ slightly from the ones quoted in the text.",
    "notebook": "session_04_evaluation_and_generalization.ipynb",
-   "bytes": 593624,
+   "bytes": 594322,
    "id": "basic-04",
    "code": "B04",
    "minutes": 60,
@@ -258,7 +258,7 @@
    "takeaways": [],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib` and `scikit-learn`. The outputs are already saved in the notebook. It runs in about fifteen seconds, and the numbers should match because every step uses a fixed seed.",
    "notebook": "session_05_unsupervised_learning.ipynb",
-   "bytes": 915862,
+   "bytes": 1034060,
    "id": "basic-05",
    "code": "B05",
    "minutes": 60,
@@ -306,7 +306,7 @@
    ],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `scikit-learn` and `torch` (see the course README). The outputs are already saved in the notebook. It runs in a few seconds on a CPU, and your numbers may differ slightly from the ones quoted in the text.",
    "notebook": "session_06_neural_networks.ipynb",
-   "bytes": 802484,
+   "bytes": 802892,
    "id": "basic-06",
    "code": "B06",
    "minutes": 60,
@@ -401,7 +401,7 @@
    ],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `torch` and `torchvision`. The first run downloads the MNIST digits (about 11 MB compressed) into `~/.cache/ai_journey`. The saved outputs came from a laptop GPU, where the notebook took 32 seconds. On a CPU the networks take a few minutes to train, and your numbers may differ slightly from the ones quoted in the text.",
    "notebook": "session_08_computer_vision.ipynb",
-   "bytes": 412953,
+   "bytes": 413627,
    "id": "basic-08",
    "code": "B08",
    "minutes": 60,
@@ -448,7 +448,7 @@
    ],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `scikit-learn`, `pillow`, `torch` and `torchvision`. The first run downloads the flower photos (229 MB) into `~/.cache/ai_journey` and the MobileNetV2 weights (14 MB). The saved outputs came from a laptop GPU, where the three training runs took about four minutes. On a CPU, expect much longer, mostly for the from-scratch run; lower `PER_CLASS` to 100 for a quick pass. Your numbers may differ from the ones quoted in the text.",
    "notebook": "session_09_transfer_learning.ipynb",
-   "bytes": 2600555,
+   "bytes": 2600710,
    "id": "basic-09",
    "code": "B09",
    "minutes": 60,
@@ -496,7 +496,7 @@
    ],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `scikit-learn`, `torch` and `huggingface_hub` (with `pyarrow` to read the files). The first run downloads the IMDB reviews from the Hugging Face hub (two files of 20 MB). The saved outputs came from a laptop GPU, where the notebook took two to three minutes. On a CPU, the LSTM is the slow part and may take several minutes. Your numbers may differ slightly from the ones quoted in the text.",
    "notebook": "session_10_nlp_foundations.ipynb",
-   "bytes": 469719,
+   "bytes": 470458,
    "id": "basic-10",
    "code": "B10",
    "minutes": 60,
@@ -543,7 +543,7 @@
    ],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `torch` and `transformers`. The first run downloads BERT (about 440 MB). The outputs are already saved in the notebook. It runs in under a minute on a laptop, and your BERT numbers may differ slightly from the ones quoted in the text.",
    "notebook": "session_11_attention_and_transformers.ipynb",
-   "bytes": 629110,
+   "bytes": 629731,
    "id": "basic-11",
    "code": "B11",
    "minutes": 60,
@@ -595,7 +595,7 @@
    ],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `scikit-learn`, `torch` and `transformers`. The first run downloads the model (about 3 GB). The saved outputs came from a laptop GPU and the notebook ran in about a minute and a half once the model was cached. On a laptop CPU the model loads in float32 (about 6 GB of memory) and each answer takes several seconds. Answers are generated greedily, so the same prompt gives the same answer on the same machine, but another machine may differ slightly.",
    "notebook": "session_12_llm_systems.ipynb",
-   "bytes": 725557,
+   "bytes": 726018,
    "id": "basic-12",
    "code": "B12",
    "minutes": 60,
@@ -605,5 +605,21 @@
     "cpu": "possible with about 6 GB of free memory; each answer takes several seconds"
    }
   }
- ]
+ ],
+ "prelim": {
+  "title": "Before You Start — Notebooks and the Ideas Behind AI",
+  "summary": [
+   "This course teaches machine learning by running real experiments. This notebook comes before Session 0. It is for anyone who has never opened a notebook, never trained a model, or never written Python. It assumes no background, and you don't have to write any code.",
+   "It has two parts. **Part 1** shows how a notebook works and how to follow the code in this course without knowing Python. **Part 2** explains the ideas the rest of the course builds on: what it means for a program to learn from examples, the words you will hear, and what each session is about."
+  ],
+  "outcomes": [
+   "open a notebook, run its cells, and recover when a cell fails",
+   "follow a code cell from the text around it, its comments and its names, without knowing Python",
+   "say how machine learning differs from ordinary programming",
+   "use the words *example*, *feature*, *label*, *model*, *training* and *prediction*"
+  ],
+  "minutes": 45,
+  "notebook": "prelim_before_you_start.ipynb",
+  "bytes": 385446
+ }
 }

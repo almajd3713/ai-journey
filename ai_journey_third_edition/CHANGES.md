@@ -3,6 +3,13 @@
 The October 2026 revision is described first; the original third-edition changes follow it.
 
 
+## Before You Start and a lighter Session 0 (2026-10-13)
+
+Learners new to notebooks, to Python, or to AI found Session 0 too technical.
+
+- **New notebook `prelim_before_you_start.ipynb`**, unnumbered and optional, before Session 0 (built by `_build/mkprelim.py`). Part 1: cells, running, shared state, errors, and how to follow the code without knowing Python. Part 2: rules against examples, products that contain a model, the vocabulary, a cut-off chosen by hand on twelve flowers and by the computer on 100 (fewest mistakes 7, from 4.75 to 4.9 cm), AI/ML/deep learning/generative AI, four warnings, the course at a glance. The course map and the word map (former Figure 0.1) moved here from Session 0.
+- **Session 0:** the title cell points newcomers to *Before You Start*; section 1's text now comes before the code; plain-English comments on every code cell; the hand-written rule is written as two named conditions and given in words; accuracy is defined where the baseline is scored; logistic regression is explained as a score card. The figure-drawing cells start collapsed (JupyterLab and Colab). The model's arithmetic for one flower (former Figure 0.5) and the `classification_report` with precision and recall moved to Going deeper. The test-flower scatter now uses the species colours of the other figures (setosa green, versicolor blue, virginica orange). No number changed: every old output is identical except the confusion-matrix cell, which no longer prints the report, and the recoloured scatter.
+
 ## Revision of 2026-10
 
 Done after a content review (`../BASIC_CONTENT_REVIEW.md`) and following its plan (`../BASIC_REVISION_PLAN.md`). The audience is now stated as people new to machine learning, typically software engineers. Every notebook was re-run in one Python 3.12 environment (`requirements.txt`), and every number in the text was checked against the new outputs. Sessions 3, 4, 5 and 11 reproduced their earlier outputs exactly in the new environment; Session 1 differs only in how pandas 3 names text columns.

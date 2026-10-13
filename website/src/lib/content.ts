@@ -88,6 +88,19 @@ export interface Person {
   links?: Record<string, string>;
 }
 
+/** the unnumbered notebook before Session 0 (basic only): listed with the course, not a dive station */
+export interface Prelim {
+  title: string;
+  summary: string[];
+  outcomes: string[];
+  minutes: number;
+  notebook: string;
+  /** present only while 'before_you_start' is switched on in content/downloads.json */
+  files: { ipynb: FileEntry; html: FileEntry } | null;
+  colab: string;
+  github: string;
+}
+
 export interface Course {
   id: CourseId;
   title: string;
@@ -95,6 +108,7 @@ export interface Course {
   code: string;
   dir: string;
   stations: Station[];
+  prelim: Prelim | null;
   zip: FileEntry | null;
   requirements: FileEntry | null;
   /** course-wide practice files released in content/downloads.json */
@@ -132,7 +146,8 @@ type RawMarker = {
   ping: { pause: number; q?: string; choices: string[]; answer: number; echo: string; src: string };
 };
 
-const raw: Record<CourseId, { title: string; subtitle: string; code: string; dir: string; sessions: RawSession[] }> = {
+type RawPrelim = Omit<Prelim, "files" | "colab" | "github"> & { bytes: number };
+const raw: Record<CourseId, { title: string; subtitle: string; code: string; dir: string; sessions: RawSession[]; prelim?: RawPrelim }> = {
   basic: { ...basic, dir: site.courseDirs.basic },
   advanced: { ...(advanced as unknown as typeof basic), dir: site.courseDirs.advanced },
 };
@@ -153,6 +168,7 @@ export const COURSES: Course[] = (["basic", "advanced"] as CourseId[]).map((cid)
   const c = raw[cid];
   const k = kit.courses[cid];
   const kp = (k as unknown as { practice?: PracticeManifest }).practice ?? {};
+  const kpre = (k as unknown as { prelim?: { ipynb: FileEntry; html: FileEntry } | null }).prelim ?? null;
   const stations = c.sessions.map((s): Station => {
     const m = (markers.stations as Record<string, RawMarker>)[s.id];
     const pause = s.pauses[m.ping.pause];
@@ -197,6 +213,10 @@ export const COURSES: Course[] = (["basic", "advanced"] as CourseId[]).map((cid)
     code: c.code,
     dir: c.dir,
     stations,
+    prelim: c.prelim
+      ? { title: c.prelim.title, summary: c.prelim.summary, outcomes: c.prelim.outcomes, minutes: c.prelim.minutes, notebook: c.prelim.notebook,
+          files: kpre, colab: colab(c.dir, c.prelim.notebook), github: blob(c.dir, c.prelim.notebook) }
+      : null,
     zip: (k.zip ?? null) as FileEntry | null,
     requirements: (k.requirements ?? null) as FileEntry | null,
     extras: { bugHunt: kp.bug_hunt ?? null, bugHuntAnswers: kp.bug_hunt_answers ?? null, capstone: kp.capstone ?? null, cheatSheet: kp.cheat_sheet ?? null, check: kp.aij_check ?? null },
@@ -210,12 +230,12 @@ export const STATION_BY_ID = Object.fromEntries(STATIONS.map((s) => [s.id, s]));
 export const KIT_BUILT: string = kit.built;
 export const KIT_BYTES = COURSES.reduce(
   (t, c) =>
-    t + (c.zip?.bytes ?? 0) + (c.requirements?.bytes ?? 0) + Object.values(c.extras).reduce((u, f) => u + (f?.bytes ?? 0), 0) +
+    t + (c.zip?.bytes ?? 0) + (c.requirements?.bytes ?? 0) + (c.prelim?.files ? c.prelim.files.ipynb.bytes + c.prelim.files.html.bytes : 0) + Object.values(c.extras).reduce((u, f) => u + (f?.bytes ?? 0), 0) +
     c.stations.reduce((u, s) => u + (s.files ? s.files.ipynb.bytes + s.files.html.bytes : 0) + (s.practice.exercise?.bytes ?? 0) + (s.practice.solutions?.bytes ?? 0), 0),
   0,
 );
 /** how many sessions are released for download; the site shows download wording only when this is above zero */
-export const RELEASED = STATIONS.filter((s) => s.files).length;
+export const RELEASED = STATIONS.filter((s) => s.files).length + COURSES.filter((c) => c.prelim?.files).length;
 export const PRACTICE_RELEASED = COURSES.some((c) => Object.values(c.extras).some(Boolean)) || STATIONS.some((s) => s.practice.exercise || s.practice.solutions);
 export const SHOW_DOWNLOADS = RELEASED > 0 || PRACTICE_RELEASED;
 

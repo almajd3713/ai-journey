@@ -109,6 +109,19 @@ def parse(nb_path):
     }
 
 
+def parse_prelim(nb_path):
+    """The unnumbered 'Before You Start' notebook: title, summary and outcomes from its title cell; not a dive station."""
+    text = md(json.loads(nb_path.read_text())["cells"][0])
+    first, body = text.strip().split("\n", 1)
+    title = re.sub(r"^#\s*", "", first).strip()
+    paras = [p.strip() for p in re.split(r"\n\s*\n", body) if p.strip()]
+    i = next(k for k, p in enumerate(paras) if p.startswith("**By the end"))
+    outcomes = [inline(re.sub(r"^\d+\.\s*", "", x)).rstrip(";.") for x in re.split(r"\n(?=\d+\.)", paras[i + 1])]
+    m = re.search(r"about (\d+) minutes", body)
+    return {"title": title, "summary": [inline(p) for p in paras[:i]], "outcomes": outcomes,
+            "minutes": int(m.group(1)) if m else 60, "notebook": nb_path.name, "bytes": nb_path.stat().st_size}
+
+
 def hardware(readme):
     """Rows of the 'Hardware' table: session spec -> {device/time, cpu}."""
     text = readme.read_text()
@@ -148,6 +161,9 @@ def main():
                     s["hardware"] = {"device": "GPU", "time": row[0], "cpu": row[1]}
             sessions.append(s)
         out = {k: v for k, v in meta.items()} | {"id": cid, "sessions": sessions}
+        pre = d / "prelim_before_you_start.ipynb"
+        if pre.exists():
+            out["prelim"] = parse_prelim(pre)
         (OUT / f"{cid}.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n")
         print(f"{cid}: {len(sessions)} sessions, {sum(len(s['pauses']) for s in sessions)} pauses")
         for s in sessions:

@@ -30,7 +30,7 @@
     {
      "value": "12",
      "source": {
-      "cell": 7
+      "cell": 10
      }
     }
    ]
@@ -40,7 +40,7 @@
   "id": "b01-p2",
   "session": "B01",
   "notebook": "session_01_reading_a_dataset.ipynb",
-  "cell": 25,
+  "cell": 29,
   "q": "the next table gives the pass rate per department",
   "question": "the next table gives the pass rate per department. Which department do you expect to pass most often, and if it does, would the table tell you why?",
   "choices": [
@@ -95,7 +95,7 @@
   "id": "b02-p1",
   "session": "B02",
   "notebook": "session_02_preprocessing_and_leakage.ipynb",
-  "cell": 13,
+  "cell": 18,
   "q": "the test score is higher than the training score",
   "question": "the test score is higher than the training score. Is the model better on unseen students? Decide before moving on.",
   "choices": [
@@ -152,7 +152,7 @@
   "id": "b02-p2",
   "session": "B02",
   "notebook": "session_02_preprocessing_and_leakage.ipynb",
-  "cell": 19,
+  "cell": 26,
   "q": "we add this column and train the same pipeline",
   "question": "we add this column and train the same pipeline. What accuracy do you expect?",
   "choices": [
@@ -195,7 +195,7 @@
   "id": "b03-p1",
   "session": "B03",
   "notebook": "session_03_classical_models.ipynb",
-  "cell": 6,
+  "cell": 5,
   "q": "the moons are curved",
   "question": "the moons are curved. Before looking at the boundaries, which models do you expect to follow the curve and which to struggle?",
   "choices": [
@@ -383,7 +383,7 @@
   "id": "b05-p2",
   "session": "B05",
   "notebook": "session_05_unsupervised_learning.ipynb",
-  "cell": 11,
+  "cell": 16,
   "q": "nothing about the points' arrangement has changed",
   "question": "nothing about the points' arrangement has changed, only the units. Will the clusters change?",
   "choices": [
@@ -406,7 +406,7 @@
     {
      "value": "0.996",
      "source": {
-      "cell": 2
+      "cell": 3
      }
     },
     {
@@ -455,7 +455,7 @@
   "id": "b06-p2",
   "session": "B06",
   "notebook": "session_06_neural_networks.ipynb",
-  "cell": 7,
+  "cell": 6,
   "q": "does the chain of two linear layers have more power than one",
   "question": "does the chain of two linear layers have more power than one?",
   "choices": [
@@ -631,7 +631,7 @@
   "id": "b08-p2",
   "session": "B08",
   "notebook": "session_08_computer_vision.ipynb",
-  "cell": 17,
+  "cell": 18,
   "q": "which network will lose more accuracy when the digits move 3 pixels",
   "question": "which network will lose more accuracy when the digits move 3 pixels, and why?",
   "choices": [
@@ -682,7 +682,7 @@
   "id": "b09-p1",
   "session": "B09",
   "notebook": "session_09_transfer_learning.ipynb",
-  "cell": 4,
+  "cell": 5,
   "q": "Which of these changes would be wrong for a dataset of handwritten digits",
   "question": "the next cell makes random changes to a training photo: flips it left to right, rotates it a little, zooms in or out. Which of these changes would be wrong for a dataset of handwritten digits like Session 8's?",
   "choices": [
@@ -712,7 +712,7 @@
   "id": "b09-p2",
   "session": "B09",
   "notebook": "session_09_transfer_learning.ipynb",
-  "cell": 20,
+  "cell": 21,
   "q": "order the three strategies by test accuracy",
   "question": "before looking at the table, order the three strategies by test accuracy. How big do you expect the gaps to be?",
   "choices": [
@@ -773,7 +773,7 @@
   "id": "b10-p1",
   "session": "B10",
   "notebook": "session_10_nlp_foundations.ipynb",
-  "cell": 7,
+  "cell": 10,
   "q": "What weight do you expect it to learn for that pair",
   "question": "the single-word model can only add up a weight for \"not\" and a weight for \"good\". The word-pair model also has a feature for \"not good\". What weight do you expect it to learn for that pair: positive, negative, or close to zero?",
   "choices": [
@@ -818,7 +818,7 @@
   "id": "b10-p2",
   "session": "B10",
   "notebook": "session_10_nlp_foundations.ipynb",
-  "cell": 10,
+  "cell": 13,
   "q": "will it beat the word-pair model's 0.884",
   "question": "the next model reads each review in order, word by word, so it could in principle learn what \"not\" does to the words after it. On these 10,000 reviews, will it beat the word-pair model's 0.884?",
   "choices": [
@@ -881,7 +881,7 @@
   "id": "b11-p1",
   "session": "B11",
   "notebook": "session_11_attention_and_transformers.ipynb",
-  "cell": 2,
+  "cell": 3,
   "q": "which token should \"it\" pay most attention to",
   "question": "which token should \"it\" pay most attention to? Look at the \"it\" row.",
   "choices": [
@@ -930,7 +930,7 @@
   "id": "b11-p2",
   "session": "B11",
   "notebook": "session_11_attention_and_transformers.ipynb",
-  "cell": 8,
+  "cell": 10,
   "q": "Will one head point from \"it\" to the right object in both sentences",
   "question": "BERT, next, has 144 attention heads. We give it the sentence twice, once ending in \"empty\" (so \"it\" is the battery) and once in \"broken\" (so \"it\" is more likely the device). Will one head point from \"it\" to the right object in both sentences?",
   "choices": [
@@ -975,7 +975,7 @@
   "id": "b12-p1",
   "session": "B12",
   "notebook": "session_12_llm_systems.ipynb",
-  "cell": 2,
+  "cell": 3,
   "q": "How sure do you expect the model to be of the first token",
   "question": "the request is \"Suggest a name for a robot that sorts batteries.\" How sure do you expect the model to be of the first token of its answer?",
   "choices": [
@@ -1026,7 +1026,7 @@
   "id": "b12-p2",
   "session": "B12",
   "notebook": "session_12_llm_systems.ipynb",
-  "cell": 21,
+  "cell": 24,
   "q": "a user asks a question that none of the documents covers",
   "question": "a user asks a question that none of the documents covers. What should the system do?",
   "choices": [
@@ -1071,7 +1071,7 @@
   "id": "b12-p3",
   "session": "B12",
   "notebook": "session_12_llm_systems.ipynb",
-  "cell": 23,
+  "cell": 26,
   "q": "the model follow the injected sentence",
   "question": "the question is about thresholds, so the retriever will return both the real document and the forum post. Will the model follow the injected sentence?",
   "choices": [
