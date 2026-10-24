@@ -10,7 +10,8 @@
    "n": 0,
    "title": "From text to probabilities",
    "summary": [
-    "The basic course used a language model as a box: text goes in, a probability for the next word comes out, and Session 11 gave a first look at the attention inside. This course opens the box. This first session covers the two ends, what goes in (tokens) and what comes out (probabilities), using a real model, GPT-2 small, which we reuse in Sessions 1 to 4."
+    "The basic course used a language model as a box: text goes in, a probability for the next word comes out, and Session 11 gave a first look at the attention inside. This course opens the box. This first session covers the two ends, what goes in (tokens) and what comes out (probabilities), using a real model, GPT-2 small, which we reuse in Sessions 1 to 4.",
+    "**Not sure you have the background, or never met attention?** Read *Before You Start* (`prelim_before_you_start.ipynb`) first. It goes over what this course assumes, up to the LSTM, and introduces attention, which Session 1 builds on."
    ],
    "outcomes": [
     "explain how a byte-pair-encoding (BPE) tokenizer builds its vocabulary, and why the same sentence costs a different number of tokens in different languages",
@@ -47,7 +48,7 @@
    ],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `torch` and `transformers`. The first run downloads GPT-2 (about 500 MB). The outputs are already saved in the notebook. It takes about half a minute on a GPU or a laptop CPU, and numbers in the later cells may differ in the last digit on another machine.",
    "notebook": "session_00_from_text_to_probabilities.ipynb",
-   "bytes": 717972,
+   "bytes": 718226,
    "id": "advanced-00",
    "code": "A00",
    "minutes": 60,
@@ -96,7 +97,7 @@
    ],
    "run": "To run it yourself you need `numpy`, `pandas`, `matplotlib`, `scipy`, `torch` and `transformers`, and the GPT-2 download from Session 0. The outputs are already saved in the notebook. It takes under a minute on a GPU. The ablation cells run the model several hundred times on 101 tokens, which is quick on a laptop CPU too. Your numbers may differ in the last digit.",
    "notebook": "session_01_attention_inside_a_real_model.ipynb",
-   "bytes": 686210,
+   "bytes": 686296,
    "id": "advanced-01",
    "code": "A01",
    "minutes": 60,
@@ -696,5 +697,21 @@
     "cpu": "slower, practical"
    }
   }
- ]
+ ],
+ "prelim": {
+  "title": "Before You Start — What This Course Assumes",
+  "summary": [
+   "This course takes some machine learning as known: how to run an experiment whose score can be trusted, how a neural network learns, and how text becomes numbers that a network reads in order, up to recurrent networks such as the LSTM. Wherever you learned it, this notebook goes over it in one sitting, so you can check that it is familiar and fill any gaps. It is optional and comes before Session 0.",
+   "It ends where the LSTM runs out of room, on a task we measure, and with **attention**, which solves that task. Attention is not assumed: it is the idea Session 1 opens up inside GPT-2, so this notebook introduces it from the start."
+  ],
+  "outcomes": [
+   "run and read an honest experiment: split, baseline, fit, evaluate once, and read the errors",
+   "write the training loop of a small PyTorch network and read its loss curves",
+   "explain how text becomes token ids and vectors, and why an LSTM's memory of fixed size limits what it can recall",
+   "say what a query, a key and a value do in attention, and why attention can recall what the LSTM loses"
+  ],
+  "minutes": 60,
+  "notebook": "prelim_before_you_start.ipynb",
+  "bytes": 798599
+ }
 }

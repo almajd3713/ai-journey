@@ -88,7 +88,7 @@ export interface Person {
   links?: Record<string, string>;
 }
 
-/** the unnumbered notebook before Session 0 (basic only): listed with the course, not a dive station */
+/** the unnumbered notebook before Session 0, in either course: listed with the course, not a dive station */
 export interface Prelim {
   title: string;
   summary: string[];

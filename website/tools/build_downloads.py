@@ -41,7 +41,7 @@ COURSES = {
     "advanced": {
         "dir": "advanced_ai_journey_third_edition",
         "zip": "ai-journey-advanced",
-        "extra": ["README.md", "CHANGES.md", "requirements.txt", "aij_common.py", "tinygpt.py", "data"],
+        "extra": ["README.md", "CHANGES.md", "requirements.txt", "aij_common.py", "tinygpt.py", "data", "prelim_before_you_start.ipynb"],
     },
 }
 
@@ -53,7 +53,7 @@ PRELIM = "prelim_before_you_start.ipynb"
 
 
 def build_prelim(t, src, out, exporter):
-    """The notebook before Session 0 (basic only), when 'before_you_start' is on: the notebook and its browser render."""
+    """The notebook before Session 0, when 'before_you_start' is on: the notebook and its browser render."""
     if t.get("before_you_start") is not True:
         return None
     dst = out / PRELIM

@@ -2,6 +2,11 @@
 
 The previous version is in `../advanced_ai_journey/`. The reasons for the rewrite are set out in `../ADVANCED_REWRITE_PLAN.md` (analysis and plan) and `../ADVANCED_CONTENT_REVIEW.md` (pedagogy review).
 
+## Before You Start (2026-10-24)
+
+- **New notebook `prelim_before_you_start.ipynb`**, unnumbered and optional, before Session 0 (built by `_build/mkprelim.py`). It goes over what the course assumes, the material of basic Sessions 0–10, without assuming the basic course was taken: an experiment on scikit-learn's breast-cancer data, cross-validation, overfitting trees, the training loop on XOR, softmax and cross-entropy in bits, CNN parameter counts, tokens and embeddings, and an LSTM on a negation task. It then measures the LSTM's limit on a key–value recall task (1.000 with 1 pair, 0.213 with 16) and introduces attention, by hand and as one trained head (1.000 on 16 pairs, against 0.215 for the LSTM given the same previous-token note). Earlier versions of the basic course did not reach attention, which Session 1 assumes. Nothing is downloaded; the GPU run takes about two minutes. Numbers quoted from the basic course are marked with their session; the rest come from the saved outputs.
+- **Sessions 0 and 1:** the title cell of Session 0 and the callback of Session 1 point to *Before You Start*.
+
 ## What changed overall
 
 - **Every result is measured.** The previous notebooks ran no real model: logits, attention weights, scores, latencies and results tables were typed by hand or generated from formulas. The new notebooks run GPT-2, BERT, T5, a small GPT trained here, Qwen2.5 (0.5B and 1.5B, base and instruct), MiniLM and CLIP, and every number in the text was checked against the saved outputs of the final run.

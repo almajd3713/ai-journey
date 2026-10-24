@@ -67,12 +67,13 @@ function SessionRow({ st, seen, pinged }: { st: Station; seen: boolean; pinged: 
 }
 
 /** The notebook before Session 0: a row like a session's, without a dive station. */
-function PrelimRow({ p }: { p: Prelim }) {
+function PrelimRow({ p, course }: { p: Prelim; course: Course }) {
   const [open, setOpen] = useState(false);
   const files = p.files;
+  const id = `row-prelim-${course.id}`;
   return (
-    <li className="srow srow-prelim" data-route="basic" data-nodl={files ? undefined : ""} data-open={open ? "" : undefined}>
-      <button type="button" className="srow-t" aria-expanded={open} aria-controls="row-prelim" onClick={() => setOpen(!open)}>
+    <li className="srow srow-prelim" data-route={course.id} data-nodl={files ? undefined : ""} data-open={open ? "" : undefined}>
+      <button type="button" className="srow-t" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
         <span className="code-link">PRE</span>
         <span className="nm">{p.title}</span>
         <span className="fog meta">{p.minutes} min · optional</span>
@@ -84,11 +85,11 @@ function PrelimRow({ p }: { p: Prelim }) {
             <Icon name="notebook" size={18} /><span>.ipynb</span><span className="sz">{size(files.ipynb.bytes)}</span>
           </a>
           <a className="dl-a" href={assetUrl(files.html.path)} target="_blank" rel="noopener"><Icon name="render" size={18} /><span>Read</span></a>
-          <a className="dl-a" href={p.colab} target="_blank" rel="noopener"><Icon name="cloud" size={18} /><span>Colab</span></a>
+          {course.id === "basic" && <a className="dl-a" href={p.colab} target="_blank" rel="noopener"><Icon name="cloud" size={18} /><span>Colab</span></a>}
         </div>
       )}
       {open && (
-        <div className="srow-more" id="row-prelim">
+        <div className="srow-more" id={id}>
           <Html as="p" className="fog" s={p.summary[0]} />
           <span className="label label-s">By the end you can</span>
           <ol className="outcomes">{p.outcomes.map((o, k) => <Html key={k} as="li" s={o} />)}</ol>
@@ -109,7 +110,7 @@ function CourseBlock({ c }: { c: Course }) {
           <p className="fog">
             {c.id === "basic"
               ? "For anyone new to machine learning. New to notebooks or Python as well? Start with Before You Start. Runs on a laptop or in Colab."
-              : "After the basic course. Read from the saved outputs; re-running needs a GPU."}
+              : "Assumes the basic course's material, up to the LSTM. Not sure you have it, or never met attention? Start with Before You Start. Read from the saved outputs; re-running needs a GPU."}
           </p>
         </div>
         {(c.stations.some((s) => s.files) || c.zip) && <div className="course-files">
@@ -122,7 +123,7 @@ function CourseBlock({ c }: { c: Course }) {
       </header>
       <CoursePractice c={c} />
       <ul className="srows" role="list">
-        {c.prelim && <PrelimRow p={c.prelim} />}
+        {c.prelim && <PrelimRow p={c.prelim} course={c} />}
         {c.stations.map((s) => <SessionRow key={s.id} st={s} seen={log.visited.includes(s.id)} pinged={s.id in log.pings} />)}
       </ul>
     </div>

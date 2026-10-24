@@ -4,12 +4,15 @@ Fourteen notebooks, Sessions 0–13, that open up the language models the basic 
 
 **Audience:** graduates of the basic course. They have trained classifiers, used a pre-trained network and met attention, and know terms such as logits, fine-tuning and validation sets at a working level. The notebooks use PyTorch and Hugging Face `transformers` (the basic course uses scikit-learn and, from its Session 6, plain PyTorch) and explain the code they rely on.
 
+**Not sure you have that background?** Start with `prelim_before_you_start`, an optional notebook of about 60 minutes before Session 0. It goes over what this course assumes, from an honest experiment to the LSTM, without assuming the basic course itself was taken, and then introduces attention: an LSTM fails a recall task that one attention head solves. Learners from earlier versions of the basic course, which did not reach attention, should read at least its section 13 before Session 1.
+
 **Format:** each notebook has a title cell with three outcomes and a "To run it yourself" note, 3–5 numbered sections with 2–3 pause questions, a short "What to take away", and a "Going deeper" part for reading afterwards. Each session fits 60 minutes when presented from the saved outputs; Sessions 3 and 5 need 90. `INSTRUCTOR_GUIDE.md` has a plan for each session.
 
 ## Sessions
 
 | # | Notebook | What it shows |
 |---|---|---|
+| – | `prelim_before_you_start` | Optional, before Session 0: experiments, overfitting and evaluation; the training loop, CNNs, transfer learning; tokens, embeddings and the LSTM; attention on a recall task the LSTM can't do |
 | 0 | `session_00_from_text_to_probabilities` | GPT-2's tokenizer and one forward pass: tokens, embeddings, logits, cost in bits, and why perplexity depends on the tokenizer |
 | 1 | `session_01_attention_inside_a_real_model` | Attention written out and matched to GPT-2, the √d_k scaling measured, induction heads found and removed |
 | 2 | `session_02_the_transformer_block` | A block in 30 lines that reproduces GPT-2, the residual stream and logit lens, learned, sinusoidal and rotary positions |
@@ -31,6 +34,7 @@ The saved outputs come from a laptop RTX 4070 GPU with 8 GB of memory, on a mach
 
 | Session | GPU time | On a CPU |
 |---|---|---|
+| Before You Start | about 2 minutes | about 10 minutes |
 | 0, 1, 2 | under a minute each | practical |
 | 3 | about 12 minutes | use `QUICK = True` (a weaker model) |
 | 4 | about a minute | slow but possible |
@@ -52,6 +56,7 @@ Models and data are fetched by Hugging Face on first use and cached in `~/.cache
 
 | Session | Downloads |
 |---|---|
+| Before You Start | nothing (scikit-learn's built-in data and generated sequences) |
 | 0 | GPT-2 small (about 500 MB), reused in Sessions 1–4 |
 | 3 | one TinyStories shard (about 250 MB), reused in Sessions 4, 5 and 11 |
 | 4 | BERT-base (about 440 MB) and T5-small (about 240 MB) |
