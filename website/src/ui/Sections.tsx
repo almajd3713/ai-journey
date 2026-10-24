@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { STATION_BY_ID, COURSES, KIT_BYTES, SHOW_DOWNLOADS, nextSession, whenText, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, SITE, STATIONS, assetUrl, size } from "../lib/content";
+import { STATION_BY_ID, COURSES, KIT_BYTES, SHOW_DOWNLOADS, SHOW_GLOSSARY, nextSession, whenText, OPEN_SLOTS, OPEN_SLOT_NOTE, PEOPLE, SITE, STATIONS, assetUrl, size } from "../lib/content";
 import { enterDive, stepTo } from "../lib/dive";
 import { useLog } from "../lib/log";
 import type { Terrain } from "../lib/terrain";
@@ -133,7 +133,7 @@ export function Footer() {
         <ul className="foot-links">
           <li><a href={SITE.clubUrl} target="_blank" rel="noopener">etclub.online <Icon name="arrow-ne" size={14} /></a></li>
           <li><a href="#kit">{SHOW_DOWNLOADS ? "Field kit" : "Sessions"}</a></li>
-          <li><a href="#glossary">Glossary</a></li>
+          {SHOW_GLOSSARY && <li><a href="#glossary">Glossary</a></li>}
           <li><a href="#method">How the chart was made</a></li>
         </ul>
         <p className="fog small foot-note">

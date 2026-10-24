@@ -79,7 +79,7 @@ Open the notebooks from this folder: they read and write `cache/` and `data/` by
 
 ## Shared files
 
-- `aij_common.py`: the device, a seed function and a GPT-2 loader. Each notebook imports it before `transformers`, which also turns off download progress bars.
+- `aij_common.py`: the device, a seed function and a GPT-2 loader. Each session notebook imports it before `transformers`, which also turns off download progress bars.
 - `tinygpt.py`: the small GPT and its training loop, exported from Session 3 and used by Sessions 5 and 11.
 - `cache/`: results that are slow to recompute: Session 3's tokenizer, token cache and checkpoint, Session 5's runs, Session 6's vectors, samples and preference pairs (also used by Session 10), Session 10's scores and Session 11's runs. A notebook skips any step whose result is already here; delete a file to recompute it.
 - `data/`: frozen inputs for Session 8: the basic course's text cells, 36 questions with their answer passages, and 20 agent tasks. `data/basic_course_chunks.jsonl` is a frozen snapshot of the basic course's text from 2026-10-08; later revisions of the basic course (such as its October 2026 port of Sessions 6–10 to PyTorch) are not reflected in it, so a few numbers it quotes differ from the current basic notebooks.

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { STATIONS, STATION_BY_ID, SHOW_DOWNLOADS } from "./lib/content";
+import { STATIONS, STATION_BY_ID, SHOW_DOWNLOADS, SHOW_GLOSSARY } from "./lib/content";
 import { END, dive, enterDive, exitDive, onDive } from "./lib/dive";
 import { loadTerrain, type Terrain } from "./lib/terrain";
 import { canWebGL2, choseThreeD, clearOldTheme, initialMode, saveMode, type Mode } from "./lib/theme";
@@ -107,7 +107,7 @@ export default function App() {
       <main id="main">
         <Hero T={T} learner={T ? <LearnerPanel T={T} /> : null} />
         <Kit />
-        <Glossary />
+        {SHOW_GLOSSARY && <Glossary />}
         <Guides />
         <Method T={T} />
       </main>

@@ -33,6 +33,8 @@ export interface Pause { id: string; question: string; choices: { text: string; 
 export interface Warmup { from: string; q: string; a: string; src: string }
 export interface GlossaryTerm { term: string; defined: string; used: string[]; definition: string; related: string[]; course: CourseId }
 export const GLOSSARY: GlossaryTerm[] = extras.glossary as GlossaryTerm[];
+/** content/site.json "glossary": whether the Glossary section and its links are shown */
+export const SHOW_GLOSSARY: boolean = (site as { glossary?: boolean }).glossary === true;
 
 /** the practice files released for one session or one course (the keys in content/downloads.json) */
 export interface Practice { exercise: FileEntry | null; solutions: FileEntry | null }

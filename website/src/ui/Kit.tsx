@@ -85,7 +85,7 @@ function PrelimRow({ p, course }: { p: Prelim; course: Course }) {
             <Icon name="notebook" size={18} /><span>.ipynb</span><span className="sz">{size(files.ipynb.bytes)}</span>
           </a>
           <a className="dl-a" href={assetUrl(files.html.path)} target="_blank" rel="noopener"><Icon name="render" size={18} /><span>Read</span></a>
-          {course.id === "basic" && <a className="dl-a" href={p.colab} target="_blank" rel="noopener"><Icon name="cloud" size={18} /><span>Colab</span></a>}
+          <a className="dl-a" href={p.colab} target="_blank" rel="noopener"><Icon name="cloud" size={18} /><span>Colab</span></a>
         </div>
       )}
       {open && (

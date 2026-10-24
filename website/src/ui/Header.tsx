@@ -1,4 +1,4 @@
-import { SITE, assetUrl } from "../lib/content";
+import { SHOW_GLOSSARY, SITE, assetUrl } from "../lib/content";
 import { enterDive } from "../lib/dive";
 import type { Mode } from "../lib/theme";
 import { Icon } from "./Icon";
@@ -29,7 +29,7 @@ export function Header({ mode, setMode, webgl }: { mode: Mode; setMode: (m: Mode
         </a>
         <nav className="nav" aria-label="Sections">
           <a className="navlink" href="#kit">Sessions</a>
-          <a className="navlink" href="#glossary">Glossary</a>
+          {SHOW_GLOSSARY && <a className="navlink" href="#glossary">Glossary</a>}
           <a className="navlink" href="#guides">Guides</a>
           <a className="navlink" href="#method">The chart</a>
         </nav>
